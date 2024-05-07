@@ -699,6 +699,30 @@
     </ClInclude>
     <ClInclude Include="lv_conf.h" />
     <ClInclude Include="lv_drv_conf.h" />
+    <ClInclude Include="..\lvgl_examples\lvgl_app.h">
+      <Filter>lvgl_exams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\scr_mgr\gl_dragable_event.h">
+      <Filter>lvgl_exams\scr_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.h">
+      <Filter>lvgl_exams\scr_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\scr_mgr\scr_mrg.h">
+      <Filter>lvgl_exams\scr_mgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\ui_base\ui_base.h">
+      <Filter>lvgl_exams\ui_base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_EPD47\ui_epd47.h">
+      <Filter>lvgl_exams\T_EPD47</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_EPD47\assets\assets.h">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="LVGL.Simulator.manifest" />
@@ -2050,6 +2074,42 @@
       <Filter>lv_drivers</Filter>
     </ClCompile>
     <ClCompile Include="LVGL.Simulator.cpp" />
+    <ClCompile Include="..\lvgl_examples\lvgl_app.c">
+      <Filter>lvgl_exams</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\scr_mgr\gl_dragable_event.c">
+      <Filter>lvgl_exams\scr_mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.c">
+      <Filter>lvgl_exams\scr_mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\scr_mgr\scr_mrg.c">
+      <Filter>lvgl_exams\scr_mgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\ui_base.c">
+      <Filter>lvgl_exams\ui_base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\ui_epd47.c">
+      <Filter>lvgl_exams\T_EPD47</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_clock.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_lora.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_sd_card.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_setting.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_test.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_wifi.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LVGL.Simulator.rc" />
@@ -6944,6 +7004,24 @@
     </Filter>
     <Filter Include="lv_drivers\win32drv">
       <UniqueIdentifier>{46dd1f5b-c62e-4ac6-98e3-a5ae1ef6ce82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams">
+      <UniqueIdentifier>{6bf73a42-7417-4136-8d5d-c84277ecef5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\scr_mgr">
+      <UniqueIdentifier>{fc714807-1500-43ae-9503-ea1295fdb47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\ui_base">
+      <UniqueIdentifier>{704e93ac-6ac0-4438-8b9a-3d2971099d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\ui_base\assets">
+      <UniqueIdentifier>{0b43caf3-bdbe-48f3-b446-7b120f2498eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\T_EPD47">
+      <UniqueIdentifier>{bf78b04d-684c-4c06-8512-5ecfeaa2c1ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\T_EPD47\assets">
+      <UniqueIdentifier>{c3e6602f-0704-4beb-9c55-a85a878b42f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

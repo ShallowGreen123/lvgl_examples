@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.projbuild": "cmake",
+        "ui_base.h": "c"
+    }
+}

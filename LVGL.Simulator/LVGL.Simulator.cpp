@@ -25,6 +25,7 @@
 #include "lvgl/examples/lv_examples.h"
 #include "lvgl/demos/lv_demos.h"
 #include "lv_drivers/win32drv/win32drv.h"
+#include "../lvgl_examples/lvgl_app.h"
 
 #if _MSC_VER >= 1200
 // Restore compilation warnings.
@@ -38,8 +39,8 @@ bool single_display_mode_initialization()
     if (!lv_win32_init(
         GetModuleHandleW(NULL),
         SW_SHOW,
-        480,
-        480,
+        LCD_HOR_SIZE,
+        LCD_VER_SIZE,
         LoadIconW(GetModuleHandleW(NULL), MAKEINTRESOURCE(IDI_LVGL))))
     {
         return false;
@@ -312,8 +313,13 @@ int main()
     // ----------------------------------
     // Demos from lv_examples
     // ----------------------------------
+    #ifdef USED_MY_DEMO
+        lvgl_app_init();
+    #else
+        lv_demo_widgets();
+    #endif
     //lvgl_app_init();
-      lv_demo_widgets();           // ok
+    //   lv_demo_widgets();           // ok
     // lv_demo_benchmark();
     // lv_demo_keypad_encoder();    // ok
     // lv_demo_music();             // removed from repository

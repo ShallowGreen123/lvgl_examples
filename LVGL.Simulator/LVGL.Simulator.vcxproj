@@ -263,6 +263,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)lv_drivers\wayland\wayland.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lv_drivers\win32drv\win32drv.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lv_drivers\win_drv.h" />
+    <ClInclude Include="..\lvgl_examples\lvgl_app.h" />
+    <ClInclude Include="..\lvgl_examples\scr_mgr\gl_dragable_event.h" />
+    <ClInclude Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.h" />
+    <ClInclude Include="..\lvgl_examples\scr_mgr\scr_mrg.h" />
+    <ClInclude Include="..\lvgl_examples\T_EPD47\assets\assets.h" />
+    <ClInclude Include="..\lvgl_examples\T_EPD47\ui_epd47.h" />
+    <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h" />
+    <ClInclude Include="..\lvgl_examples\ui_base\ui_base.h" />
     <ClInclude Include="lv_conf.h" />
   </ItemGroup>
   <ItemGroup>
@@ -723,6 +731,18 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)lv_drivers\wayland\wayland.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)lv_drivers\win32drv\win32drv.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)lv_drivers\win_drv.c" />
+    <ClCompile Include="..\lvgl_examples\lvgl_app.c" />
+    <ClCompile Include="..\lvgl_examples\scr_mgr\gl_dragable_event.c" />
+    <ClCompile Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.c" />
+    <ClCompile Include="..\lvgl_examples\scr_mgr\scr_mrg.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_clock.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_lora.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_sd_card.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_setting.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_test.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_wifi.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\ui_epd47.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\ui_base.c" />
     <ClCompile Include="LVGL.Simulator.cpp" />
   </ItemGroup>
   <ItemGroup>
