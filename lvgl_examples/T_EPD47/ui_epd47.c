@@ -1,7 +1,7 @@
-#include "ui_epd47.h"
+﻿#include "ui_epd47.h"
 #include "assets/assets.h"
 //************************************[ Other fun ]******************************************
-void scr_back_btn_create(lv_obj_t *parent, lv_event_cb_t cb)
+void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
 {
     lv_obj_t * btn = lv_btn_create(parent);
     lv_obj_set_style_pad_all(btn, 0, 0);
@@ -20,7 +20,7 @@ void scr_back_btn_create(lv_obj_t *parent, lv_event_cb_t cb)
     lv_obj_t *label = lv_label_create(parent);
     lv_obj_align_to(label, btn, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
     lv_obj_set_style_text_color(label, lv_color_hex(EPD_COLOR_TEXT), LV_PART_MAIN);
-    lv_label_set_text(label, "Back");
+    lv_label_set_text(label, text);
     lv_obj_add_flag(label, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(label, cb, LV_EVENT_CLICKED, NULL);
 }
@@ -127,9 +127,15 @@ static scr_lifecycle_t screen0 = {
 #endif
 //************************************[ screen 1 ]****************************************** clock
 #if 1
-lv_obj_t *scr1_cont;
-
 static lv_obj_t * meter;
+static lv_timer_t *get_timer = NULL;
+static lv_meter_indicator_t * indic_min;
+static lv_meter_indicator_t * indic_hour;
+static lv_obj_t *clock_time;
+static lv_obj_t *clock_data;
+static lv_obj_t *clock_ap;
+
+static const char *week_list_en[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
 static void set_value(void * indic, int32_t v)
 {
@@ -144,9 +150,21 @@ static void scr1_btn_event_cb(lv_event_t * e)
 }
 
 static void create1(lv_obj_t *parent) {
+
+    clock_time = lv_label_create(parent);
+    clock_data = lv_label_create(parent);
+    clock_ap = lv_label_create(parent);
+
+    lv_obj_set_style_text_font(clock_time, &Font_Mono_Bold_90, LV_PART_MAIN);
+    lv_obj_set_style_text_font(clock_data, &Font_Mono_Bold_30, LV_PART_MAIN);
+    lv_obj_set_style_text_font(clock_ap, &Font_Mono_Bold_30, LV_PART_MAIN);
+
+    lv_label_set_text_fmt(clock_time, "%02d:%02d", 10, 19);
+    lv_label_set_text_fmt(clock_data, "%04d/%02d/%02d Sun", 2024, 5, 8);
+    lv_label_set_text_fmt(clock_ap, "%s", "P.M.");
+
     meter = lv_meter_create(parent);
     lv_obj_set_size(meter, 400, 400);
-    lv_obj_center(meter);
     lv_obj_set_style_border_width(meter, 2, LV_PART_MAIN);
     lv_obj_set_style_border_color(meter, lv_color_black(), LV_PART_MAIN);
     lv_obj_set_style_shadow_width(meter, 0, LV_PART_MAIN);
@@ -163,33 +181,43 @@ static void create1(lv_obj_t *parent) {
     lv_meter_set_scale_major_ticks(meter, scale_hour, 1, 3, 20, lv_color_black(), 25);    /*Every tick is major*/
     lv_meter_set_scale_range(meter, scale_hour, 1, 12, 330, 300);       /*[1..12] values in an almost full circle*/
 
-    LV_IMG_DECLARE(img_hand)
-
     /*Add a the hands from images*/
-    lv_meter_indicator_t * indic_min = lv_meter_add_needle_img(meter, scale_min, &img_hand, 5, 5);
-    lv_meter_indicator_t * indic_hour = lv_meter_add_needle_img(meter, scale_min, &img_hand, 5, 5);
+    indic_hour = lv_meter_add_needle_img(meter, scale_min, &img_hand, 5, 5);
+    indic_min = lv_meter_add_needle_img(meter, scale_min, &img_hand_sec, 5, 5);
+    
 
     /*Create an animation to set the value*/
-    // lv_anim_t a;
-    // lv_anim_init(&a);
-    // lv_anim_set_exec_cb(&a, set_value);
-    // lv_anim_set_values(&a, 0, 60);
-    // lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
-    // lv_anim_set_time(&a, 2000);     /*2 sec for 1 turn of the minute hand (1 hour)*/
-    // lv_anim_set_var(&a, indic_min);
-    // lv_anim_start(&a);
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_exec_cb(&a, set_value);
+    lv_anim_set_values(&a, 0, 60);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_set_time(&a, 2000);     /*2 sec for 1 turn of the minute hand (1 hour)*/
+    lv_anim_set_var(&a, indic_min);
+    lv_anim_start(&a);
 
-    // lv_anim_set_var(&a, indic_hour);
-    // lv_anim_set_time(&a, 24000);    /*24 sec for 1 turn of the hour hand*/
-    // lv_anim_set_values(&a, 0, 60);
-    // lv_anim_start(&a);
+    lv_anim_set_var(&a, indic_hour);
+    lv_anim_set_time(&a, 24000);    /*24 sec for 1 turn of the hour hand*/
+    lv_anim_set_values(&a, 0, 60);
+    lv_anim_start(&a);
     
     // back
-    scr_back_btn_create(parent, scr1_btn_event_cb);
+    scr_back_btn_create(parent, "Clock", scr1_btn_event_cb);
 }
-static void entry1(void) { }
+static void entry1(void) {
+    lv_obj_align(meter, LV_ALIGN_RIGHT_MID, -100, 0);
+
+    lv_obj_set_style_text_align(clock_time, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_set_style_text_align(clock_data, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_set_style_text_align(clock_ap, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_align(clock_time, LV_ALIGN_LEFT_MID, 80, -50);
+    lv_obj_align_to(clock_ap, clock_time, LV_ALIGN_OUT_RIGHT_MID, 0, 20);
+    lv_obj_align_to(clock_data, clock_time, LV_ALIGN_OUT_BOTTOM_MID, 25, 30);
+}
 static void exit1(void) { }
-static void destroy1(void) { }
+static void destroy1(void) {
+    lv_anim_del_all();
+}
 
 static scr_lifecycle_t screen1 = {
     .create = create1,
@@ -200,7 +228,7 @@ static scr_lifecycle_t screen1 = {
 #endif
 //************************************[ screen 2 ]****************************************** lora
 #if 1
-lv_obj_t *scr2_cont;
+static lv_obj_t *scr2_cont;
 
 static void scr2_btn_event_cb(lv_event_t * e)
 {
@@ -211,7 +239,8 @@ static void scr2_btn_event_cb(lv_event_t * e)
 }
 
 static void create2(lv_obj_t *parent) {
-    scr_back_btn_create(parent, scr2_btn_event_cb);
+    
+    scr_back_btn_create(parent, "Lora", scr2_btn_event_cb);
 }
 static void entry2(void) { }
 static void exit2(void) { }
@@ -228,18 +257,62 @@ static scr_lifecycle_t screen2 = {
 #if 1
 lv_obj_t *scr3_cont;
 
+static void read_img_btn_event(lv_event_t * e)
+{
+    int data = (int)e->user_data;
+
+    if(e->code = LV_EVENT_CLICKED) {
+        printf("imgbtn %d\n", data);
+    }
+}
+
 static void scr3_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        
         scr_mgr_pop(false);
     }
 }
 
 static void create3(lv_obj_t *parent) {
-    scr_back_btn_create(parent, scr3_btn_event_cb);
+    scr3_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr3_cont, lv_pct(100), lv_pct(85));
+    lv_obj_set_style_bg_color(scr3_cont, lv_color_white(), LV_PART_MAIN);
+    lv_obj_clear_flag(scr3_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_scrollbar_mode(scr3_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(scr3_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr3_cont, 0, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr3_cont, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_row(scr3_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr3_cont, 0, LV_PART_MAIN);
+
+    for(int i = 0; i < 36; i++) {
+        lv_obj_t *obj = lv_obj_create(scr3_cont);
+        lv_obj_set_size(obj, LCD_HOR_SIZE/9, LCD_HOR_SIZE/9);
+        lv_obj_set_style_bg_color(obj, lv_color_white(), LV_PART_MAIN);
+        lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
+        lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
+        lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN);
+
+        lv_obj_t *img = lv_img_create(obj);
+        lv_obj_align(img, LV_ALIGN_CENTER, 0, -10);
+        lv_img_set_src(img, &img_PNG);
+        lv_obj_add_flag(img, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_add_event_cb(img, read_img_btn_event, LV_EVENT_CLICKED, (void *)i);
+
+        lv_obj_t *lab = lv_label_create(obj);
+        lv_obj_set_style_text_font(lab, &lv_font_montserrat_20, LV_PART_MAIN);
+        lv_label_set_text(lab, "image");
+        lv_obj_align_to(lab, img, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+    }
+
+    // back
+    scr_back_btn_create(parent, "SD", scr3_btn_event_cb);
 }
-static void entry3(void) { }
+static void entry3(void) 
+{
+    lv_obj_align(scr3_cont, LV_ALIGN_BOTTOM_MID, 0, 0);
+}
 static void exit3(void) { }
 static void destroy3(void) { }
 
@@ -263,7 +336,7 @@ static void scr4_btn_event_cb(lv_event_t * e)
 }
 
 static void create4(lv_obj_t *parent) {
-    scr_back_btn_create(parent, scr4_btn_event_cb);
+    scr_back_btn_create(parent, "Setting", scr4_btn_event_cb);
 }
 static void entry4(void) { }
 static void exit4(void) { }
@@ -289,7 +362,7 @@ static void scr5_btn_event_cb(lv_event_t * e)
 }
 
 static void create5(lv_obj_t *parent) {
-    scr_back_btn_create(parent, scr5_btn_event_cb);
+    scr_back_btn_create(parent, "Test", scr5_btn_event_cb);
 }
 static void entry5(void) { }
 static void exit5(void) { }
@@ -315,7 +388,7 @@ static void scr6_btn_event_cb(lv_event_t * e)
 }
 
 static void create6(lv_obj_t *parent) {
-    scr_back_btn_create(parent, scr6_btn_event_cb);
+    scr_back_btn_create(parent, "Wifi", scr6_btn_event_cb);
 }
 static void entry6(void) { }
 static void exit6(void) { }
@@ -336,6 +409,7 @@ void ui_epd47_entry(void)
     scr_mgr_set_bg_color(EPD_COLOR_BG);
     scr_mgr_register(SCREEN0_ID, &screen0);
     scr_mgr_register(SCREEN1_ID, &screen1);
+    scr_mgr_register(SCREEN2_ID, &screen2);
     scr_mgr_register(SCREEN3_ID, &screen3);
     scr_mgr_register(SCREEN4_ID, &screen4);
     scr_mgr_register(SCREEN5_ID, &screen5);

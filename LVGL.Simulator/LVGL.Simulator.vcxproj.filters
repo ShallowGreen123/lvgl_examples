@@ -2110,6 +2110,27 @@
     <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_wifi.c">
       <Filter>lvgl_exams\T_EPD47\assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_hand_min.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_hand_sec.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_90.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_30.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_BMP.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_JPG.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_PNG.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LVGL.Simulator.rc" />

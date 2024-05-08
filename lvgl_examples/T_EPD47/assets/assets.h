@@ -14,6 +14,13 @@ LV_IMG_DECLARE(img_sd_card)
 LV_IMG_DECLARE(img_setting)
 LV_IMG_DECLARE(img_test)
 LV_IMG_DECLARE(img_wifi)
+LV_IMG_DECLARE(img_hand)
+LV_IMG_DECLARE(img_hand_min)
+LV_IMG_DECLARE(img_hand_sec)
+
+LV_IMG_DECLARE(img_PNG)
+LV_IMG_DECLARE(img_JPG)
+LV_IMG_DECLARE(img_BMP)
 
 // font
 // LV_FONT_DECLARE(Font_Mono_Bold_14);
@@ -21,6 +28,8 @@ LV_IMG_DECLARE(img_wifi)
 // LV_FONT_DECLARE(Font_Mono_Bold_18);
 // LV_FONT_DECLARE(Font_Mono_Bold_20);
 // LV_FONT_DECLARE(Font_Mono_Light_14);
+LV_FONT_DECLARE(Font_Mono_Bold_30)
+LV_FONT_DECLARE(Font_Mono_Bold_90)
 
 #ifdef __cplusplus
 } /*extern "C"*/
