@@ -735,6 +735,7 @@
     <ClCompile Include="..\lvgl_examples\scr_mgr\gl_dragable_event.c" />
     <ClCompile Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.c" />
     <ClCompile Include="..\lvgl_examples\scr_mgr\scr_mrg.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_20.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_30.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_90.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_BMP.c" />

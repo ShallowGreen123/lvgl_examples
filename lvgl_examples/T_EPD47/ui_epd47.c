@@ -273,6 +273,27 @@ static void scr3_btn_event_cb(lv_event_t * e)
     }
 }
 
+static void scr3_add_img_btn(void)
+{
+    lv_obj_t *obj = lv_obj_create(scr3_cont);
+    lv_obj_set_size(obj, LCD_HOR_SIZE/9, LCD_HOR_SIZE/9);
+    lv_obj_set_style_bg_color(obj, lv_color_white(), LV_PART_MAIN);
+    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN);
+
+    lv_obj_t *btn = lv_img_create(obj);
+    lv_obj_align(btn, LV_ALIGN_CENTER, 0, -10);
+    lv_obj_add_flag(btn, LV_OBJ_FLAG_CLICKABLE);
+    lv_img_set_src(btn, &img_PNG);
+
+    lv_obj_t *lab = lv_label_create(obj);
+    lv_obj_set_style_text_font(lab, &Font_Mono_Bold_20, LV_PART_MAIN);
+    lv_label_set_text(lab, "image");
+    lv_obj_align_to(lab, btn, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+}
+
 static void create3(lv_obj_t *parent) {
     scr3_cont = lv_obj_create(parent);
     lv_obj_set_size(scr3_cont, lv_pct(100), lv_pct(85));
@@ -286,24 +307,7 @@ static void create3(lv_obj_t *parent) {
     lv_obj_set_style_pad_column(scr3_cont, 0, LV_PART_MAIN);
 
     for(int i = 0; i < 36; i++) {
-        lv_obj_t *obj = lv_obj_create(scr3_cont);
-        lv_obj_set_size(obj, LCD_HOR_SIZE/9, LCD_HOR_SIZE/9);
-        lv_obj_set_style_bg_color(obj, lv_color_white(), LV_PART_MAIN);
-        lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-        lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
-        lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
-        lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN);
-
-        lv_obj_t *img = lv_img_create(obj);
-        lv_obj_align(img, LV_ALIGN_CENTER, 0, -10);
-        lv_img_set_src(img, &img_PNG);
-        lv_obj_add_flag(img, LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_add_event_cb(img, read_img_btn_event, LV_EVENT_CLICKED, (void *)i);
-
-        lv_obj_t *lab = lv_label_create(obj);
-        lv_obj_set_style_text_font(lab, &lv_font_montserrat_20, LV_PART_MAIN);
-        lv_label_set_text(lab, "image");
-        lv_obj_align_to(lab, img, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+        scr3_add_img_btn();
     }
 
     // back
