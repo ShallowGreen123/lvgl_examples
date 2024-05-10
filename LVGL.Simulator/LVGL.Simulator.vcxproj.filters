@@ -2134,6 +2134,12 @@
     <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_20.c">
       <Filter>lvgl_exams\T_EPD47\assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_25.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Geist_Bold_20.c">
+      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LVGL.Simulator.rc" />
