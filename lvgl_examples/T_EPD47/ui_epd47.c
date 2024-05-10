@@ -422,7 +422,8 @@ static scr_lifecycle_t screen4 = {
 #endif
 //************************************[ screen 5 ]****************************************** test
 #if 1
-lv_obj_t *scr5_cont;
+lv_obj_t *scr5_cont_PASS;
+lv_obj_t *scr5_cont_FAIL;
 
 static void scr5_btn_event_cb(lv_event_t * e)
 {
@@ -432,7 +433,86 @@ static void scr5_btn_event_cb(lv_event_t * e)
     }
 }
 
+lv_obj_t * scr5_imgbtn_create(lv_obj_t *parent, int idx)
+{
+    lv_obj_t *obj = lv_obj_create(parent);
+    lv_obj_set_size(obj, 120, 150);
+    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
+
+    lv_obj_t *img = lv_img_create(obj);
+    lv_img_set_src(img, icon_buf[idx].icon_src);
+    lv_obj_align(img, LV_ALIGN_TOP_MID, 0, 0);
+
+    lv_obj_t *lab = lv_label_create(obj);
+    lv_obj_set_style_text_font(lab, &Font_Mono_Bold_25, LV_PART_MAIN);
+    lv_label_set_text(lab, icon_buf[idx].icon_str);
+    lv_obj_align_to(lab, img, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+    return obj;
+}
+
 static void create5(lv_obj_t *parent) {
+
+    scr5_cont_PASS = lv_obj_create(parent);
+    lv_obj_set_size(scr5_cont_PASS, lv_pct(49), lv_pct(80));
+    lv_obj_set_style_bg_color(scr5_cont_PASS, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr5_cont_PASS, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(scr5_cont_PASS, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr5_cont_PASS, 26, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr5_cont_PASS, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_row(scr5_cont_PASS, 27, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr5_cont_PASS, 27, LV_PART_MAIN);
+    lv_obj_set_align(scr5_cont_PASS, LV_ALIGN_BOTTOM_LEFT);
+
+    scr5_cont_FAIL = lv_obj_create(parent);
+    lv_obj_set_size(scr5_cont_FAIL, lv_pct(49), lv_pct(80));
+    lv_obj_set_style_bg_color(scr5_cont_FAIL, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr5_cont_FAIL, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(scr5_cont_FAIL, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr5_cont_FAIL, 26, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr5_cont_FAIL, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_row(scr5_cont_FAIL, 27, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr5_cont_FAIL, 27, LV_PART_MAIN);
+    lv_obj_set_align(scr5_cont_FAIL, LV_ALIGN_BOTTOM_RIGHT);
+
+
+    lv_obj_t *pass = lv_label_create(parent);
+    lv_obj_t *fail = lv_label_create(parent);
+
+    lv_obj_set_style_text_font(pass, &Font_Mono_Bold_25, LV_PART_MAIN);
+    lv_obj_set_style_text_font(fail, &Font_Mono_Bold_25, LV_PART_MAIN);
+
+    lv_label_set_text(pass, "INIT PASS");
+    lv_label_set_text(fail, "INIT FAIL");
+
+    lv_obj_align_to(pass, scr5_cont_PASS, LV_ALIGN_OUT_TOP_MID, 0, 0);
+    lv_obj_align_to(fail, scr5_cont_FAIL, LV_ALIGN_OUT_TOP_MID, 0, 0);
+
+
+    for(int i = 0; i < 4; i++) {
+        scr5_imgbtn_create(scr5_cont_PASS, i);
+    }
+
+    for(int i = 0; i < 4; i++) {
+        scr5_imgbtn_create(scr5_cont_FAIL, i);
+    }
+
+    //---------------------
+    static lv_point_t line_points[] = { {LCD_HOR_SIZE/2, 0}, {LCD_HOR_SIZE/2, LCD_VER_SIZE-150}};
+    /*Create style*/
+    static lv_style_t style_line;
+    lv_style_init(&style_line);
+    lv_style_set_line_width(&style_line, 2);
+    lv_style_set_line_color(&style_line, lv_color_black());
+    lv_style_set_line_rounded(&style_line, true);
+    /*Create a line and apply the new style*/
+    lv_obj_t * line1;
+    line1 = lv_line_create(parent);
+    lv_line_set_points(line1, line_points, 2);     /*Set the points*/
+    lv_obj_add_style(line1, &style_line, 0);
+    lv_obj_set_align(line1, LV_ALIGN_LEFT_MID);
+
     scr_back_btn_create(parent, "Test", scr5_btn_event_cb);
 }
 static void entry5(void) { }
