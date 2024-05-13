@@ -14,9 +14,12 @@
 #include "../lvgl_app.h"
 #include "../scr_mgr/scr_mrg.h"
 
+
 /*********************************************************************************
  *                                   DEFINES
  * *******************************************************************************/
+#if UI_EPD47_DISPALY
+
 #define EPD_COLOR_BG          0xffffff
 #define EPD_COLOR_FOCUS_ON    0x91B821
 #define EPD_COLOR_TEXT        0x000000
@@ -37,5 +40,5 @@
  * *******************************************************************************/
 void ui_epd47_entry(void);
 
+#endif /* UI_EPD47_DISPALY */
 #endif /* __UI_EPD47H__ */
-

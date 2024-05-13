@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "*.projbuild": "cmake",
-        "ui_base.h": "c"
+        "ui_base.h": "c",
+        "assets.h": "c",
+        "scr_mrg.h": "c",
+        "lvgl.h": "c",
+        "lvgl_app.h": "c",
+        "ui_epd47.h": "c"
     }
 }

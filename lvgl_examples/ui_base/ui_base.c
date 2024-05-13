@@ -1,6 +1,7 @@
 
 #include "ui_base.h"
 #include "assets/assets.h"
+#if UI_BASE_DISPALY
 
 static void btn_event_cb(lv_event_t * e)
 {
@@ -56,4 +57,6 @@ void ui_base_entry(void)
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);
 }
+
+#endif
 

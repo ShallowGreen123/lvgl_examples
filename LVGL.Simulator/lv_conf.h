@@ -1,6 +1,6 @@
 ﻿/**
  * @file lv_conf.h
- * Configuration file for v8.3.4
+ * Configuration file for v8.3.10
  */
 
 /*
@@ -18,6 +18,31 @@
 #define LV_CONF_H
 
 #include <stdint.h>
+
+// ----------------------- MY CONFIG -----------------------------------
+#include "../lvgl_examples/lvgl_conf.h"
+
+#if USED_MY_DEMO 
+
+    // my demo config
+    #if UI_BASE_DISPALY
+        #define LV_USE_THEME_DEFAULT 1
+        #define LV_FONT_DEFAULT &lv_font_montserrat_14
+    #elif UI_EPD47_DISPALY
+        #define LV_USE_THEME_DEFAULT 0
+        #define LV_FONT_DEFAULT &lv_font_montserrat_32
+    #else
+        #define LV_USE_THEME_DEFAULT 1
+        #define LV_FONT_DEFAULT &lv_font_montserrat_14
+    #endif
+#else
+    #define LV_USE_THEME_DEFAULT 1
+    #define LV_FONT_DEFAULT &lv_font_montserrat_14
+#endif
+
+
+// ----------------------------------------------------------
+
 
 /*====================
    COLOR SETTINGS
@@ -388,7 +413,7 @@
 #define LV_FONT_CUSTOM_DECLARE
 
 /*Always set a default font*/
-#define LV_FONT_DEFAULT &lv_font_montserrat_32
+// #define LV_FONT_DEFAULT &lv_font_montserrat_14
 
 /*Enable handling large font and/or fonts with a lot of characters.
  *The limit depends on the font size, font face and bpp.
@@ -562,7 +587,7 @@
  *----------*/
 
 /*A simple, impressive and very complete theme*/
-#define LV_USE_THEME_DEFAULT 0
+// #define LV_USE_THEME_DEFAULT 0
 #if LV_USE_THEME_DEFAULT
 
     /*0: Light mode; 1: Dark mode*/

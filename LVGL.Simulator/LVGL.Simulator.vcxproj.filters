@@ -717,11 +717,11 @@
     <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_EPD47\ui_epd47.h">
-      <Filter>lvgl_exams\T_EPD47</Filter>
+    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h">
+      <Filter>lvgl_exams\T_EPD47_S3</Filter>
     </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_EPD47\assets\assets.h">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\assets\assets.h">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2089,56 +2089,56 @@
     <ClCompile Include="..\lvgl_examples\ui_base\ui_base.c">
       <Filter>lvgl_exams\ui_base</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\ui_epd47.c">
-      <Filter>lvgl_exams\T_EPD47</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.c">
+      <Filter>lvgl_exams\T_EPD47_S3</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_clock.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Geist_Bold_20.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_lora.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_20.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_sd_card.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_25.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_setting.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_30.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_test.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_90.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_wifi.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_BMP.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_hand_min.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_clock.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_hand_sec.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_hand_min.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_90.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_hand_sec.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_30.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_JPG.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_BMP.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_lora.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_JPG.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_PNG.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\img_PNG.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_sd_card.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_20.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_setting.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Mono_Bold_25.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_test.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47\assets\Font_Geist_Bold_20.c">
-      <Filter>lvgl_exams\T_EPD47\assets</Filter>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_wifi.c">
+      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -7047,11 +7047,11 @@
     <Filter Include="lvgl_exams\ui_base\assets">
       <UniqueIdentifier>{0b43caf3-bdbe-48f3-b446-7b120f2498eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lvgl_exams\T_EPD47">
+    <Filter Include="lvgl_exams\T_EPD47_S3">
       <UniqueIdentifier>{bf78b04d-684c-4c06-8512-5ecfeaa2c1ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lvgl_exams\T_EPD47\assets">
-      <UniqueIdentifier>{c3e6602f-0704-4beb-9c55-a85a878b42f5}</UniqueIdentifier>
+    <Filter Include="lvgl_exams\T_EPD47_S3\assets">
+      <UniqueIdentifier>{730007d8-2c8f-4b27-aea2-1a81ba0fef94}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -313,7 +313,7 @@ int main()
     // ----------------------------------
     // Demos from lv_examples
     // ----------------------------------
-    #ifdef USED_MY_DEMO
+    #if USED_MY_DEMO
         lvgl_app_init();
     #else
         lv_demo_widgets();

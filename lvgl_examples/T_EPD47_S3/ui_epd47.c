@@ -1,5 +1,9 @@
-﻿#include "ui_epd47.h"
+﻿
+
+#include "ui_epd47.h"
 #include "assets/assets.h"
+
+#if UI_EPD47_DISPALY
 //************************************[ Other fun ]******************************************
 void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
 {
@@ -781,3 +785,5 @@ void ui_epd47_entry(void)
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);
 }
+
+#endif

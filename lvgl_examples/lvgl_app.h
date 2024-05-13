@@ -12,6 +12,7 @@
  *                                  INCLUDES
  * *******************************************************************************/
 #include <stdio.h>
+#include "lvgl_conf.h"
 #include "../lvgl/lvgl.h"
 
 #ifdef __cplusplus
@@ -20,21 +21,25 @@ extern "C" {
 /*********************************************************************************
  *                                   DEFINES
  * *******************************************************************************/
-#define USED_MY_DEMO
 
-//❗❗❗ -------------- Please select one below -------------- ❗❗❗
-// #define UI_BASE_DISPALY
-#define UI_EPD47_DISPALY 
 
 /*********************************************************************************
  *                                   MACROS
  * *******************************************************************************/
-#ifdef UI_BASE_DISPALY
+#if USED_MY_DEMO
+#if UI_BASE_DISPALY
 #define LCD_HOR_SIZE 240
 #define LCD_VER_SIZE 240
-#elif defined UI_EPD47_DISPALY
+#elif UI_EPD47_DISPALY
 #define LCD_HOR_SIZE 960
 #define LCD_VER_SIZE 540
+#else
+#define LCD_HOR_SIZE 800
+#define LCD_VER_SIZE 600
+#endif
+#else
+#define LCD_HOR_SIZE 800
+#define LCD_VER_SIZE 600
 #endif
 
 /*********************************************************************************
