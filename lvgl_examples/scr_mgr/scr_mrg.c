@@ -28,7 +28,7 @@ static lv_obj_t *scr_mgr_default_style(scr_card_t *card)
     // lv_obj_set_scroll_snap_x(obj, LV_SCROLL_SNAP_CENTER);
     // lv_obj_set_flex_flow(obj, LV_FLEX_FLOW_ROW);
     // lv_obj_set_style_bg_opa(obj, LV_OPA_0, 0);
-    // lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
     card->life->create(obj);
     return obj;
 }

@@ -7038,9 +7038,6 @@
     <Filter Include="lvgl_exams">
       <UniqueIdentifier>{6bf73a42-7417-4136-8d5d-c84277ecef5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lvgl_exams\scr_mgr">
-      <UniqueIdentifier>{fc714807-1500-43ae-9503-ea1295fdb47f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lvgl_exams\ui_base">
       <UniqueIdentifier>{704e93ac-6ac0-4438-8b9a-3d2971099d10}</UniqueIdentifier>
     </Filter>
@@ -7052,6 +7049,12 @@
     </Filter>
     <Filter Include="lvgl_exams\T_EPD47_S3\assets">
       <UniqueIdentifier>{730007d8-2c8f-4b27-aea2-1a81ba0fef94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\T_Embed_PN532">
+      <UniqueIdentifier>{ffb3aaaf-fc78-42c9-913a-3dfb7ee899ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\scr_mgr">
+      <UniqueIdentifier>{fc714807-1500-43ae-9503-ea1295fdb47f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
