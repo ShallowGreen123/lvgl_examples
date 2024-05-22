@@ -734,10 +734,22 @@ static void lv_win32_keypad_driver_read_callback(
             context->keyboard_queue));
     if (current)
     {
-        data->key = current->key;
+        uint32_t act_key;
+        switch (current->key)
+        {
+            case 10: act_key = LV_KEY_ENTER; break; // enter
+            case 17: act_key = LV_KEY_PREV; break;  // ↑
+            case 18: act_key = LV_KEY_NEXT; break;  // ↓
+            case 20: act_key = LV_KEY_LEFT; break;  // ←
+            case 19: act_key = LV_KEY_RIGHT; break; // →
+            default:
+                break;
+        }
+
+        data->key = act_key;
         data->state = current->state;
 
-        printf("keypad=%d\n", data->key);
+        // printf("keypad=%d\n", data->key);
 
         _aligned_free(current);
 

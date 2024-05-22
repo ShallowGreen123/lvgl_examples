@@ -31,6 +31,16 @@
     #elif UI_EPD47_DISPALY
         #define LV_USE_THEME_DEFAULT 0
         #define LV_FONT_DEFAULT &lv_font_montserrat_32
+    #elif UI_EMBED_PN532
+
+        #define LV_USE_THEME_DEFAULT 1
+        #define LV_FONT_DEFAULT &lv_font_montserrat_14
+        // file system   
+        #define LV_USE_FS_STDIO 1
+        #define LV_FS_STDIO_LETTER 'A'                                 
+        #define LV_FS_STDIO_PATH "./../lvgl_examples/T_Embed_PN532/assets"        
+        #define LV_FS_STDIO_CACHE_SIZE 0    
+
     #else
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14
@@ -623,12 +633,12 @@
 /*File system interfaces for common APIs */
 
 /*API for fopen, fread, etc*/
-#define LV_USE_FS_STDIO 1
-#if LV_USE_FS_STDIO
-    #define LV_FS_STDIO_LETTER 'A'                                 /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
-    #define LV_FS_STDIO_PATH "./../lvgl_mydemo/assets/image/"         /*Set the working directory. File/directory paths will be appended to it.*/
-    #define LV_FS_STDIO_CACHE_SIZE 0    /*>0 to cache this number of bytes in lv_fs_read()*/
-#endif
+// #define LV_USE_FS_STDIO 1
+// #if LV_USE_FS_STDIO
+//     #define LV_FS_STDIO_LETTER 'A'                                 /*Set an upper cased letter on which the drive will accessible (e.g. 'A')*/
+//     #define LV_FS_STDIO_PATH "./../lvgl_mydemo/assets/image/"         /*Set the working directory. File/directory paths will be appended to it.*/
+//     #define LV_FS_STDIO_CACHE_SIZE 0    /*>0 to cache this number of bytes in lv_fs_read()*/
+// #endif
 
 /*API for open, read, etc*/
 #define LV_USE_FS_POSIX 0

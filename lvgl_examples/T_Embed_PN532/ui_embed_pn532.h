@@ -1,19 +1,13 @@
-/************************************************************************
- * FilePath     : lvgl_examples.h
- * Author       : GX.Duan
- * LastEditors  : ShallowGreen123 2608653986@qq.com
- * Copyright (c): 2022 by GX.Duan, All Rights Reserved.
- * Github       : https://github.com/ShallowGreen123/lvgl_examples.git
- ************************************************************************/
-#ifndef LV_DEMO_INIT_H
-#define LV_DEMO_INIT_H
+﻿
+#ifndef UI_EMBED_PN532_H
+#define UI_EMBED_PN532_H
 
 /*********************************************************************************
  *                                  INCLUDES
  * *******************************************************************************/
-#include <stdio.h>
-#include "lvgl_conf.h"
-#include "../lvgl/lvgl.h"
+#include "../lvgl_app.h"
+#include "../scr_mgr/scr_mrg.h"
+#include "assets/assets.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,54 +15,30 @@ extern "C" {
 /*********************************************************************************
  *                                   DEFINES
  * *******************************************************************************/
-
-
+#if UI_EMBED_PN532  
 /*********************************************************************************
  *                                   MACROS
  * *******************************************************************************/
-#if USED_MY_DEMO
-#if UI_BASE_DISPALY
-#define LCD_HOR_SIZE 240
-#define LCD_VER_SIZE 240
-#elif UI_EPD47_DISPALY
-#define LCD_HOR_SIZE 960
-#define LCD_VER_SIZE 540
-#elif UI_EMBED_PN532
-#define LCD_HOR_SIZE 320
-#define LCD_VER_SIZE 170
-#else
-#define LCD_HOR_SIZE 800
-#define LCD_VER_SIZE 600
-#endif
-#else
-#define LCD_HOR_SIZE 800
-#define LCD_VER_SIZE 600
-#endif
+
+#define EMBED_PN532_COLOR_BG          0xffffff
+#define EMBED_PN532_COLOR_FOCUS_ON    0x91B821
+#define EMBED_PN532_COLOR_TEXT        0x161823
+#define EMBED_PN532_COLOR_BORDER      0xBBBBBB
+#define EMBED_PN532_COLOR_PROMPT_BG   0x1e1e00
+#define EMBED_PN532_COLOR_PROMPT_TXT  0xfffee6
 
 /*********************************************************************************
  *                                  TYPEDEFS
  * *******************************************************************************/
-enum {
-    SCREEN0_ID = 0,
-    SCREEN1_ID,
-    SCREEN2_ID,
-    SCREEN3_ID,
-    SCREEN4_ID,
-    SCREEN5_ID,
-    SCREEN6_ID,
-    SCREEN7_ID,
-    SCREEN7_1_ID,
-    SCREEN7_2_ID,
-    SCREEN7_3_ID,
-};
 
 /*********************************************************************************
  *                              GLOBAL PROTOTYPES
  * *******************************************************************************/
-void lvgl_app_init(void);
+void ui_embed_pn532_entry(void);
+#endif // UI_EMBED_PN532
 
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif
 
-#endif /* LV_DEMO_INIT_H */
+#endif /* UI_EMBED_PN532_H */

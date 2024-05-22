@@ -723,6 +723,12 @@
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\assets\assets.h">
       <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
     </ClInclude>
+    <ClInclude Include="..\lvgl_examples\lvgl_conf.h">
+      <Filter>lvgl_exams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h">
+      <Filter>lvgl_exams\T_Embed_PN532</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="LVGL.Simulator.manifest" />
@@ -2139,6 +2145,24 @@
     </ClCompile>
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\img_wifi.c">
       <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_14.c">
+      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_16.c">
+      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_18.c">
+      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_20.c">
+      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Light_14.c">
+      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.c">
+      <Filter>lvgl_exams\T_Embed_PN532</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -7055,6 +7079,9 @@
     </Filter>
     <Filter Include="lvgl_exams\scr_mgr">
       <UniqueIdentifier>{fc714807-1500-43ae-9503-ea1295fdb47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\T_Embed_PN532\assets">
+      <UniqueIdentifier>{36830af2-72fc-4f2a-9615-07049a3d5bb6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

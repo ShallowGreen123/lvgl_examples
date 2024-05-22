@@ -264,9 +264,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)lv_drivers\win32drv\win32drv.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lv_drivers\win_drv.h" />
     <ClInclude Include="..\lvgl_examples\lvgl_app.h" />
+    <ClInclude Include="..\lvgl_examples\lvgl_conf.h" />
     <ClInclude Include="..\lvgl_examples\scr_mgr\gl_dragable_event.h" />
     <ClInclude Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.h" />
     <ClInclude Include="..\lvgl_examples\scr_mgr\scr_mrg.h" />
+    <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h" />
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\assets\assets.h" />
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h" />
     <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h" />
@@ -735,6 +737,12 @@
     <ClCompile Include="..\lvgl_examples\scr_mgr\gl_dragable_event.c" />
     <ClCompile Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.c" />
     <ClCompile Include="..\lvgl_examples\scr_mgr\scr_mrg.c" />
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_14.c" />
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_16.c" />
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_18.c" />
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_20.c" />
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Light_14.c" />
+    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Geist_Bold_20.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_20.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_25.c" />
