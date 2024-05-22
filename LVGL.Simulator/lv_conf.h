@@ -49,7 +49,6 @@
         #define LV_FS_STDIO_LETTER 'A'                                 
         #define LV_FS_STDIO_PATH "./../lvgl_examples/T_Embed_PN532/assets"        
         #define LV_FS_STDIO_CACHE_SIZE 0    
-
     #else
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14

@@ -439,7 +439,7 @@ lv_obj_t *ui_photos_img = NULL;
 static void read_img_btn_event(lv_event_t * e)
 {
     static int idx = 0;
-    if(e->code = LV_EVENT_CLICKED) {
+    if(e->code == LV_EVENT_CLICKED) {
         lv_img_set_src(ui_photos_img, icon_buf[idx].icon_src);
         idx++;
         if(idx > sizeof(icon_buf)/sizeof(icon_buf[0])-1) {

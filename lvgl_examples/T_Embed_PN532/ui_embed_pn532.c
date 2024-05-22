@@ -92,6 +92,7 @@ static const char *name_buf[] = {
     "<- NFC"    , 
     "<- Battery", 
     "<- Wifi"   ,
+    "<- Music"  ,
     "<- Other"  ,
     "<- Setting"
 };
@@ -114,8 +115,9 @@ static void scr0_btn_event_cb(lv_event_t * e)
             case 2: switch_scr0_anim(SCREEN3_ID); break; // ID3 --- nfc
             case 3: switch_scr0_anim(SCREEN5_ID); break; // ID2 --- battery
             case 4: switch_scr0_anim(SCREEN6_ID); break; // ID5 --- wifi 
-            case 5: switch_scr0_anim(SCREEN7_ID); break; // ID2 --- other
-            case 6: switch_scr0_anim(SCREEN4_ID); break; // ID4 --- setting
+            case 5: switch_scr0_anim(SCREEN8_ID); break; // ID8 --- music
+            case 6: switch_scr0_anim(SCREEN7_ID); break; // ID2 --- other
+            case 7: switch_scr0_anim(SCREEN4_ID); break; // ID4 --- setting
             default:
                 break;
         }
@@ -145,12 +147,16 @@ static void scr0_btn_event_cb(lv_event_t * e)
             case 4: 
                 lv_img_set_src(menu_icon, "A:/img_wifi_32.png");
                 lv_obj_set_style_img_recolor_opa(menu_icon, LV_OPA_0, LV_PART_MAIN);
-                break;     
+                break;  
             case 5: 
+                lv_img_set_src(menu_icon, "A:/img_music_32.png");
+                lv_obj_set_style_img_recolor_opa(menu_icon, LV_OPA_0, LV_PART_MAIN);
+                break;    
+            case 6: 
                 lv_img_set_src(menu_icon, "A:/img_setting_32.png"); 
                 lv_obj_set_style_img_recolor_opa(menu_icon, LV_OPA_0, LV_PART_MAIN);
                 break;  
-            case 6: 
+            case 7: 
                 lv_img_set_src(menu_icon, "A:/img_setting_32.png"); 
                 lv_obj_set_style_img_recolor_opa(menu_icon, LV_OPA_0, LV_PART_MAIN);
                 break;  
@@ -158,6 +164,7 @@ static void scr0_btn_event_cb(lv_event_t * e)
                 break;
         }
         lv_label_set_text(menu_icon_lab, ((char*)name_buf[data] + 3));
+        lv_obj_align_to(menu_icon_lab, menu_cont, LV_ALIGN_BOTTOM_MID, 0, -25);
     }
 }
 
@@ -276,7 +283,7 @@ static void create0(lv_obj_t *parent)
     lv_obj_set_style_text_color(menu_icon_lab, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
     lv_obj_set_style_text_font(menu_icon_lab, &Font_Mono_Bold_18, LV_PART_MAIN);
     // lv_label_set_text(menu_icon_lab, "battery");
-    lv_obj_align_to(menu_icon_lab, menu_cont, LV_ALIGN_BOTTOM_MID, 5, -25);
+    lv_obj_align_to(menu_icon_lab, menu_cont, LV_ALIGN_BOTTOM_MID, 0, -25);
     
     menu_time_lab = lv_label_create(menu_cont);
     lv_obj_set_width(menu_time_lab, LCD_HOR_SIZE * MENU_LAB_PROPORTION);
@@ -304,7 +311,7 @@ static void create0(lv_obj_t *parent)
 
     int buf_len = sizeof(name_buf)/sizeof(name_buf[0]);
 
-    uint32_t i;
+    int i;
     for(i = 0; i < buf_len; i++) {
         lv_obj_t * btn = lv_btn_create(item_cont);
         lv_obj_set_width(btn, lv_pct(100));
@@ -645,7 +652,7 @@ static void ta_event_cb(lv_event_t * e)
         uint32_t max_length = lv_textarea_get_cursor_pos(ta);
         if(max_length != 0){
             lora_send_cnt++;
-            for(int i = 0; i < max_length; i++){
+            for(uint32_t i = 0; i < max_length; i++){
                 lv_textarea_del_char(ta);
             }
             lv_label_set_text_fmt(lora_send_lab, "send:%d", lora_send_cnt);
@@ -884,7 +891,7 @@ static void create3(lv_obj_t *parent) {
 
     lv_list_add_btn(list, NULL, "0123456789012345678901234567890123");
 
-    for(int i = 0; i < lv_obj_get_child_cnt(list); i++){
+    for(uint32_t i = 0; i < lv_obj_get_child_cnt(list); i++){
         lv_obj_t *item = lv_obj_get_child(list, i);
         lv_obj_set_height(item, 30);
         lv_obj_set_style_bg_color(item, lv_color_hex(EMBED_PN532_COLOR_BG), LV_PART_MAIN);
@@ -1425,8 +1432,6 @@ static lv_obj_t *sd_used;
 static bool ui_sd_flag = true;
 static int ui_sd_type = 0;
 
-
-
 static void entry7_3_anim(lv_obj_t *obj) { entry1_anim(obj); }
 static void exit7_3_anim(int user_data, lv_obj_t *obj) { exit1_anim(user_data, obj); }
 
@@ -1601,7 +1606,7 @@ static void create7(lv_obj_t *parent)
     lv_obj_t *setting2 = lv_list_add_btn(other_list, NULL, " - Microphone");
     lv_obj_t *setting3 = lv_list_add_btn(other_list, NULL, " - TF Card");
 
-    for(int i = 0; i < lv_obj_get_child_cnt(other_list); i++) {
+    for(uint32_t i = 0; i < lv_obj_get_child_cnt(other_list); i++) {
         lv_obj_t *item = lv_obj_get_child(other_list, i);
         lv_obj_set_style_text_font(item, &Font_Mono_Bold_14, LV_PART_MAIN);
         lv_obj_set_style_bg_color(item, lv_color_hex(EMBED_PN532_COLOR_FOCUS_ON), LV_STATE_FOCUS_KEY);
@@ -1627,16 +1632,119 @@ static scr_lifecycle_t screen7 = {
     .destroy = destroy7,
 };
 #endif
+//************************************[ screen 8 ]****************************************** music 
+#if 1
+static lv_obj_t *scr8_cont;
+static lv_obj_t *music_lab;
+static lv_obj_t *pause_btn;
+static lv_obj_t *next_btn;
+static lv_obj_t *prev_btn;
+static int music_idx = 0;
+static char *music_list[20] = {"BBIBBI.mp3", "yafdgh.mp3"};
+
+
+static void entry8_anim(lv_obj_t *obj) 
+{
+    entry1_anim(obj);
+}
+
+static void exit8_anim(int user_data, lv_obj_t *obj)
+{
+    exit1_anim(user_data, obj);
+}
+
+void music_player_event(lv_event_t * e)
+{
+    lv_obj_t *tgt = (lv_obj_t *)e->target;
+
+    if(e->code == LV_EVENT_CLICKED) {
+        if(tgt == pause_btn) {
+
+        } else if(tgt == next_btn) {
+
+        } else if(tgt == prev_btn) {
+
+        }
+    }
+}
+
+static void scr8_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        // scr_mgr_set_anim(LV_SCR_LOAD_ANIM_FADE_OUT, -1, -1);
+        // scr_mgr_switch(SCREEN0_ID, false);
+        exit8_anim(SCREEN0_ID, scr8_cont);
+    }
+}
+
+static lv_obj_t * scr8_music_btn_create(void)
+{
+    lv_obj_t *btn = lv_btn_create(scr8_cont);
+    lv_obj_set_size(btn, 40, 40);
+    lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
+    lv_obj_set_style_radius(btn, 10, 0);
+    lv_obj_remove_style(btn, NULL, LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_outline_pad(btn, 2, LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_outline_width(btn, 2, LV_STATE_FOCUS_KEY);
+    lv_obj_set_style_outline_color(btn, lv_color_hex(EMBED_PN532_COLOR_FOCUS_ON), LV_STATE_FOCUS_KEY);
+    lv_obj_add_event_cb(btn, music_player_event, LV_EVENT_CLICKED, NULL);
+    return btn;
+}
+
+static void create8(lv_obj_t *parent) {
+    scr8_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr8_cont, lv_pct(100), lv_pct(100));
+    lv_obj_set_style_bg_color(scr8_cont, lv_color_hex(EMBED_PN532_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr8_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(scr8_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr8_cont, 0, LV_PART_MAIN);
+
+    lv_obj_t *label = lv_label_create(scr8_cont);
+    lv_obj_set_style_text_color(label, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, &Font_Mono_Bold_18, LV_PART_MAIN);
+    lv_label_set_text(label, "Music");
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 10);
+
+    music_lab = lv_label_create(scr8_cont);
+    lv_obj_set_style_text_color(music_lab, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
+    lv_obj_set_style_text_font(music_lab, &Font_Mono_Bold_20, LV_PART_MAIN);
+    lv_label_set_text(music_lab, music_list[music_idx]);
+    lv_obj_center(music_lab);
+    lv_obj_align(music_lab, LV_ALIGN_CENTER, 0, -10);
+
+    next_btn = scr8_music_btn_create();
+    lv_obj_set_style_bg_img_src(next_btn, "A:/img_next_32.png", 0);
+    lv_obj_align(next_btn, LV_ALIGN_BOTTOM_RIGHT, -20, -15);
+
+    pause_btn = scr8_music_btn_create();
+    lv_obj_set_style_bg_img_src(pause_btn, "A:/img_pause_32.png", 0);
+    lv_obj_align(pause_btn, LV_ALIGN_BOTTOM_MID, 0, -15);
+
+    prev_btn = scr8_music_btn_create();
+    lv_obj_set_style_bg_img_src(prev_btn, "A:/img_prev_32.png", 0);
+    lv_obj_align(prev_btn, LV_ALIGN_BOTTOM_LEFT, 20, -15);
+
+    lv_obj_align(pause_btn, LV_ALIGN_BOTTOM_MID, 0, -15);
+
+    // back btn
+    scr_back_btn_create(scr8_cont, scr8_btn_event_cb);
+}
+static void entry8(void) {   }
+static void exit8(void) {   }
+static void destroy8(void) { 
+}
+
+static scr_lifecycle_t screen8 = {
+    .create = create8,
+    .entry = entry8,
+    .exit  = exit8,
+    .destroy = destroy8,
+};
+#endif
 //******************************************************************************
 void ui_embed_pn532_entry(void)
-{
-    // scr_mrg_init();
-
-    // DataModelInit();
-    // ScrMgrInit();
-    // ScrMgrSwitchScr(GUI_MIAN_SCR_ID, true);
-    
-
+{ 
     scr_mgr_init();
     scr_mgr_set_bg_color(EMBED_PN532_COLOR_BG);
     scr_mgr_register(SCREEN0_ID, &screen0);
@@ -1650,15 +1758,10 @@ void ui_embed_pn532_entry(void)
     scr_mgr_register(SCREEN7_1_ID, &screen7_1); //   -IR
     scr_mgr_register(SCREEN7_2_ID, &screen7_2); //   -MIC
     scr_mgr_register(SCREEN7_3_ID, &screen7_3); //   -TF Card
+    scr_mgr_register(SCREEN8_ID, &screen8);
 
+    // set root
     scr_mgr_switch(SCREEN0_ID, false);
-
-    // lv_example_chart_2();
-
-    // lv_timer_create(screen_sw_test_timer_cb, 1000, NULL);
-
-    // lv_example_msg_3();
-
 }
 
 #endif // UI_EMBED_PN532_DISPALY   
