@@ -33,7 +33,7 @@ extern "C" {
 #elif UI_EPD47_DISPALY
 #define LCD_HOR_SIZE 960
 #define LCD_VER_SIZE 540
-#elif UI_EMBED_PN532
+#elif UI_EMBED_PN532_DISPALY 
 #define LCD_HOR_SIZE 320
 #define LCD_VER_SIZE 170
 #else

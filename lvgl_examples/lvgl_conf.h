@@ -10,14 +10,14 @@
 #if USED_MY_DEMO
 
 //❗❗❗ -------------- Please select one below -------------- ❗❗❗
-#define UI_BASE_DISPALY    0
-#define UI_EPD47_DISPALY   0
-#define UI_EMBED_PN532     1
+#define UI_BASE_DISPALY             0
+#define UI_EPD47_DISPALY            0
+#define UI_EMBED_PN532_DISPALY      1
 
 
 
 //
-#if (UI_BASE_DISPALY+UI_EPD47_DISPALY+UI_EMBED_PN532) != 1
+#if (UI_BASE_DISPALY+UI_EPD47_DISPALY+UI_EMBED_PN532_DISPALY ) != 1
 #error "Please enable one macro that display the LVGL"
 #endif
 

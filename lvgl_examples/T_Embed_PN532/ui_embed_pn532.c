@@ -2,7 +2,7 @@
 
 #include "ui_embed_pn532.h"
 
-#if UI_EMBED_PN532  
+#if UI_EMBED_PN532_DISPALY   
 
 //************************************[ Other fun ]******************************************
 #if 1
@@ -1661,4 +1661,4 @@ void ui_embed_pn532_entry(void)
 
 }
 
-#endif // UI_EMBED_PN532  
+#endif // UI_EMBED_PN532_DISPALY   

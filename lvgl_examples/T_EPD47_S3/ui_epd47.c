@@ -52,6 +52,7 @@ void scr_middle_line(lv_obj_t *parent)
 #define MENU_ICON_NUM  (6)
 #define MENU_CONT_HIGH (LCD_VER_SIZE * 0.80)
 
+int icon_width = 120; // 
 lv_obj_t *scr0_cont;
 struct menu_icon {
     const void *icon_src;
@@ -59,12 +60,12 @@ struct menu_icon {
 };
 
 const struct menu_icon icon_buf[MENU_ICON_NUM] = {
-    {&img_clock, "clock"}, 
-    {&img_lora, "lora"},
-    {&img_sd_card, "sd card"},
-    {&img_setting, "setting"},
-    {&img_test, "test"},
-    {&img_wifi, "wifi"},
+    {"A:/img_clock.png", "clock"}, 
+    {"A:/img_lora.png", "lora"},
+    {"A:/img_sd_card.png", "sd card"},
+    {"A:/img_setting.png", "setting"},
+    {"A:/img_test.png", "test"},
+    {"A:/img_wifi.png", "wifi"},
 };
 
 static void menu_btn_event(lv_event_t *e)
@@ -112,7 +113,7 @@ static void create0(lv_obj_t *parent)
         lab_buf[i] = label;
     }
 
-    lv_coord_t x_gap = (LCD_HOR_SIZE-(img_clock.header.w * col_n)) / (col_n+1);
+    lv_coord_t x_gap = (LCD_HOR_SIZE-(icon_width * col_n)) / (col_n+1);
     lv_coord_t y_gap = (MENU_CONT_HIGH / 5);
 
     printf("x=%d, y=%d\n", x_gap, y_gap);
@@ -506,7 +507,7 @@ static void create3(lv_obj_t *parent) {
 
 
     for(int i = 0; i < 10; i++) {
-        scr3_add_img_btn(scr3_cont_file, &img_PNG, "image");
+        scr3_add_img_btn(scr3_cont_file, "A:/img_PNG.png", "image");
     }
 
 

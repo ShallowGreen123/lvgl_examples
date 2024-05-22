@@ -28,11 +28,20 @@
     #if UI_BASE_DISPALY
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14
+        // file system   
+        #define LV_USE_FS_STDIO 1
+        #define LV_FS_STDIO_LETTER 'A'                                 
+        #define LV_FS_STDIO_PATH "./../lvgl_examples/ui_base/assets"        
+        #define LV_FS_STDIO_CACHE_SIZE 0   
     #elif UI_EPD47_DISPALY
         #define LV_USE_THEME_DEFAULT 0
         #define LV_FONT_DEFAULT &lv_font_montserrat_32
-    #elif UI_EMBED_PN532
-
+        // file system   
+        #define LV_USE_FS_STDIO 1
+        #define LV_FS_STDIO_LETTER 'A'                                 
+        #define LV_FS_STDIO_PATH "./../lvgl_examples/T_EPD47_S3/assets"        
+        #define LV_FS_STDIO_CACHE_SIZE 0    
+    #elif UI_EMBED_PN532_DISPALY 
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14
         // file system   
