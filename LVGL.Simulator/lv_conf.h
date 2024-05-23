@@ -26,6 +26,10 @@
 
     // my demo config
     #if UI_BASE_DISPALY
+        #define LV_COLOR_DEPTH 16
+
+        #define LV_USE_SJPG 1
+        // default font
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14
         // file system   
@@ -34,6 +38,10 @@
         #define LV_FS_STDIO_PATH "./../lvgl_examples/ui_base/assets"        
         #define LV_FS_STDIO_CACHE_SIZE 0   
     #elif UI_EPD47_DISPALY
+        #define LV_COLOR_DEPTH 16
+
+        #define LV_USE_SJPG 1
+        // default font
         #define LV_USE_THEME_DEFAULT 0
         #define LV_FONT_DEFAULT &lv_font_montserrat_32
         // file system   
@@ -42,6 +50,11 @@
         #define LV_FS_STDIO_PATH "./../lvgl_examples/T_EPD47_S3/assets"        
         #define LV_FS_STDIO_CACHE_SIZE 0    
     #elif UI_EMBED_PN532_DISPALY 
+        #define LV_COLOR_DEPTH 16
+
+        #define LV_USE_SJPG 1
+
+        // default font
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14
         // file system   
@@ -49,13 +62,28 @@
         #define LV_FS_STDIO_LETTER 'A'                                 
         #define LV_FS_STDIO_PATH "./../lvgl_examples/T_Embed_PN532/assets"        
         #define LV_FS_STDIO_CACHE_SIZE 0    
-    #else
+    #elif UI_DECKPRO_DISPALY
+        #define LV_COLOR_DEPTH 1
+
+        #define LV_USE_SJPG 0
+        // default font
         #define LV_USE_THEME_DEFAULT 1
         #define LV_FONT_DEFAULT &lv_font_montserrat_14
+        // file system   
+        #define LV_USE_FS_STDIO 1
+        #define LV_FS_STDIO_LETTER 'A'                                 
+        #define LV_FS_STDIO_PATH "./../lvgl_examples/T_DeckPro/assets"        
+        #define LV_FS_STDIO_CACHE_SIZE 0    
     #endif
 #else
+    #define LV_COLOR_DEPTH 16
+
+    #define LV_USE_SJPG 1
+    // default font
     #define LV_USE_THEME_DEFAULT 1
     #define LV_FONT_DEFAULT &lv_font_montserrat_14
+    // file system   
+    #define LV_USE_FS_STDIO 0
 #endif
 
 
@@ -67,7 +95,7 @@
  *====================*/
 
 /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
-#define LV_COLOR_DEPTH 16
+// #define LV_COLOR_DEPTH 1
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
 #define LV_COLOR_16_SWAP 0
@@ -75,7 +103,7 @@
 /*Enable features to draw on transparent background.
  *It's required if opa, and transform_* style properties are used.
  *Can be also used if the UI is above another layer, e.g. an OSD menu or video player.*/
-#define LV_COLOR_SCREEN_TRANSP 1
+#define LV_COLOR_SCREEN_TRANSP 0
 
 /* Adjust color mix functions rounding. GPUs might calculate color mix (blending) differently.
  * 0: round down, 64: round up from x.75, 128: round up from half, 192: round up from x.25, 254: round up */
@@ -615,7 +643,7 @@
     #define LV_THEME_DEFAULT_GROW 1
 
     /*Default transition time in [ms]*/
-    #define LV_THEME_DEFAULT_TRANSITION_TIME 0
+    #define LV_THEME_DEFAULT_TRANSITION_TIME 80
 #endif /*LV_USE_THEME_DEFAULT*/
 
 /*A very simple theme that is a good starting point for a custom theme*/
@@ -679,7 +707,7 @@
 
 /* JPG + split JPG decoder library.
  * Split JPG is a custom format optimized for embedded systems. */
-#define LV_USE_SJPG 1
+// #define LV_USE_SJPG 0
 
 /*GIF decoder library*/
 #define LV_USE_GIF 1

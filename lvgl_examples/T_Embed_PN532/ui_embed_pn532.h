@@ -1,4 +1,10 @@
-﻿
+﻿/************************************************************************
+ * FilePath     : ui_base.h
+ * Author       : GX.Duan
+ * LastEditors  : ShallowGreen123 2608653986@qq.com
+ * Copyright (c): 2022 by GX.Duan, All Rights Reserved.
+ * Github       : https://github.com/ShallowGreen123/lvgl_examples.git
+ ************************************************************************/
 #ifndef UI_EMBED_PN532_H
 #define UI_EMBED_PN532_H
 
@@ -6,8 +12,6 @@
  *                                  INCLUDES
  * *******************************************************************************/
 #include "../lvgl_app.h"
-#include "../scr_mgr/scr_mrg.h"
-#include "assets/assets.h"
 
 #ifdef __cplusplus
 extern "C" {

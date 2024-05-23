@@ -1,7 +1,6 @@
 ﻿
 
 #include "ui_epd47.h"
-#include "assets/assets.h"
 
 #if UI_EPD47_DISPALY
 //************************************[ Other fun ]******************************************

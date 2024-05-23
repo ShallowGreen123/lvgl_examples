@@ -12,7 +12,6 @@
  *                                  INCLUDES
  * *******************************************************************************/
 #include "../lvgl_app.h"
-#include "../scr_mgr/scr_mrg.h"
 
 #ifdef __cplusplus
 extern "C" {

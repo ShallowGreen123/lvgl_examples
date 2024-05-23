@@ -720,14 +720,14 @@
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h">
       <Filter>lvgl_exams\T_EPD47_S3</Filter>
     </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\assets\assets.h">
-      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
-    </ClInclude>
     <ClInclude Include="..\lvgl_examples\lvgl_conf.h">
       <Filter>lvgl_exams</Filter>
     </ClInclude>
     <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h">
       <Filter>lvgl_exams\T_Embed_PN532</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro.h">
+      <Filter>lvgl_exams\T_DeckPro</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -2098,38 +2098,38 @@
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.c">
       <Filter>lvgl_exams\T_EPD47_S3</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Geist_Bold_20.c">
-      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_20.c">
-      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_25.c">
-      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_30.c">
-      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\assets\Font_Mono_Bold_90.c">
-      <Filter>lvgl_exams\T_EPD47_S3\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_14.c">
-      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_16.c">
-      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_18.c">
-      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Bold_20.c">
-      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_Embed_PN532\assets\Font_Mono_Light_14.c">
-      <Filter>lvgl_exams\T_Embed_PN532\assets</Filter>
-    </ClCompile>
     <ClCompile Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.c">
       <Filter>lvgl_exams\T_Embed_PN532</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_DeckPro\ui_deckpro.c">
+      <Filter>lvgl_exams\T_DeckPro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Geist_Bold_20.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_14.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_16.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_18.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_20.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_25.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_90.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Light_14.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_30.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -7038,17 +7038,14 @@
     <Filter Include="lvgl_exams\T_EPD47_S3">
       <UniqueIdentifier>{bf78b04d-684c-4c06-8512-5ecfeaa2c1ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lvgl_exams\T_EPD47_S3\assets">
-      <UniqueIdentifier>{730007d8-2c8f-4b27-aea2-1a81ba0fef94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lvgl_exams\T_Embed_PN532">
       <UniqueIdentifier>{ffb3aaaf-fc78-42c9-913a-3dfb7ee899ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="lvgl_exams\scr_mgr">
       <UniqueIdentifier>{fc714807-1500-43ae-9503-ea1295fdb47f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lvgl_exams\T_Embed_PN532\assets">
-      <UniqueIdentifier>{36830af2-72fc-4f2a-9615-07049a3d5bb6}</UniqueIdentifier>
+    <Filter Include="lvgl_exams\T_DeckPro">
+      <UniqueIdentifier>{9197237e-b74f-4674-bc68-f1f148bcdbf2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
