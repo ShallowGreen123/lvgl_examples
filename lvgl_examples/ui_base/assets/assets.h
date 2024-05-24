@@ -22,6 +22,9 @@ LV_FONT_DECLARE(Font_Mono_Light_14);
 
 LV_FONT_DECLARE(Font_Geist_Bold_20)
 
+//
+LV_FONT_DECLARE(Font_Han_Mono_Bold_20)
+
 
 #ifdef __cplusplus
 } /*extern "C"*/

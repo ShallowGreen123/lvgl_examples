@@ -803,19 +803,71 @@ static scr_lifecycle_t screen6 = {
 #endif
 //************************************[ screen 7 ]****************************************** battery
 #if 1
-static lv_obj_t *scr7_cont;
+static lv_obj_t *scr7_cont_letf;
+static lv_obj_t *scr7_cont_right;
 
 static void scr7_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        
         scr_mgr_pop(false);
     }
 }
 
+static lv_obj_t * scr7_create_label(lv_obj_t *parent)
+{
+    lv_obj_t *label = lv_label_create(parent);
+    lv_obj_set_width(label, LCD_HOR_SIZE/2-50);
+    lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    return label;
+}
+
 static void create7(lv_obj_t *parent)
 {
-    
+    scr7_cont_letf = lv_obj_create(parent);
+    lv_obj_set_size(scr7_cont_letf, lv_pct(49), lv_pct(85));
+    lv_obj_set_style_bg_color(scr7_cont_letf, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr7_cont_letf, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr7_cont_letf, LV_OBJ_FLAG_SCROLLABLE);
+    // lv_obj_set_style_border_width(scr7_cont_letf, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr7_cont_letf, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_hor(scr7_cont_letf, 20, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr7_cont_letf, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr7_cont_letf, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr7_cont_letf, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr7_cont_letf, LV_ALIGN_BOTTOM_LEFT);
+
+    scr7_cont_right = lv_obj_create(parent);
+    lv_obj_set_size(scr7_cont_right, lv_pct(49), lv_pct(85));
+    lv_obj_set_style_bg_color(scr7_cont_right, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr7_cont_right, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr7_cont_right, LV_OBJ_FLAG_SCROLLABLE);
+    // lv_obj_set_style_border_width(scr7_cont_right, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr7_cont_right, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_hor(scr7_cont_right, 10, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr7_cont_right, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr7_cont_right, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr7_cont_right, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr7_cont_right, LV_ALIGN_BOTTOM_RIGHT);
+
+    lv_obj_t *label;
+    bool ret;
+    // left
+    label = scr7_create_label(scr7_cont_letf);
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_label_set_text_fmt(label, "%s", "bq25896");
+
+    label = scr7_create_label(scr7_cont_letf);
+    lv_label_set_text_fmt(label, "Charge: %s", (battery_25896_is_chr() == true ? "Charging" : "Not charged"));
+
+    // right
+    label = scr7_create_label(scr7_cont_right);
+    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_label_set_text_fmt(label, "%s", "bq27220");
+
+    label = scr7_create_label(scr7_cont_right);
+    lv_label_set_text_fmt(label, "Charge: %s", (battery_27220_is_chr() == true? "Charging" : "Not charged"));
 
     //---------------------
     scr_middle_line(parent);

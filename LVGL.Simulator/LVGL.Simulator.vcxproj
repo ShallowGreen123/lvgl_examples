@@ -269,8 +269,10 @@
     <ClInclude Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.h" />
     <ClInclude Include="..\lvgl_examples\scr_mgr\scr_mrg.h" />
     <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro.h" />
+    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.h" />
     <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h" />
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h" />
+    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.h" />
     <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h" />
     <ClInclude Include="..\lvgl_examples\ui_base\ui_base.h" />
     <ClInclude Include="lv_conf.h" />
@@ -738,9 +740,12 @@
     <ClCompile Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.c" />
     <ClCompile Include="..\lvgl_examples\scr_mgr\scr_mrg.c" />
     <ClCompile Include="..\lvgl_examples\T_DeckPro\ui_deckpro.c" />
+    <ClCompile Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.c" />
     <ClCompile Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.c" />
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Geist_Bold_20.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_20.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_14.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_16.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_18.c" />
@@ -749,6 +754,7 @@
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_30.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_90.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Light_14.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\lv_i18n.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\ui_base.c" />
     <ClCompile Include="LVGL.Simulator.cpp" />
   </ItemGroup>

@@ -726,7 +726,13 @@
     <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h">
       <Filter>lvgl_exams\T_Embed_PN532</Filter>
     </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.h">
+      <Filter>lvgl_exams\T_EPD47_S3</Filter>
+    </ClInclude>
     <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro.h">
+      <Filter>lvgl_exams\T_DeckPro</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.h">
       <Filter>lvgl_exams\T_DeckPro</Filter>
     </ClInclude>
   </ItemGroup>
@@ -2101,9 +2107,6 @@
     <ClCompile Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.c">
       <Filter>lvgl_exams\T_Embed_PN532</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\T_DeckPro\ui_deckpro.c">
-      <Filter>lvgl_exams\T_DeckPro</Filter>
-    </ClCompile>
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Geist_Bold_20.c">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
@@ -2129,6 +2132,21 @@
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_30.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_20.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.c">
+      <Filter>lvgl_exams\T_EPD47_S3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_DeckPro\ui_deckpro.c">
+      <Filter>lvgl_exams\T_DeckPro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.c">
+      <Filter>lvgl_exams\T_DeckPro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\lv_i18n.c">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
   </ItemGroup>

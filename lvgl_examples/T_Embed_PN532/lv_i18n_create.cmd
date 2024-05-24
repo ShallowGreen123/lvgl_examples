@@ -1,0 +1,1 @@
+lv_i18n compile -t .\assets\*.yml -l zh-cn -o .\..\ui_base\assets

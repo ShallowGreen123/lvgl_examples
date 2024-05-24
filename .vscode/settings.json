@@ -8,6 +8,9 @@
         "lvgl_app.h": "c",
         "ui_epd47.h": "c",
         "ui_embed_pn532.h": "c",
-        "ui_deckpro.h": "c"
+        "ui_deckpro.h": "c",
+        "ui_port.h": "c",
+        "ui_epd47_port.h": "c",
+        "lv_i18n.h": "c"
     }
 }

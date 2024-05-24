@@ -19,6 +19,7 @@
 #include "scr_mgr/gl_dragable_event.h"
 
 #include "ui_base/assets/assets.h" // Add some fonts
+#include "ui_base/assets/lv_i18n.h"
 
 #ifdef __cplusplus
 extern "C" {
