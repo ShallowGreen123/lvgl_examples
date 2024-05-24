@@ -4,7 +4,7 @@
 
 #if UI_EPD47_DISPALY
 //************************************[ Other fun ]******************************************
-void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
+static void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
 {
     lv_obj_t * btn = lv_btn_create(parent);
     lv_obj_set_style_pad_all(btn, 0, 0);
@@ -29,7 +29,7 @@ void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
     lv_obj_add_event_cb(label, cb, LV_EVENT_CLICKED, NULL);
 }
 
-void scr_middle_line(lv_obj_t *parent)
+static void scr_middle_line(lv_obj_t *parent)
 {
     static lv_point_t line_points[] = { {LCD_HOR_SIZE/2, 0}, {LCD_HOR_SIZE/2, LCD_VER_SIZE-150}};
     /*Create style*/
@@ -48,23 +48,25 @@ void scr_middle_line(lv_obj_t *parent)
 //************************************[ screen 0 ]****************************************** menu
 #if 1
 
-#define MENU_ICON_NUM  (6)
+#define MENU_ICON_NUM  (sizeof(icon_buf)/sizeof(icon_buf[0]))
 #define MENU_CONT_HIGH (LCD_VER_SIZE * 0.80)
 
-int icon_width = 120; // 
-lv_obj_t *scr0_cont;
+static int icon_width = 120; // 
+static int menu_icon_num = 0;
+static lv_obj_t *scr0_cont;
 struct menu_icon {
     const void *icon_src;
     const char *icon_str;
 };
 
-const struct menu_icon icon_buf[MENU_ICON_NUM] = {
+const struct menu_icon icon_buf[] = {
     {"A:/img_clock.png", "clock"}, 
     {"A:/img_lora.png", "lora"},
     {"A:/img_sd_card.png", "sd card"},
     {"A:/img_setting.png", "setting"},
     {"A:/img_test.png", "test"},
     {"A:/img_wifi.png", "wifi"},
+    {"A:/img_battery.png", "battery"},
 };
 
 static void menu_btn_event(lv_event_t *e)
@@ -79,6 +81,7 @@ static void menu_btn_event(lv_event_t *e)
             case 3: scr_mgr_push(SCREEN4_ID, false); break;
             case 4: scr_mgr_push(SCREEN5_ID, false); break;
             case 5: scr_mgr_push(SCREEN6_ID, false); break;
+            case 6: scr_mgr_push(SCREEN7_ID, false); break;
             default:
                 break;
         }
@@ -149,22 +152,15 @@ static scr_lifecycle_t screen0 = {
 //************************************[ screen 1 ]****************************************** clock
 #if 1
 static lv_obj_t *calendar;
-static lv_obj_t * meter;
-static lv_timer_t *get_timer = NULL;
-static lv_meter_indicator_t * indic_min;
-static lv_meter_indicator_t * indic_hour;
 static lv_obj_t *clock_time;
 static lv_obj_t *clock_data;
 static lv_obj_t *clock_ap;
 static lv_obj_t *clock_month;
+static lv_timer_t *get_timer = NULL;
 
 static const char *week_list_en[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 static const char * month_names_def[12] = LV_CALENDAR_DEFAULT_MONTH_NAMES;
 
-static void set_value(void * indic, int32_t v)
-{
-    lv_meter_set_indicator_end_value(meter, indic, v);
-}
 
 static void scr1_btn_event_cb(lv_event_t * e)
 {
@@ -172,6 +168,15 @@ static void scr1_btn_event_cb(lv_event_t * e)
         scr_mgr_pop(false);
     }
 }
+
+static void get_timer_event(lv_timer_t *t) 
+{
+    uint16_t hour, minute, second;
+    uint16_t year, minth, day, week;
+
+
+}
+
 
 static void create1(lv_obj_t *parent) {
 
@@ -211,49 +216,11 @@ static void create1(lv_obj_t *parent) {
     //---------------------
     scr_middle_line(parent);
 
-    // meter = lv_meter_create(parent);
-    // lv_obj_set_size(meter, 400, 400);
-    // lv_obj_set_style_border_width(meter, 2, LV_PART_MAIN);
-    // lv_obj_set_style_border_color(meter, lv_color_black(), LV_PART_MAIN);
-    // lv_obj_set_style_shadow_width(meter, 0, LV_PART_MAIN);
-
-    // /*Create a scale for the minutes*/
-    // /*61 ticks in a 360 degrees range (the last and the first line overlaps)*/
-    // lv_meter_scale_t * scale_min = lv_meter_add_scale(meter);
-    // lv_meter_set_scale_ticks(meter, scale_min, 61, 3, 10, lv_palette_main(LV_PALETTE_GREY));
-    // lv_meter_set_scale_range(meter, scale_min, 0, 60, 360, 270);
-
-    // /*Create another scale for the hours. It's only visual and contains only major ticks*/
-    // lv_meter_scale_t * scale_hour = lv_meter_add_scale(meter);
-    // lv_meter_set_scale_ticks(meter, scale_hour, 12, 0, 0, lv_palette_main(LV_PALETTE_GREY));               /*12 ticks*/
-    // lv_meter_set_scale_major_ticks(meter, scale_hour, 1, 3, 20, lv_color_black(), 25);    /*Every tick is major*/
-    // lv_meter_set_scale_range(meter, scale_hour, 1, 12, 330, 300);       /*[1..12] values in an almost full circle*/
-
-    // /*Add a the hands from images*/
-    // indic_hour = lv_meter_add_needle_img(meter, scale_min, &img_hand, 5, 5);
-    // indic_min = lv_meter_add_needle_img(meter, scale_min, &img_hand_sec, 5, 5);
-    
-
-    // /*Create an animation to set the value*/
-    // lv_anim_t a;
-    // lv_anim_init(&a);
-    // lv_anim_set_exec_cb(&a, set_value);
-    // lv_anim_set_values(&a, 0, 60);
-    // lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
-    // lv_anim_set_time(&a, 2000);     /*2 sec for 1 turn of the minute hand (1 hour)*/
-    // lv_anim_set_var(&a, indic_min);
-    // lv_anim_start(&a);
-
-    // lv_anim_set_var(&a, indic_hour);
-    // lv_anim_set_time(&a, 24000);    /*24 sec for 1 turn of the hour hand*/
-    // lv_anim_set_values(&a, 0, 60);
-    // lv_anim_start(&a);
-    
     // back
     scr_back_btn_create(parent, "Clock", scr1_btn_event_cb);
 }
 static void entry1(void) {
-    // lv_obj_align(meter, LV_ALIGN_RIGHT_MID, -100, 0);
+    get_timer = lv_timer_create(get_timer_event, 6000, NULL);
 
     lv_obj_set_style_text_align(clock_time, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
     lv_obj_set_style_text_align(clock_data, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
@@ -263,7 +230,12 @@ static void entry1(void) {
     lv_obj_align_to(clock_ap, clock_time, LV_ALIGN_OUT_RIGHT_MID, 0, 20);
     lv_obj_align_to(clock_month, calendar, LV_ALIGN_OUT_TOP_RIGHT, 0, -5);
 }
-static void exit1(void) { }
+static void exit1(void) {
+    if(get_timer) {
+        lv_timer_del(get_timer);
+        get_timer = NULL;
+    }
+}
 static void destroy1(void) {
     lv_anim_del_all();
 }
@@ -430,10 +402,10 @@ static scr_lifecycle_t screen2 = {
 #endif
 //************************************[ screen 3 ]****************************************** sd_card
 #if 1
-lv_obj_t *scr3_cont_file;
-lv_obj_t *scr3_cont_img;
-lv_obj_t *sd_info;
-lv_obj_t *ui_photos_img = NULL;
+static lv_obj_t *scr3_cont_file;
+static lv_obj_t *scr3_cont_img;
+static lv_obj_t *sd_info;
+static lv_obj_t *ui_photos_img = NULL;
 
 static void read_img_btn_event(lv_event_t * e)
 {
@@ -546,7 +518,7 @@ static scr_lifecycle_t screen3 = {
 #endif
 //************************************[ screen 4 ]****************************************** setting
 #if 1
-lv_obj_t *scr4_cont;
+static lv_obj_t *scr4_cont;
 
 static void scr4_btn_event_cb(lv_event_t * e)
 {
@@ -601,8 +573,8 @@ static scr_lifecycle_t screen4 = {
 #endif
 //************************************[ screen 5 ]****************************************** test
 #if 1
-lv_obj_t *scr5_cont_PASS;
-lv_obj_t *scr5_cont_FAIL;
+static lv_obj_t *scr5_cont_PASS;
+static lv_obj_t *scr5_cont_FAIL;
 
 static void scr5_btn_event_cb(lv_event_t * e)
 {
@@ -696,12 +668,11 @@ static scr_lifecycle_t screen5 = {
 #endif
 //************************************[ screen 6 ]****************************************** wifi
 #if 1
-lv_obj_t *scr6_cont;
-lv_obj_t *wifi_st_lab = NULL;
-lv_obj_t *ip_lab;
-lv_obj_t *ssid_lab;
-lv_obj_t *pwd_lab;
-
+static lv_obj_t *scr6_cont;
+static lv_obj_t *wifi_st_lab = NULL;
+static lv_obj_t *ip_lab;
+static lv_obj_t *ssid_lab;
+static lv_obj_t *pwd_lab;
 
 static void wifi_info_label_create(lv_obj_t *parent)
 {
@@ -830,6 +801,38 @@ static scr_lifecycle_t screen6 = {
     .destroy = destroy6,
 };
 #endif
+//************************************[ screen 7 ]****************************************** battery
+#if 1
+static lv_obj_t *scr7_cont;
+
+static void scr7_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        
+        scr_mgr_pop(false);
+    }
+}
+
+static void create7(lv_obj_t *parent)
+{
+    
+
+    //---------------------
+    scr_middle_line(parent);
+    // back
+    scr_back_btn_create(parent, "batter", scr7_btn_event_cb);
+}
+static void entry7(void) { }
+static void exit7(void) { }
+static void destroy7(void) { }
+
+static scr_lifecycle_t screen7 = {
+    .create = create7,
+    .entry = entry7,
+    .exit  = exit7,
+    .destroy = destroy7,
+};
+#endif
 
 //************************************[ UI ENTRY ]******************************************
 void ui_epd47_entry(void)
@@ -846,6 +849,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN4_ID, &screen4); // setting
     scr_mgr_register(SCREEN5_ID, &screen5); // test
     scr_mgr_register(SCREEN6_ID, &screen6); // wifi
+    scr_mgr_register(SCREEN7_ID, &screen7); // wifi
 
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);

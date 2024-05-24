@@ -15,7 +15,7 @@ static void anim_size_cb(void * var, int32_t v)
 void ui_deckpro_entry(void)
 {
     lv_obj_t * obj = lv_obj_create(lv_scr_act());
-    lv_obj_set_style_bg_color(obj, lv_color_black(), 0);
+    lv_obj_set_style_bg_color(obj, DECKPRO_COLOR_FG, 0);
     lv_obj_set_style_radius(obj, LV_RADIUS_CIRCLE, 0);
 
     lv_obj_align(obj, LV_ALIGN_LEFT_MID, 10, 0);
@@ -42,7 +42,7 @@ void ui_deckpro_entry(void)
     lv_obj_set_size(btn, 50, 50);                          /*Set its size*/
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(btn, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(btn, DECKPRO_COLOR_FG, LV_PART_MAIN);
     // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
     lv_obj_center(btn);
     lv_obj_t * label = lv_label_create(btn);          /*Add a label to the button*/
@@ -54,7 +54,7 @@ void ui_deckpro_entry(void)
     lv_obj_set_size(btn, 50, 50);                          /*Set its size*/
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(btn, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(btn, DECKPRO_COLOR_FG, LV_PART_MAIN);
     // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
     lv_obj_align(btn, LV_ALIGN_TOP_LEFT, 0, 0);
     label = lv_label_create(btn);          /*Add a label to the button*/
@@ -67,7 +67,7 @@ void ui_deckpro_entry(void)
     lv_obj_set_size(btn, 50, 50);                          /*Set its size*/
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(btn, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(btn, DECKPRO_COLOR_FG, LV_PART_MAIN);
     // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
     lv_obj_align(btn, LV_ALIGN_TOP_RIGHT, 0, 0);
     label = lv_label_create(btn);          /*Add a label to the button*/
@@ -79,7 +79,7 @@ void ui_deckpro_entry(void)
     lv_obj_set_size(btn, 50, 50);                          /*Set its size*/
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(btn, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(btn, DECKPRO_COLOR_FG, LV_PART_MAIN);
     // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
     lv_obj_align(btn, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     label = lv_label_create(btn);          /*Add a label to the button*/
@@ -92,7 +92,7 @@ void ui_deckpro_entry(void)
     lv_obj_set_size(btn, 50, 50);                          /*Set its size*/
     lv_obj_set_style_border_width(btn, 0, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(btn, lv_color_black(), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(btn, DECKPRO_COLOR_FG, LV_PART_MAIN);
     // lv_obj_add_event_cb(btn, btn_event_cb, LV_EVENT_ALL, NULL);           /*Assign a callback to the button*/
     lv_obj_align(btn, LV_ALIGN_BOTTOM_RIGHT, 0, 0);
     label = lv_label_create(btn);          /*Add a label to the button*/
