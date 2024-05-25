@@ -901,7 +901,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN4_ID, &screen4); // setting
     scr_mgr_register(SCREEN5_ID, &screen5); // test
     scr_mgr_register(SCREEN6_ID, &screen6); // wifi
-    scr_mgr_register(SCREEN7_ID, &screen7); // wifi
+    scr_mgr_register(SCREEN7_ID, &screen7); // battery
 
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);

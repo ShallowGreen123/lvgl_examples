@@ -23,6 +23,11 @@ LV_FONT_DECLARE(Font_Mono_Light_14);
 LV_FONT_DECLARE(Font_Geist_Bold_20)
 
 //
+LV_FONT_DECLARE(Font_Han_Mono_Bold_15)
+LV_FONT_DECLARE(Font_Han_Mono_Bold_16)
+LV_FONT_DECLARE(Font_Han_Mono_Bold_17)
+LV_FONT_DECLARE(Font_Han_Mono_Bold_18)
+LV_FONT_DECLARE(Font_Han_Mono_Bold_19)
 LV_FONT_DECLARE(Font_Han_Mono_Bold_20)
 
 

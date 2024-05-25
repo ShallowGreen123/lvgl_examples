@@ -18,9 +18,18 @@ static inline uint32_t op_f(uint32_t val) { UNUSED(val); return 0; }
 static inline uint32_t op_t(uint32_t val) { UNUSED(val); return 0; }
 
 static lv_i18n_phrase_t zh_cn_singulars[] = {
-    {"menu", "目录"},
-    {"name", "名字"},
-    {"title1", "标题一"},
+    {"Lora", "Lora"},
+    {"SD", "SD"},
+    {"GPS", "GPS"},
+    {"Setting", "设置"},
+    {"About", "关于"},
+    {"Other", "其他"},
+    {"Rotatoion", "旋转"},
+    {"Deep Sleep", "深度睡眠"},
+    {"About System", "关于系统"},
+    {"Language", "语言切换"},
+    {"English", "英语"},
+    {"Chinese", "简体中文"},
     {NULL, NULL} // End mark
 };
 
@@ -42,9 +51,18 @@ static const lv_i18n_lang_t zh_cn_lang = {
 };
 
 static lv_i18n_phrase_t en_us_singulars[] = {
-    {"menu", "menu"},
-    {"name", "Dylan"},
-    {"title1", "title1"},
+    {"Lora", "Lora"},
+    {"SD", "SD"},
+    {"Setting", "Setting"},
+    {"GPS", "GPS"},
+    {"About", "About"},
+    {"Other", "Other"},
+    {"Rotatoion", "Rotatoion"},
+    {"Deep Sleep", "Deep Sleep"},
+    {"About System", "About System"},
+    {"Language", "Language"},
+    {"English", "English"},
+    {"Chinese", "Chinese"},
     {NULL, NULL} // End mark
 };
 

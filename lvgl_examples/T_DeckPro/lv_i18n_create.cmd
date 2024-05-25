@@ -18,7 +18,7 @@ echo "********************************"
 echo "npm version: %param%"
 echo "node version: %param1%"
 echo "lv_i18n version: %lv_i18n%"
-echo "lv_i18n compile -t %yml_path%\*.yml -l zh-cn -o %out_path%
+echo "lv_i18n compile -t %yml_path%\*.yml -l zh-cn -o %out_path%"
 echo "********************************"
 
 REM 如果没有 node.js 环境直接退出
@@ -43,7 +43,12 @@ if "%lv_i18n%" == "0" (
 
 REM 如果啥也没有返回，表示 lv_i18n 编译生成成功
 if "%ret_val%" == "" (
-    echo "lv_i18n compile succeed!"
+    echo "lv_i18n create succeed!"
 ) else (
-    echo "lv_i18n compile failed!"
+    echo "lv_i18n create failed!"
 )
+
+REM 生成包含中文的字体
+lv_font_create
+
+pause

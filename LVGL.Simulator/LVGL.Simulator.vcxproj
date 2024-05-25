@@ -745,6 +745,11 @@
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Geist_Bold_20.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_15.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_16.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_17.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_18.c" />
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_19.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_20.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_14.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_16.c" />

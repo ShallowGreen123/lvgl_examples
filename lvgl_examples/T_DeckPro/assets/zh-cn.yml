@@ -1,5 +1,13 @@
 'zh-cn':
-  menu: 目录
-  name: 名字
-  title1: 标题一
-  
+  Lora: Lora
+  SD: SD
+  GPS: GPS
+  Setting: 设置
+  About: 关于
+  Other: 其他
+  Rotatoion: 旋转
+  Deep Sleep: 深度睡眠
+  About System: 关于系统
+  Language: 语言切换
+  English: 英语
+  Chinese: 简体中文

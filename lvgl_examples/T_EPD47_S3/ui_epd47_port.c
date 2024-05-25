@@ -1,6 +1,8 @@
 
-#if UI_EPD47_DISPALY
+
 #include "ui_epd47_port.h"
+
+#if UI_EPD47_DISPALY
 
 void clock_get_time(uint16_t *hour, uint16_t *minute, uint16_t *second)
 {
