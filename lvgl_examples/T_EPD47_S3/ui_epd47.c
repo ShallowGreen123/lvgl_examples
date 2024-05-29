@@ -519,43 +519,184 @@ static scr_lifecycle_t screen3 = {
 //************************************[ screen 4 ]****************************************** setting
 #if 1
 static lv_obj_t *scr4_cont;
+static lv_style_t style_radio;
+static lv_style_t style_radio_chk;
+static uint32_t active_index_1 = 0;
+static uint32_t active_index_2 = 0;
 
-static void scr4_btn_event_cb(lv_event_t * e)
-{
-    if(e->code == LV_EVENT_CLICKED){
-        
-        scr_mgr_pop(false);
-    }
-}
+lv_obj_t * ui_Slider1;
+lv_obj_t * ui_Slider2;
+lv_obj_t * ui_Slider3;
+lv_obj_t * ui_label1;
+lv_obj_t * ui_Label2;
+lv_obj_t * ui_Label3;
+lv_obj_t * ui_backlight;
+lv_obj_t * ui_refr_cycle;
+lv_obj_t * ui_refr_time;
 
-static void slider_event_cb(lv_event_t * e);
-static lv_obj_t * slider_label;
+
 
 static void slider_event_cb(lv_event_t * e)
 {
     lv_obj_t * slider = lv_event_get_target(e);
-    char buf[8];
-    lv_snprintf(buf, sizeof(buf), "%d%%", (int)lv_slider_get_value(slider));
-    lv_label_set_text(slider_label, buf);
-    lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+    if(e->code == LV_EVENT_VALUE_CHANGED) {
+        if(slider == ui_Slider1) {
+        lv_label_set_text_fmt(ui_backlight, "%d", (int)lv_slider_get_value(slider));
+        } else if(slider == ui_Slider2) {
+            lv_label_set_text_fmt(ui_refr_cycle, "%d", (int)lv_slider_get_value(slider));
+        } else if(slider == ui_Slider3) {
+            lv_label_set_text_fmt(ui_refr_time, "%d", (int)lv_slider_get_value(slider));
+        }
+    } else if(e->code == LV_EVENT_RELEASED) {
+        printf("LV_EVENT_RELEASED\n");
+    }
+
+    
 }
 
+static void scr4_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+///////////////////// FUNCTIONS ////////////////////
+void ui_event_Slider1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        slider_event_cb(e);
+    }
+}
+void ui_event_Slider2(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        slider_event_cb(e);
+    }   
+}
+void ui_event_Slider3(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+    lv_obj_t * target = lv_event_get_target(e);
+    if(event_code == LV_EVENT_VALUE_CHANGED) {
+        slider_event_cb(e);
+    }
+}
 
 static void create4(lv_obj_t *parent) {
-    /*Create a slider in the center of the display*/
-    lv_obj_t * slider = lv_slider_create(parent);
-    lv_obj_set_size(slider, 500, 40);
-    lv_slider_set_range(slider, 0, 10);
-    lv_obj_set_style_anim_time(slider, 0, LV_PART_MAIN);
-    lv_obj_center(slider);
-    lv_obj_set_style_radius(slider, LV_RADIUS_CIRCLE, LV_PART_MAIN);
-    lv_obj_add_event_cb(slider, slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+    ui_Slider1 = lv_slider_create(parent);
+    lv_slider_set_range(ui_Slider1, 0, 10);
+    lv_slider_set_value(ui_Slider1, 0, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_Slider1) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_Slider1, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_Slider1, 500);
+    lv_obj_set_height(ui_Slider1, 50);
+    lv_obj_set_x(ui_Slider1, 333);
+    lv_obj_set_y(ui_Slider1, 165);
+    lv_obj_set_style_radius(ui_Slider1, 32767, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    /*Create a label below the slider*/
-    slider_label = lv_label_create(parent);
-    lv_label_set_text(slider_label, "0%");
 
-    lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+    ui_Slider2 = lv_slider_create(parent);
+    lv_slider_set_range(ui_Slider2, 1, 100);
+    lv_slider_set_value(ui_Slider2, 50, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_Slider2) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_Slider2, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_Slider2, 500);
+    lv_obj_set_height(ui_Slider2, 50);
+    lv_obj_set_x(ui_Slider2, 333);
+    lv_obj_set_y(ui_Slider2, 288);
+    lv_obj_set_style_radius(ui_Slider2, 32767, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+
+    ui_Slider3 = lv_slider_create(parent);
+    lv_slider_set_range(ui_Slider3, 1, 5);
+    lv_slider_set_value(ui_Slider3, 4, LV_ANIM_OFF);
+    if(lv_slider_get_mode(ui_Slider3) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_Slider3, 0, LV_ANIM_OFF);
+    lv_obj_set_width(ui_Slider3, 500);
+    lv_obj_set_height(ui_Slider3, 50);
+    lv_obj_set_x(ui_Slider3, 335);
+    lv_obj_set_y(ui_Slider3, 414);
+    lv_obj_set_style_radius(ui_Slider3, 32767, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+
+    ui_label1 = lv_label_create(parent);
+    lv_obj_set_width(ui_label1, LV_SIZE_CONTENT);   /// 9
+    lv_obj_set_height(ui_label1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_label1, 58);
+    lv_obj_set_y(ui_label1, 172);
+    lv_label_set_text(ui_label1, "Backlight");
+    lv_obj_set_style_text_font(ui_label1, &Font_Mono_Bold_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_Label2 = lv_label_create(parent);
+    lv_obj_set_width(ui_Label2, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label2, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label2, -332);
+    lv_obj_set_y(ui_Label2, 39);
+    lv_obj_set_align(ui_Label2, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label2, "Refresh Cycle");
+    lv_obj_set_style_text_font(ui_Label2, &Font_Mono_Bold_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_Label3 = lv_label_create(parent);
+    lv_obj_set_width(ui_Label3, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label3, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label3, -321);
+    lv_obj_set_y(ui_Label3, 161);
+    lv_obj_set_align(ui_Label3, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label3, "Refresh Times");
+    lv_obj_set_style_text_font(ui_Label3, &Font_Mono_Bold_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_backlight = lv_label_create(parent);
+    lv_obj_set_width(ui_backlight, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_backlight, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_backlight, 870);
+    lv_obj_set_y(ui_backlight, 170);
+    lv_label_set_text(ui_backlight, "10");
+    lv_obj_set_style_text_font(ui_backlight, &Font_Mono_Bold_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_refr_cycle = lv_label_create(parent);
+    lv_obj_set_width(ui_refr_cycle, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_refr_cycle, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_refr_cycle, 870);
+    lv_obj_set_y(ui_refr_cycle, 296);
+    lv_label_set_text(ui_refr_cycle, "50");
+    lv_obj_set_style_text_font(ui_refr_cycle, &Font_Mono_Bold_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    ui_refr_time = lv_label_create(parent);
+    lv_obj_set_width(ui_refr_time, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_refr_time, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_refr_time, 870);
+    lv_obj_set_y(ui_refr_time, 425);
+    lv_label_set_text(ui_refr_time, "4");
+    lv_obj_set_style_text_font(ui_refr_time, &Font_Mono_Bold_30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(ui_Slider1, ui_event_Slider1, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_Slider2, ui_event_Slider2, LV_EVENT_ALL, NULL);
+    lv_obj_add_event_cb(ui_Slider3, ui_event_Slider3, LV_EVENT_ALL, NULL);
+
+    // 
+    lv_obj_set_style_anim_time(ui_Slider1, 0, LV_PART_MAIN);
+    lv_obj_set_style_anim_time(ui_Slider2, 0, LV_PART_MAIN);
+    lv_obj_set_style_anim_time(ui_Slider3, 0, LV_PART_MAIN);
+
+
+    // /*Create a slider in the center of the display*/
+    // lv_obj_t * slider = lv_slider_create(parent);
+    // lv_obj_set_size(slider, 500, 40);
+    // lv_slider_set_range(slider, 0, 10);
+    // lv_obj_set_style_anim_time(slider, 0, LV_PART_MAIN);
+    // lv_obj_center(slider);
+    // // lv_obj_set_style_radius(slider, LV_RADIUS_CIRCLE, LV_PART_MAIN);
+    // lv_obj_add_event_cb(slider, slider_event_cb, LV_EVENT_VALUE_CHANGED, NULL);
+
+    // /*Create a label below the slider*/
+    // slider_label = lv_label_create(parent);
+    // lv_label_set_text(slider_label, "0");
+
+    // lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 
     // back
     scr_back_btn_create(parent, "Setting", scr4_btn_event_cb);
