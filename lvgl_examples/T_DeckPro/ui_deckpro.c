@@ -109,22 +109,31 @@ static void menu_btn_event(lv_event_t *e)
 static lv_obj_t * scr0_imgbtn_create(lv_obj_t *parent, int idx)
 {
     lv_obj_t *obj = lv_obj_create(parent);
-    lv_obj_set_size(obj, (LV_HOR_RES / 3) - 2, LV_VER_RES/3-2);
+    lv_obj_set_size(obj, (LV_HOR_RES / 3) - 2, LV_VER_RES/3-10);
     lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
+    lv_obj_add_flag(obj, LV_OBJ_FLAG_OVERFLOW_VISIBLE);
+    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
     lv_obj_set_style_border_color(obj, DECKPRO_COLOR_FG, LV_PART_MAIN);
     lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
-
+    
     lv_obj_t *img = lv_img_create(obj);
     lv_img_set_src(img, icon_buf[idx].icon_src);
     lv_obj_add_flag(img, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(img, menu_btn_event, LV_EVENT_CLICKED, (void *)idx);
-    lv_obj_align(img, LV_ALIGN_CENTER, 1, -5);
 
+    if(idx % 3 == 0) {
+        lv_obj_align(img, LV_ALIGN_CENTER, 8, -5);
+    } else if((idx-2)%3 == 0) {
+        lv_obj_align(img, LV_ALIGN_CENTER, -8, -5);
+    } else {
+        lv_obj_align(img, LV_ALIGN_CENTER, 0, -5);
+    }
+    
     lv_obj_t *lab = lv_label_create(obj);
     lv_obj_set_style_text_font(lab, &Font_Han_Mono_Bold_16, LV_PART_MAIN);
     lv_label_set_text(lab, _(icon_buf[idx].icon_str));
     lv_obj_align_to(lab, img, LV_ALIGN_OUT_BOTTOM_MID, 0, 0);
+    // lv_obj_move_foreground(lab);
     return obj;
 }
 
@@ -165,8 +174,43 @@ static void scr1_btn_event_cb(lv_event_t * e)
     }
 }
 
+static void ta_event_cb(lv_event_t * e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * ta = lv_event_get_target(e);
+    lv_obj_t * kb = lv_event_get_user_data(e);
+    if(code == LV_EVENT_FOCUSED) {
+        lv_keyboard_set_textarea(kb, ta);
+        lv_obj_clear_flag(kb, LV_OBJ_FLAG_HIDDEN);
+    }
+
+    if(code == LV_EVENT_DEFOCUSED) {
+        lv_keyboard_set_textarea(kb, NULL);
+        lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
 static void create1(lv_obj_t *parent) {
     
+    /*Create a keyboard to use it with an of the text areas*/
+    lv_obj_t * kb = lv_keyboard_create(parent);
+
+    /*Create a text area. The keyboard will write here*/
+    lv_obj_t * ta;
+    ta = lv_textarea_create(parent);
+    lv_obj_align(ta, LV_ALIGN_TOP_LEFT, 10, 40);
+    lv_obj_add_event_cb(ta, ta_event_cb, LV_EVENT_ALL, kb);
+    lv_textarea_set_placeholder_text(ta, "Hello");
+    lv_obj_set_size(ta, 100, 80);
+
+    ta = lv_textarea_create(parent);
+    lv_obj_align(ta, LV_ALIGN_TOP_RIGHT, -10, 40);
+    lv_obj_add_event_cb(ta, ta_event_cb, LV_EVENT_ALL, kb);
+    lv_obj_set_size(ta, 100, 80);
+
+    lv_keyboard_set_textarea(kb, ta);
+
+    // back
     scr_back_btn_create(parent, _("Lora"), scr1_btn_event_cb);
 }
 static void entry1(void) {  }
@@ -327,18 +371,6 @@ void ui_deckpro_entry(void)
 
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);
-
-    // lv_i18n_init(lv_i18n_language_pack);
-    // lv_i18n_set_locale("en-us");
-    // label1 = lv_label_create(lv_scr_act());
-    // lv_obj_set_style_text_font(label1, &Font_Mono_Bold_20, 0);
-    // lv_obj_align(label1, LV_ALIGN_CENTER, 0, 100);
-    // lv_label_set_text(label1, _(test_str));
-    // lv_obj_t* btn = lv_obj_create(lv_scr_act());
-    // lv_obj_align(btn, LV_ALIGN_CENTER, 0, 0);
-    // lv_obj_set_size(btn,50,50);
-    // lv_obj_set_style_bg_color(btn, lv_color_hex(0x335566), 0);
-    // lv_obj_add_event_cb(btn, callback, LV_EVENT_CLICKED, NULL);
 }
 
 #endif /* UI_DECKPRO_DISPALY */
