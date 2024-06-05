@@ -14,7 +14,7 @@ lv_scr_load_anim_t scr_anim_sw = SCR_MGR_SCR_SWITCH_ANIM;
 lv_scr_load_anim_t scr_anim_push = SCR_MGR_SCR_PUSH_ANIM;
 lv_scr_load_anim_t scr_anim_pop = SCR_MGR_SCR_POP_ANIM;
 
-uint32_t default_bg_color = 0xFF0000;
+uint32_t default_bg_color = 0xFFFFFF;
 /*********************************************************************************
  *                              STATIC FUNCTION
  *********************************************************************************/

@@ -28,6 +28,8 @@
     #if UI_BASE_DISPALY
         #define LV_COLOR_DEPTH 16
 
+        #define LV_COLOR_SCREEN_TRANSP 1
+
         #define LV_USE_SJPG 1
         // default font
         #define LV_USE_THEME_DEFAULT 1
@@ -40,6 +42,8 @@
     #elif UI_EPD47_DISPALY
         #define LV_COLOR_DEPTH 16
 
+        #define LV_COLOR_SCREEN_TRANSP 1
+
         #define LV_USE_SJPG 1
         // default font
         #define LV_USE_THEME_DEFAULT 0
@@ -48,9 +52,11 @@
         #define LV_USE_FS_STDIO 1
         #define LV_FS_STDIO_LETTER 'A'                                 
         #define LV_FS_STDIO_PATH "./../lvgl_examples/T_EPD47_S3/assets"        
-        #define LV_FS_STDIO_CACHE_SIZE 0    
+        #define LV_FS_STDIO_CACHE_SIZE (1024U * 1024U)    
     #elif UI_EMBED_PN532_DISPALY 
         #define LV_COLOR_DEPTH 16
+
+        #define LV_COLOR_SCREEN_TRANSP 1
 
         #define LV_USE_SJPG 1
 
@@ -63,7 +69,9 @@
         #define LV_FS_STDIO_PATH "./../lvgl_examples/T_Embed_PN532/assets"        
         #define LV_FS_STDIO_CACHE_SIZE 0    
     #elif UI_DECKPRO_DISPALY
-        #define LV_COLOR_DEPTH 1
+        #define LV_COLOR_DEPTH 16
+
+        #define LV_COLOR_SCREEN_TRANSP 0
 
         #define LV_USE_SJPG 0
         // default font
@@ -77,6 +85,8 @@
     #endif
 #else
     #define LV_COLOR_DEPTH 16
+
+    #define LV_COLOR_SCREEN_TRANSP 1
 
     #define LV_USE_SJPG 1
     // default font
@@ -103,7 +113,7 @@
 /*Enable features to draw on transparent background.
  *It's required if opa, and transform_* style properties are used.
  *Can be also used if the UI is above another layer, e.g. an OSD menu or video player.*/
-#define LV_COLOR_SCREEN_TRANSP 1
+// #define LV_COLOR_SCREEN_TRANSP 1
 
 /* Adjust color mix functions rounding. GPUs might calculate color mix (blending) differently.
  * 0: round down, 64: round up from x.75, 128: round up from half, 192: round up from x.25, 254: round up */
@@ -120,7 +130,7 @@
 #define LV_MEM_CUSTOM 0
 #if LV_MEM_CUSTOM == 0
     /*Size of the memory available for `lv_mem_alloc()` in bytes (>= 2kB)*/
-    #define LV_MEM_SIZE (1024U * 1024U)          /*[bytes]*/
+    #define LV_MEM_SIZE (1024U * 1024U * 4)          /*[bytes]*/
 
     /*Set an address for the memory pool instead of allocating it as a normal array. Can be in external SRAM too.*/
     #define LV_MEM_ADR 0     /*0: unused*/

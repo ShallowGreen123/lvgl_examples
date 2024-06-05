@@ -39,7 +39,7 @@ extern "C" {
 void ui_set_default_language(int language);
 int ui_get_default_language(void);
 
-
+void ui_disp_full_refr(void);
 #endif /* UI_DECKPOR_DISPALY */
 
 #ifdef __cplusplus

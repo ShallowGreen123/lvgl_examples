@@ -12,6 +12,7 @@
         "ui_port.h": "c",
         "ui_epd47_port.h": "c",
         "lv_i18n.h": "c",
-        "ui_deckpro_port.h": "c"
+        "ui_deckpro_port.h": "c",
+        "random": "c"
     }
 }

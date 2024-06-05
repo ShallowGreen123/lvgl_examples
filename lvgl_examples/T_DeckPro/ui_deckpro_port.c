@@ -19,6 +19,11 @@ int ui_get_default_language(void)
 }
 
 
+void ui_disp_full_refr(void)
+{
+    printf("[disp] ui_disp_full_refr\n");
+}
+
 
 #endif
 

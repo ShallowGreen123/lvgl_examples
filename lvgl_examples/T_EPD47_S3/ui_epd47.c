@@ -50,7 +50,7 @@ static void scr_middle_line(lv_obj_t *parent)
 #if 1
 
 #define MENU_ICON_NUM  (sizeof(icon_buf)/sizeof(icon_buf[0]))
-#define MENU_CONT_HIGH (LCD_VER_SIZE * 0.80)
+#define MENU_CONT_HIGH (LCD_VER_SIZE * 0.84)
 
 static int icon_width = 120; // 
 static int menu_icon_num = 0;
@@ -68,6 +68,7 @@ const struct menu_icon icon_buf[] = {
     {"A:/img_test.png", "test"},
     {"A:/img_wifi.png", "wifi"},
     {"A:/img_battery.png", "battery"},
+    {"A:/img_shutdown.png", "shutdown"},
 };
 
 static void menu_btn_event(lv_event_t *e)
@@ -83,6 +84,7 @@ static void menu_btn_event(lv_event_t *e)
             case 4: scr_mgr_push(SCREEN5_ID, false); break;
             case 5: scr_mgr_push(SCREEN6_ID, false); break;
             case 6: scr_mgr_push(SCREEN7_ID, false); break;
+            case 7: scr_mgr_push(SCREEN8_ID, false); break;
             default:
                 break;
         }
@@ -1022,7 +1024,7 @@ static void battery_data_refr(void)
         lv_snprintf(buf, line_max, "%.2fmA", battery_27220_get_CURR_CHG());
         battery_set_line(batt_right[6], "Curr Charging:", buf);
 
-        lv_snprintf(buf, line_max, "%.2fK", battery_27220_get_TEMP());
+        lv_snprintf(buf, line_max, "%.2f℃", battery_27220_get_TEMP());
         battery_set_line(batt_right[7], "TEMP:", buf);
 
         lv_snprintf(buf, line_max, "%.2fmAh", battery_27220_get_BATT_CAP());
@@ -1166,9 +1168,57 @@ static scr_lifecycle_t screen7 = {
     .exit  = exit7,
     .destroy = destroy7,
 };
-#endif
 
 #undef line_max
+#endif
+//************************************[ screen 8 ]****************************************** shutdown
+#if 1
+
+static void scr8_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_switch(SCREEN0_ID, false);
+    }
+}
+
+static void create8(lv_obj_t *parent)
+{
+
+    lv_obj_t * img = lv_img_create(parent);
+    lv_img_set_src(img, "A:/img_start1.png");
+    lv_obj_center(img);
+
+    const char *str1 = "PWR: Press and hold to power on";
+
+    lv_obj_t *label = lv_label_create(parent);
+    lv_label_set_text(label, "PWR: Press and hold to power on");
+    lv_obj_set_style_transform_angle(label, -900, 0);
+    lv_obj_align(label, LV_ALIGN_RIGHT_MID, 50, 100);
+
+    lv_coord_t w = lv_txt_get_width(str1, strlen(str1), &lv_font_montserrat_20, 0, false);
+    lv_obj_set_style_transform_pivot_x(label, w / 2, 0);
+    printf("w = %d\n", w);
+
+    // back
+    scr_back_btn_create(parent, "Shoutdown", scr8_btn_event_cb);
+}
+
+static void entry8(void) {
+    // ui_batt_power_off();
+}
+static void exit8(void) {
+}
+static void destroy8(void) { 
+
+}
+
+static scr_lifecycle_t screen8 = {
+    .create = create8,
+    .entry = entry8,
+    .exit  = exit8,
+    .destroy = destroy8,
+};
+#endif
 //************************************[ UI ENTRY ]******************************************
 void ui_epd47_entry(void)
 {
@@ -1185,6 +1235,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN5_ID, &screen5); // test
     scr_mgr_register(SCREEN6_ID, &screen6); // wifi
     scr_mgr_register(SCREEN7_ID, &screen7); // battery
+    scr_mgr_register(SCREEN8_ID, &screen8); // battery
 
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);

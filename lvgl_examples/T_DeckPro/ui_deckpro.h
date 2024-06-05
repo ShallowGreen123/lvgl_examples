@@ -30,15 +30,26 @@ extern "C" {
 /*********************************************************************************
  *                                  TYPEDEFS
  * *******************************************************************************/
+typedef void (*ui_indev_read_cb)(int);
+
+struct menu_btn {
+    uint16_t idx;
+    const void *icon;
+    const char *name;
+    lv_coord_t pos_x;
+    lv_coord_t pos_y; 
+};
+
 
 /*********************************************************************************
  *                              GLOBAL PROTOTYPES
  * *******************************************************************************/
 void ui_deckpro_entry(void);
 
-#endif /* __UI_DECKPRO_H__ */
+#endif /* UI_DECKPRO_DISPALY */
 
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif
-#endif /* __UI_EPD47H__ */
+
+#endif /*  __UI_DECKPRO_H__*/

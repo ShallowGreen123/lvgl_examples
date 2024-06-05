@@ -29,6 +29,7 @@ LV_FONT_DECLARE(Font_Han_Mono_Bold_17)
 LV_FONT_DECLARE(Font_Han_Mono_Bold_18)
 LV_FONT_DECLARE(Font_Han_Mono_Bold_19)
 LV_FONT_DECLARE(Font_Han_Mono_Bold_20)
+LV_FONT_DECLARE(Font_Han_Mono_Bold_25)
 
 
 #ifdef __cplusplus

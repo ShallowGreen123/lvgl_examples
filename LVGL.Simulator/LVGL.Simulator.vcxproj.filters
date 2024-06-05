@@ -2164,6 +2164,9 @@
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_20.c">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_25.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LVGL.Simulator.rc" />

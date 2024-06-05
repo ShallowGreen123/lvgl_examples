@@ -39,9 +39,9 @@ void clock_get_data(uint16_t *year, uint16_t *month, uint16_t *data, uint16_t *w
 /* 25896 */
 bool battery_25896_is_vaild(void);
 bool battery_25896_is_chr(void);
-char * battery_25896_get_VSYS_ST(void);
-char * battery_25896_get_VBUS_ST(void);
-char * battery_25896_get_CHG_ERR(void);
+const char * battery_25896_get_VSYS_ST(void);
+const char * battery_25896_get_VBUS_ST(void);
+const char * battery_25896_get_CHG_ERR(void);
 float battery_25896_get_VBUS(void);
 float battery_25896_get_VSYS(void);
 float battery_25896_get_VBAT(void);

@@ -980,7 +980,6 @@ static void scr4_btn_clt_event(lv_event_t * e)
         angle++;
         angle &= 0x3;
         lv_obj_invalidate(scr4_cont);
-        // lv_obj_align(scr4_btn, LV_ALIGN_LEFT_MID, 10, 0);
     }
 }
 

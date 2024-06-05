@@ -32,15 +32,15 @@ bool battery_25896_is_chr(void)
     return false;
 }
 
-char * battery_25896_get_VSYS_ST(void)
+const char * battery_25896_get_VSYS_ST(void)
 {
     return "Nomal";
 }
-char * battery_25896_get_VBUS_ST(void) 
+const char * battery_25896_get_VBUS_ST(void) 
 {
     return "Nomal";
 }
-char * battery_25896_get_CHG_ERR(void)
+const char * battery_25896_get_CHG_ERR(void)
 {
     return "Nomal";
 }
