@@ -13,10 +13,10 @@ void lvgl_app_init(void)
 #if UI_BASE_DISPALY
     ui_base_entry();
 #elif UI_EPD47_DISPALY
-    ui_epd47_entry();
+    ui_epd47_entry();           // https://github.com/Xinyuan-LilyGO/T-EPD47-S3.git
 #elif UI_EMBED_PN532_DISPALY 
-    ui_embed_pn532_entry();
+    ui_embed_pn532_entry();     // https://github.com/Xinyuan-LilyGO/T-Embed-PN532.git
 #elif UI_DECKPRO_DISPALY
-    ui_deckpro_entry();
+    ui_deckpro_entry();         //
 #endif
 }

@@ -1193,7 +1193,7 @@ static void create8(lv_obj_t *parent)
     lv_obj_t *label = lv_label_create(parent);
     lv_label_set_text(label, "PWR: Press and hold to power on");
     lv_obj_set_style_transform_angle(label, -900, 0);
-    lv_obj_align(label, LV_ALIGN_RIGHT_MID, 50, 100);
+    lv_obj_align(label, LV_ALIGN_RIGHT_MID, 50, 80);
 
     lv_coord_t w = lv_txt_get_width(str1, strlen(str1), &lv_font_montserrat_20, 0, false);
     lv_obj_set_style_transform_pivot_x(label, w / 2, 0);

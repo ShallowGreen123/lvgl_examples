@@ -6,11 +6,11 @@
 chcp 65001 > nul
 
 @REM 需要生成的汉字
-set HAN_ZI=(设置关于其他旋转深度睡眠关于系统语言切换英语简体中文)
+set HAN_ZI=设置关于其他旋转深度睡眠关于系统语言切换英语简体中文
 @REM 需要生成的字体
-set FONT_NAME=SourceHanMono-Bold.otf 
+set FONT_NAME=NotoSansSC-Medium.ttf
 @REM 存放字体所在的路径
-set FANT_PATH=D:\dgx\source\Font\source-han-mono-master\Bold\OTC
+set FANT_PATH=D:\dgx\source\Font\google\Noto_Sans_SC\static
 
 @REM 输出字体的命名
 set OUT_FONT_NAME=Font_Han_Mono_Bold

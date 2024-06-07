@@ -69,7 +69,7 @@
         #define LV_FS_STDIO_PATH "./../lvgl_examples/T_Embed_PN532/assets"        
         #define LV_FS_STDIO_CACHE_SIZE 0    
     #elif UI_DECKPRO_DISPALY
-        #define LV_COLOR_DEPTH 16
+        #define LV_COLOR_DEPTH 1
 
         #define LV_COLOR_SCREEN_TRANSP 0
 

@@ -33,15 +33,46 @@ extern "C" {
  *                                  TYPEDEFS
  * *******************************************************************************/
 
+
 /*********************************************************************************
  *                              GLOBAL PROTOTYPES
  * *******************************************************************************/
-void ui_set_default_language(int language);
-int ui_get_default_language(void);
 
 void ui_disp_full_refr(void);
-#endif /* UI_DECKPOR_DISPALY */
 
+// [ screen 2 ] --- setting
+void ui_setting_set_language(int language);
+void ui_setting_set_keypad_light(bool on);
+void ui_setting_set_motor_status(bool on);
+
+int ui_setting_get_language(void);
+bool ui_setting_get_keypad_light(void);
+bool ui_setting_get_motor_status(void);
+
+
+// [ screen 3 ] --- GPS
+void ui_GPS_print_info(void);
+void ui_GPS_get_info(float *lat, float *lon, float *speed, float *alt, float *accuracy,
+             int *vsat,  int *usat,  int *year,    int *month, int *day,
+             int *hour,  int *min,   int *sec);
+
+// [ screen 4 ] --- SD card
+// [ screen 5 ] --- Test
+// [ screen 6 ] --- Battery
+// BQ25896
+bool ui_batt_25896_is_chg(void);
+float ui_batt_25896_get_vbus(void);
+float ui_batt_25896_get_vsys(void);
+float ui_batt_25896_get_vbat(void);
+float ui_batt_25896_get_volt_targ(void);
+float ui_batt_25896_get_chg_curr(void);
+float ui_batt_25896_get_pre_curr(void);
+const char * ui_batt_25896_get_chg_st(void);
+const char * ui_batt_25896_get_vbus_st(void);
+const char * ui_batt_25896_get_ntc_st(void);
+
+
+#endif /* UI_DECKPOR_DISPALY */
 #ifdef __cplusplus
 } /*extern "C"*/
 #endif
