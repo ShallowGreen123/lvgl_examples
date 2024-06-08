@@ -8,6 +8,10 @@
 volatile int default_language = DEFAULT_LANGUAGE_EN;
 volatile int default_keypad_light = false;
 volatile int default_motor_status = false;
+volatile int default_gps_status = true;
+volatile int default_lora_status = true;
+volatile int default_gyro_status = true;
+volatile int default_a7682_status = true;
 // ----
 
 void ui_disp_full_refr(void)
@@ -31,6 +35,22 @@ void ui_setting_set_motor_status(bool on)
 {
     default_motor_status = on;
 }
+void ui_setting_set_gps_status(bool on)
+{
+    default_gps_status = on;
+}
+void ui_setting_set_lora_status(bool on)
+{
+    default_lora_status = on;
+}
+void ui_setting_set_gyro_status(bool on)
+{
+    default_gyro_status = on;
+}
+void ui_setting_set_a7682_status(bool on)
+{
+    default_a7682_status = on;
+}
 
 // get function
 int ui_setting_get_language(void)
@@ -44,6 +64,22 @@ bool ui_setting_get_keypad_light(void)
 bool ui_setting_get_motor_status(void)
 {
     return default_motor_status;
+}
+bool ui_setting_get_gps_status(void)
+{
+    return default_gps_status;
+}
+bool ui_setting_get_lora_status(void)
+{
+    return default_lora_status;
+}
+bool ui_setting_get_gyro_status(void)
+{
+    return default_gyro_status;
+}
+bool ui_setting_get_a7682_status(void)
+{
+    return default_a7682_status;
 }
 
 //************************************[ screen 3 ]****************************************** GPS
