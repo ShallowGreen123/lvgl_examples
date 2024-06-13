@@ -40,6 +40,20 @@ struct menu_btn {
     lv_coord_t pos_y; 
 };
 
+typedef struct _ui_setting
+{
+    const char *name;
+    lv_obj_t *obj;
+    lv_obj_t *st;
+    void (*set_cb)(bool);
+    bool (*get_cb)(void);
+}_ui_setting_handle;
+
+typedef struct _ui_test {
+    const char *name;
+    bool (*cb)(void);
+} ui_test_handle;
+
 
 /*********************************************************************************
  *                              GLOBAL PROTOTYPES

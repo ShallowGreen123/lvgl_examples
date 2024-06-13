@@ -18,7 +18,8 @@ void ui_disp_full_refr(void)
 {
     printf("[disp] ui_disp_full_refr\n");
 }
-
+//************************************[ screen 0 ]****************************************** menu
+//************************************[ screen 1 ]****************************************** lora
 //************************************[ screen 2 ]****************************************** setting
 // set function
 
@@ -81,7 +82,6 @@ bool ui_setting_get_a7682_status(void)
 {
     return default_a7682_status;
 }
-
 //************************************[ screen 3 ]****************************************** GPS
 void ui_GPS_print_info(void)
 {
@@ -107,10 +107,34 @@ void ui_GPS_get_info(float *lat, float *lon, float *speed, float *alt, float *ac
     *sec      = idx;
     idx++;
 }
-#endif
 
 //************************************[ screen 4 ]****************************************** SD card
 //************************************[ screen 5 ]****************************************** Test
+bool ui_sd_is_vaild(void)
+{
+    return true;
+}
+bool ui_lora_is_vaild(void)
+{
+    return false;
+}
+bool ui_keypad_is_vaild(void)
+{
+    return false;
+}
+bool ui_bq25896_is_vaild(void)
+{
+    return false;
+}
+bool ui_bq27220_is_vaild(void)
+{
+    return false;
+}
+bool ui_ltr553_is_vaild(void)
+{
+    return false;
+}
+
 //************************************[ screen 6 ]****************************************** Battery
 // BQ25896
 bool ui_batt_25896_is_chg(void)
@@ -154,3 +178,4 @@ const char * ui_batt_25896_get_ntc_st(void)
     return "hello";
 }
 
+#endif

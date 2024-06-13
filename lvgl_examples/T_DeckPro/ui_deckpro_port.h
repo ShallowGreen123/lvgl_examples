@@ -65,6 +65,13 @@ void ui_GPS_get_info(float *lat, float *lon, float *speed, float *alt, float *ac
 
 // [ screen 4 ] --- SD card
 // [ screen 5 ] --- Test
+bool ui_sd_is_vaild(void);
+bool ui_lora_is_vaild(void);
+bool ui_keypad_is_vaild(void);
+bool ui_bq25896_is_vaild(void);
+bool ui_bq27220_is_vaild(void);
+bool ui_ltr553_is_vaild(void);
+
 // [ screen 6 ] --- Battery
 // BQ25896
 bool ui_batt_25896_is_chg(void);
