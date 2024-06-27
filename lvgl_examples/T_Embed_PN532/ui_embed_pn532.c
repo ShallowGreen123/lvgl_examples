@@ -930,8 +930,8 @@ static scr_lifecycle_t screen3 = {
 static lv_obj_t *scr4_cont;
 static lv_obj_t *setting_list;
 static lv_obj_t *theme_label;
-static lv_obj_t *scr4_btn;
-static lv_obj_t *scr4_btn_clt;
+static lv_obj_t *shutdown_up;
+static lv_obj_t *shutdown_dp;
 
 static void entry4_anim(lv_obj_t *obj)
 {
@@ -969,6 +969,11 @@ static void transform_angle_anim(lv_obj_t *obj, int angle)
     lv_anim_start(&a);
 }
 
+static void shotdown_anim_cb(void * var, int32_t v){
+    lv_obj_set_y((lv_obj_t *)shutdown_up, v-LV_VER_RES/2);
+    lv_obj_set_y((lv_obj_t *)shutdown_dp, LV_VER_RES-v);
+}
+
 static void scr4_btn_clt_event(lv_event_t * e)
 {
     static int angle = 0;
@@ -983,6 +988,52 @@ static void scr4_btn_clt_event(lv_event_t * e)
     }
 }
 
+void setting_scr_event(lv_event_t *e)
+{
+    lv_obj_t *tgt = (lv_obj_t *)e->target;
+    int data = (int)e->user_data;
+
+    static int angle = 0;
+    if(e->code == LV_EVENT_CLICKED) {
+        switch (data)
+        {
+        case 0: // "Rotatoion"
+            lv_obj_set_style_transform_pivot_x(scr4_cont, LV_HOR_RES/2, LV_PART_MAIN);
+            lv_obj_set_style_transform_pivot_y(scr4_cont, LV_VER_RES/2, LV_PART_MAIN);
+            transform_angle_anim(scr4_cont, angle);
+            angle++;
+            angle &= 0x3;
+            lv_obj_invalidate(scr4_cont);
+            // lv_obj_invalidate(scr4_cont);
+            break;
+        case 1: // "Deep Sleep"
+
+            break;
+        case 2: // "UI Theme"
+            break;
+        case 3: // "System Sound"
+            prompt_info("No speaker found", 1000);
+            break;
+        case 4: {// "Shutdown"
+                lv_obj_clear_flag(shutdown_up, LV_OBJ_FLAG_HIDDEN);
+                lv_obj_clear_flag(shutdown_dp, LV_OBJ_FLAG_HIDDEN);
+                
+                lv_anim_t a;
+                lv_anim_init(&a);
+                lv_anim_set_var(&a, shutdown_up);
+                lv_anim_set_values(&a, 0, LV_VER_RES/2);
+                lv_anim_set_time(&a, 1000);
+                lv_anim_set_path_cb(&a, lv_anim_path_linear);
+                lv_anim_set_exec_cb(&a, shotdown_anim_cb);
+                lv_anim_start(&a);
+            } break;
+        default:
+            break;
+        }
+    }
+}
+
+
 static void create4(lv_obj_t *parent) {
     scr4_cont = lv_obj_create(parent);
     lv_obj_set_size(scr4_cont, lv_pct(100), lv_pct(100));
@@ -996,6 +1047,24 @@ static void create4(lv_obj_t *parent) {
     lv_obj_set_style_text_font(label, &Font_Mono_Bold_16, LV_PART_MAIN);
     lv_label_set_text(label, "Setting");
     lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 10);
+
+    shutdown_up = lv_obj_create(parent);
+    lv_obj_set_size(shutdown_up, lv_pct(100), lv_pct(50));
+    lv_obj_set_style_bg_color(shutdown_up, lv_color_hex(0x000000), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(shutdown_up, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(shutdown_up, 0, LV_PART_MAIN);
+    lv_obj_set_style_radius(shutdown_up, 0, 0);
+    lv_obj_set_style_pad_all(shutdown_up, 0, LV_PART_MAIN);
+    lv_obj_add_flag(shutdown_up, LV_OBJ_FLAG_HIDDEN);
+
+    shutdown_dp = lv_obj_create(parent);
+    lv_obj_set_size(shutdown_dp, lv_pct(100), lv_pct(50));
+    lv_obj_set_style_bg_color(shutdown_dp, lv_color_hex(0x000000), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(shutdown_dp, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(shutdown_dp, 0, LV_PART_MAIN);
+    lv_obj_set_style_radius(shutdown_dp, 0, 0);
+    lv_obj_set_style_pad_all(shutdown_dp, 0, LV_PART_MAIN);
+    lv_obj_add_flag(shutdown_dp, LV_OBJ_FLAG_HIDDEN);
 
     setting_list = lv_list_create(scr4_cont);
     lv_obj_set_size(setting_list, LV_HOR_RES, 135);
@@ -1012,19 +1081,23 @@ static void create4(lv_obj_t *parent) {
     lv_obj_t *setting2 = lv_list_add_btn(setting_list, NULL, "- Deep Sleep");
     lv_obj_t *setting3 = lv_list_add_btn(setting_list, NULL, "- UI Theme");
     lv_obj_t *setting4 = lv_list_add_btn(setting_list, NULL, "- System Sound");
-    lv_obj_t *setting5 = lv_list_add_btn(setting_list, NULL, "- About System");
+    lv_obj_t *setting5 = lv_list_add_btn(setting_list, NULL, "- Shutdown");
 
-    scr4_btn = lv_btn_create(scr4_cont);
-    lv_obj_set_size(scr4_btn, 100, 50);
-    lv_obj_align(scr4_btn, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_t *label1 = lv_label_create(scr4_btn);
-    lv_label_set_text(label1, "Bottom");
+    for(int i = 0; i < lv_obj_get_child_cnt(setting_list); i++) {
+        lv_obj_t *item = lv_obj_get_child(setting_list, i);
+        lv_obj_set_style_text_font(item, &Font_Mono_Bold_14, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(item, lv_color_hex(EMBED_PN532_COLOR_BG), LV_PART_MAIN);
+        lv_obj_set_style_text_color(item, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
 
+        // lv_obj_set_style_bg_color(item, lv_color_hex(EMBED_COLOR_FOCUS_ON), LV_STATE_FOCUS_KEY);
+        
+        lv_obj_remove_style(item, NULL, LV_STATE_FOCUS_KEY);
+        lv_obj_set_style_radius(item, 5, LV_STATE_FOCUS_KEY);
+        lv_obj_set_style_outline_color(item, lv_color_hex(EMBED_PN532_COLOR_FOCUS_ON), LV_STATE_FOCUS_KEY);
+        lv_obj_set_style_outline_width(item, 2, LV_STATE_FOCUS_KEY);
 
-    scr4_btn_clt = lv_btn_create(scr4_cont);
-    lv_obj_set_size(scr4_btn_clt, 100, 50);
-    lv_obj_align(scr4_btn_clt, LV_ALIGN_RIGHT_MID, -10, 0);
-    lv_obj_add_event_cb(scr4_btn_clt, scr4_btn_clt_event, LV_EVENT_CLICKED, NULL);
+        lv_obj_add_event_cb(item, setting_scr_event, LV_EVENT_CLICKED, (void *)i);  
+    }
 
     // back btn
     scr_back_btn_create(scr4_cont, scr4_btn_event_cb);
@@ -1742,6 +1815,52 @@ static scr_lifecycle_t screen8 = {
 };
 #endif
 //******************************************************************************
+static lv_obj_t *starting_up;
+static lv_obj_t *starting_dp;
+
+static void starting_up_anim_cb(void * var, int32_t v)
+{
+    lv_obj_set_y((lv_obj_t *)starting_up, 0-v);
+    lv_obj_set_y((lv_obj_t *)starting_dp, LV_VER_RES/2+v);
+}
+
+static void starting_up_ready_cb(struct _lv_anim_t * a)
+{
+    lv_obj_del(starting_up);
+    lv_obj_del(starting_dp);
+}
+
+static void ui_embed_starting_up(void)
+{
+    starting_up = lv_obj_create(lv_layer_top());
+    lv_obj_set_size(starting_up, lv_pct(100), lv_pct(50));
+    lv_obj_set_style_bg_color(starting_up, lv_color_hex(0x000000), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(starting_up, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(starting_up, 0, LV_PART_MAIN);
+    lv_obj_set_style_radius(starting_up, 0, 0);
+    lv_obj_set_style_pad_all(starting_up, 0, LV_PART_MAIN);
+    // lv_obj_add_flag(starting_up, LV_OBJ_FLAG_HIDDEN);
+
+    starting_dp = lv_obj_create(lv_layer_top());
+    lv_obj_set_size(starting_dp, lv_pct(100), lv_pct(50));
+    lv_obj_set_style_bg_color(starting_dp, lv_color_hex(0x000000), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(starting_dp, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(starting_dp, 0, LV_PART_MAIN);
+    lv_obj_set_style_radius(starting_dp, 0, 0);
+    lv_obj_set_style_pad_all(starting_dp, 0, LV_PART_MAIN);
+    // lv_obj_add_flag(starting_dp, LV_OBJ_FLAG_HIDDEN);
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, NULL);
+    lv_anim_set_values(&a, 0, LV_VER_RES/2);
+    lv_anim_set_time(&a, 2000);
+    lv_anim_set_path_cb(&a, lv_anim_path_linear);
+    lv_anim_set_exec_cb(&a, starting_up_anim_cb);
+    lv_anim_set_ready_cb(&a, starting_up_ready_cb);
+    lv_anim_start(&a);
+}
+
 void ui_embed_pn532_entry(void)
 { 
     scr_mgr_init();
@@ -1761,6 +1880,8 @@ void ui_embed_pn532_entry(void)
 
     // set root
     scr_mgr_switch(SCREEN0_ID, false);
+
+    ui_embed_starting_up();
 }
 
 #endif // UI_EMBED_PN532_DISPALY   
