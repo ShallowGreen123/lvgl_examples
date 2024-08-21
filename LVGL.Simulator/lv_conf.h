@@ -25,75 +25,63 @@
 #if USED_MY_DEMO 
 
     // my demo config
-    #if UI_BASE_DISPALY
-        #define LV_COLOR_DEPTH 16
+    #if (UI_BASE_DISPALY        || \
+        UI_EMBED_PN532_DISPALY  || \
+        UI_ESP32_P4_DISPALY)
 
-        #define LV_COLOR_SCREEN_TRANSP 1
+        #define LV_COLOR_DEPTH          16
 
-        #define LV_USE_SJPG 1
+        #define LV_COLOR_SCREEN_TRANSP  1
+
+        #define LV_USE_SJPG             1
         // default font
-        #define LV_USE_THEME_DEFAULT 1
-        #define LV_FONT_DEFAULT &lv_font_montserrat_14
+        #define LV_USE_THEME_DEFAULT    1
+        #define LV_FONT_DEFAULT         &lv_font_montserrat_14
         // file system   
-        #define LV_USE_FS_STDIO 1
-        #define LV_FS_STDIO_LETTER 'A'                                 
-        #define LV_FS_STDIO_PATH "./../lvgl_examples/ui_base/assets"        
-        #define LV_FS_STDIO_CACHE_SIZE 0   
+        #define LV_USE_FS_STDIO         1
+        #define LV_FS_STDIO_LETTER      'A'                                 
+        #define LV_FS_STDIO_PATH        FILE_SYSTEM_PATH      
+        #define LV_FS_STDIO_CACHE_SIZE  0   
     #elif UI_EPD47_DISPALY
-        #define LV_COLOR_DEPTH 16
+        #define LV_COLOR_DEPTH          16
 
-        #define LV_COLOR_SCREEN_TRANSP 1
+        #define LV_COLOR_SCREEN_TRANSP  1
 
-        #define LV_USE_SJPG 1
+        #define LV_USE_SJPG             1
         // default font
-        #define LV_USE_THEME_DEFAULT 0
-        #define LV_FONT_DEFAULT &lv_font_montserrat_32
+        #define LV_USE_THEME_DEFAULT    0
+        #define LV_FONT_DEFAULT         &lv_font_montserrat_32
         // file system   
-        #define LV_USE_FS_STDIO 1
-        #define LV_FS_STDIO_LETTER 'A'                                 
-        #define LV_FS_STDIO_PATH "./../lvgl_examples/T_EPD47_S3/assets"        
-        #define LV_FS_STDIO_CACHE_SIZE (1024U * 1024U)    
-    #elif UI_EMBED_PN532_DISPALY 
-        #define LV_COLOR_DEPTH 16
-
-        #define LV_COLOR_SCREEN_TRANSP 1
-
-        #define LV_USE_SJPG 1
-
-        // default font
-        #define LV_USE_THEME_DEFAULT 1
-        #define LV_FONT_DEFAULT &lv_font_montserrat_14
-        // file system   
-        #define LV_USE_FS_STDIO 1
-        #define LV_FS_STDIO_LETTER 'A'                                 
-        #define LV_FS_STDIO_PATH "./../lvgl_examples/T_Embed_PN532/assets"        
-        #define LV_FS_STDIO_CACHE_SIZE 0    
+        #define LV_USE_FS_STDIO         1
+        #define LV_FS_STDIO_LETTER      'A'                                 
+        #define LV_FS_STDIO_PATH        FILE_SYSTEM_PATH    
+        #define LV_FS_STDIO_CACHE_SIZE  (1024U * 1024U)    
     #elif UI_DECKPRO_DISPALY
-        #define LV_COLOR_DEPTH 1
+        #define LV_COLOR_DEPTH          1
 
-        #define LV_COLOR_SCREEN_TRANSP 0
+        #define LV_COLOR_SCREEN_TRANSP  0
 
-        #define LV_USE_SJPG 0
+        #define LV_USE_SJPG             0
         // default font
-        #define LV_USE_THEME_DEFAULT 1
-        #define LV_FONT_DEFAULT &lv_font_montserrat_14
+        #define LV_USE_THEME_DEFAULT    1
+        #define LV_FONT_DEFAULT         &lv_font_montserrat_14
         // file system   
-        #define LV_USE_FS_STDIO 1
-        #define LV_FS_STDIO_LETTER 'A'                                 
-        #define LV_FS_STDIO_PATH "./../lvgl_examples/T_DeckPro/assets"        
-        #define LV_FS_STDIO_CACHE_SIZE 0    
+        #define LV_USE_FS_STDIO         1
+        #define LV_FS_STDIO_LETTER      'A'                                 
+        #define LV_FS_STDIO_PATH        FILE_SYSTEM_PATH     
+        #define LV_FS_STDIO_CACHE_SIZE  0
     #endif
 #else
-    #define LV_COLOR_DEPTH 16
+    #define LV_COLOR_DEPTH              16
 
-    #define LV_COLOR_SCREEN_TRANSP 1
+    #define LV_COLOR_SCREEN_TRANSP      1
 
-    #define LV_USE_SJPG 1
+    #define LV_USE_SJPG                 1
     // default font
-    #define LV_USE_THEME_DEFAULT 1
-    #define LV_FONT_DEFAULT &lv_font_montserrat_14
+    #define LV_USE_THEME_DEFAULT        1
+    #define LV_FONT_DEFAULT             &lv_font_montserrat_14
     // file system   
-    #define LV_USE_FS_STDIO 0
+    #define LV_USE_FS_STDIO             0
 #endif
 
 

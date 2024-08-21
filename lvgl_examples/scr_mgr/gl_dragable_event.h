@@ -20,5 +20,5 @@
 void gl_set_dragable(lv_obj_t *obj, lv_anim_ready_cb_t rdy_cb);
 bool gl_has_drag_flag(void);
 void gl_clear_drag_flag(void);
-
+void gl_disable_drag(bool en);
 #endif

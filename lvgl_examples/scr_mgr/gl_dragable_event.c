@@ -9,6 +9,7 @@
  ************************************************************************/
 #include "gl_dragable_event.h"
 
+static bool drag_en_flag = true;
 static bool drag_flag = false;          // if you has setten dragable and clicked event togather, use this flag to make sure not mix up them;
 static int  innerX    = -1;
 static int  innerY    = -1;
@@ -35,6 +36,8 @@ static void gl_obj_add_anim(lv_obj_t *obj, lv_anim_exec_xcb_t exec_cb, lv_anim_r
 static void gl_drag_event_cb(lv_event_t *e) {
     lv_obj_t       *lvObj = lv_event_get_target(e);
     lv_event_code_t code  = lv_event_get_code(e);
+
+    if(drag_en_flag == false) return;
 
     if (code == LV_EVENT_PRESSED) {
         drag_flag         = false;
@@ -108,4 +111,9 @@ bool gl_has_drag_flag(void) {
 
 void gl_clear_drag_flag(void) {
     drag_flag = false;
+}
+
+void gl_disable_drag(bool en)
+{
+    drag_en_flag = !en;
 }

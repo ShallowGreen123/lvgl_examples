@@ -735,6 +735,9 @@
     <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.h">
       <Filter>lvgl_exams\T_DeckPro</Filter>
     </ClInclude>
+    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ui_esp32p4.h">
+      <Filter>lvgl_exams\T_ESP32_P4</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="LVGL.Simulator.manifest" />
@@ -2166,6 +2169,9 @@
     </ClCompile>
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_25.c">
       <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\T_ESP32_P4\ui_esp32p4.c">
+      <Filter>lvgl_exams\T_ESP32_P4</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -7082,6 +7088,9 @@
     </Filter>
     <Filter Include="lvgl_exams\T_DeckPro">
       <UniqueIdentifier>{9197237e-b74f-4674-bc68-f1f148bcdbf2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lvgl_exams\T_ESP32_P4">
+      <UniqueIdentifier>{f993cc04-4d37-41b8-8bfe-88cd7a72c36c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
