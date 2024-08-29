@@ -27,6 +27,8 @@ extern "C" {
 #define DECKPRO_COLOR_BG lv_color_white()
 #define DECKPRO_COLOR_FG lv_color_black()
 
+#define UI_WIFI_SCAN_ITEM_MAX 13
+
 /*********************************************************************************
  *                                  TYPEDEFS
  * *******************************************************************************/
@@ -54,6 +56,10 @@ typedef struct _ui_test {
     bool (*cb)(void);
 } ui_test_handle;
 
+typedef struct {
+    char name[16];
+    int rssi;
+}ui_wifi_scan_info_t;
 
 /*********************************************************************************
  *                              GLOBAL PROTOTYPES

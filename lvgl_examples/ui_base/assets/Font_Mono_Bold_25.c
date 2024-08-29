@@ -1,17 +1,8 @@
 /*******************************************************************************
  * Size: 25 px
  * Bpp: 4
- * Opts: --no-compress --format lvgl --font .\JetBrainsMono-Bold.ttf -o D:\dgx\code\3_debug\LilyGo-EPD47-test\examples\display_demo\src\Font_Mono_Bold_25.c --bpp 4 --size 25 -r 0x20-0x7f
+ * Opts: --no-compress --format lvgl --font D:\dgx\source\Font\JetBrainsMono-2.304\fonts\ttf\JetBrainsMono-Bold.ttf -o .\..\ui_base\assets\Font_Mono_Bold_25.c --bpp 4 --size 25 -r 0x20-0x7F --symbols 1
  ******************************************************************************/
-
-#ifdef __has_include
-    #if __has_include("lvgl.h")
-        #ifndef LV_LVGL_H_INCLUDE_SIMPLE
-            #define LV_LVGL_H_INCLUDE_SIMPLE
-        #endif
-    #endif
-#endif
-
 
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
 #include "lvgl.h"

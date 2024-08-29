@@ -7,11 +7,12 @@
 #define line_max 21
 #define GET_BUFF_LEN(a) sizeof(a)/sizeof(a[0])
 
-#define FONT_BOLD_SIZE_15 &Font_Han_Mono_Bold_15
-#define FONT_BOLD_SIZE_16 &Font_Han_Mono_Bold_16
-#define FONT_BOLD_SIZE_17 &Font_Han_Mono_Bold_17
-#define FONT_BOLD_SIZE_18 &Font_Han_Mono_Bold_18
-#define FONT_BOLD_SIZE_19 &Font_Han_Mono_Bold_19
+#define FONT_BOLD_SIZE_14 &Font_Mono_Bold_14
+#define FONT_BOLD_SIZE_15 &Font_Mono_Bold_15
+#define FONT_BOLD_SIZE_16 &Font_Mono_Bold_16
+#define FONT_BOLD_SIZE_17 &Font_Mono_Bold_17
+#define FONT_BOLD_SIZE_18 &Font_Mono_Bold_18
+#define FONT_BOLD_SIZE_19 &Font_Mono_Bold_19
 
 #define FONT_BOLD_MONO_SIZE_15 &Font_Mono_Bold_15
 #define FONT_BOLD_MONO_SIZE_16 &Font_Mono_Bold_16
@@ -80,7 +81,7 @@ static struct menu_btn menu_btn_list[] =
     {SCREEN1_ID,  "A:/img_lora.png",    "Lora",     23,     23},
     {SCREEN2_ID,  "A:/img_setting.png", "Setting",  95,     23},
     {SCREEN3_ID,  "A:/img_GPS.png",     "GPS",      167,    23},
-    {SCREEN4_ID,  "A:/img_SD.png",      "SD",       23,     111},
+    {SCREEN4_ID,  "A:/img_wifi.png",    "Wifi",     23,     111},
     {SCREEN5_ID,  "A:/img_test.png",    "Test",     95,     111},
     {SCREEN6_ID,  "A:/img_batt.png",    "Battery",  167,    111},
     {SCREEN7_ID,  "A:/img_lora.png", "Lora6", 23, 199},
@@ -147,7 +148,7 @@ static void menu_btn_create(lv_obj_t *parent, struct menu_btn *info)
     lv_obj_set_style_outline_width(btn, 3, LV_PART_MAIN | LV_STATE_PRESSED);
 
     lv_obj_t *label = lv_label_create(btn);
-    lv_obj_set_style_text_font(label, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, FONT_BOLD_SIZE_14, LV_PART_MAIN);
     lv_obj_set_width(label, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(label, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(label, 0);
@@ -596,8 +597,14 @@ static scr_lifecycle_t screen3 = {
     .destroy = destroy3,
 };
 #endif
-//************************************[ screen 4 ]****************************************** SD card
+//************************************[ screen 4 ]****************************************** Wifi Scan
 #if 1
+static lv_obj_t *scr4_cont;
+static lv_obj_t *wifi_scan_lab;
+static lv_timer_t *wifi_scan_timer = NULL;
+
+static ui_wifi_scan_info_t wifi_info_list[UI_WIFI_SCAN_ITEM_MAX];
+
 static void scr4_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
@@ -605,17 +612,78 @@ static void scr4_btn_event_cb(lv_event_t * e)
     }
 }
 
+
+static void show_wifi_scan(void)
+{
+#define BUFF_LEN 400
+    char buf[BUFF_LEN];
+    int ret = 0, offs = 0;
+
+    ret = lv_snprintf(buf + offs, BUFF_LEN, "       NAME      | RSSI\n");
+    offs = offs + ret;
+    ret = lv_snprintf(buf + offs, BUFF_LEN, "-----------------------\n");
+    offs = offs + ret;
+
+    for(int i = 0; i < UI_WIFI_SCAN_ITEM_MAX; i++) {
+        if(strcmp(wifi_info_list[i].name, "") == 0 && wifi_info_list[i].rssi == 0)
+        {
+            break;
+        }
+        if(i == UI_WIFI_SCAN_ITEM_MAX - 1) {
+            ret = lv_snprintf(buf + offs, BUFF_LEN, "%-16.16s | %4d", wifi_info_list[i].name, wifi_info_list[i].rssi);
+            break;
+        }
+
+        ret = lv_snprintf(buf + offs, BUFF_LEN, "%-16.16s | %4d\n", wifi_info_list[i].name, wifi_info_list[i].rssi);
+        offs = offs + ret;
+    }
+    lv_label_set_text(wifi_scan_lab, buf);
+#undef BUFF_LEN
+}
+
+
+static void wifi_scan_timer_event(lv_timer_t *t)
+{
+    ui_wifi_get_scan_info(wifi_info_list, UI_WIFI_SCAN_ITEM_MAX);
+    show_wifi_scan();
+}
+
 static void create4(lv_obj_t *parent) 
 {
-    
-    lv_obj_t *back4_label = scr_back_btn_create(parent, ("444"), scr4_btn_event_cb);
+    scr4_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr4_cont, lv_pct(100), lv_pct(90));
+    lv_obj_set_style_bg_color(scr4_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr4_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr4_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr4_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr4_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(scr4_cont, 13, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr4_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr4_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr4_cont, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr4_cont, LV_ALIGN_BOTTOM_MID);
+
+    wifi_scan_lab = lv_label_create(scr4_cont);
+    lv_obj_set_width(wifi_scan_lab, lv_pct(95));
+    lv_obj_set_style_pad_all(wifi_scan_lab, 0, LV_PART_MAIN);
+    lv_obj_set_style_text_font(wifi_scan_lab, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(wifi_scan_lab, 0, LV_PART_MAIN);
+    lv_label_set_long_mode(wifi_scan_lab, LV_LABEL_LONG_WRAP);
+
+    lv_obj_t *back4_label = scr_back_btn_create(parent, ("Wifi"), scr4_btn_event_cb);
 }
 static void entry4(void) 
 {
     ui_disp_full_refr();
+    wifi_scan_timer = lv_timer_create(wifi_scan_timer_event, 5000, NULL);
+    lv_timer_ready(wifi_scan_timer);
 }
 static void exit4(void) {
     ui_disp_full_refr();
+    if(wifi_scan_timer) {
+        lv_timer_del(wifi_scan_timer);
+        wifi_scan_timer = NULL;
+    }
 }
 static void destroy4(void) { }
 

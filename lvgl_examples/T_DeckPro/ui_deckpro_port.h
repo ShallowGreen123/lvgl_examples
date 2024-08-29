@@ -12,6 +12,7 @@
  *                                  INCLUDES
  * *******************************************************************************/
 #include "../lvgl_app.h"
+#include "ui_deckpro.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,7 +74,9 @@ void ui_GPS_get_info(float *lat, float *lon, float *speed, float *alt, float *ac
              int *vsat,  int *usat,  int *year,    int *month, int *day,
              int *hour,  int *min,   int *sec);
 
-// [ screen 4 ] --- SD card
+// [ screen 4 ] --- Wifi Scan
+void ui_wifi_get_scan_info(ui_wifi_scan_info_t *list, int list_len);
+
 // [ screen 5 ] --- Test
 bool ui_sd_is_vaild(void);
 bool ui_lora_is_vaild(void);

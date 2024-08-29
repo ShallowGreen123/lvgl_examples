@@ -142,7 +142,18 @@ void ui_GPS_get_info(float *lat, float *lon, float *speed, float *alt, float *ac
     idx++;
 }
 
-//************************************[ screen 4 ]****************************************** SD card
+//************************************[ screen 4 ]****************************************** Wifi Scan
+void ui_wifi_get_scan_info(ui_wifi_scan_info_t *list, int list_len)
+{
+    for(int i = 0; i < list_len; i++)
+    {
+        printf("list:%d\n", sizeof(*list));
+        char buf[16];
+        lv_snprintf(buf, 16, "hello#%d", lv_rand(0, 30));
+        strncpy(list[i].name, buf, 16);
+        list[i].rssi = lv_rand(-120, 0);
+    }
+}
 //************************************[ screen 5 ]****************************************** Test
 bool ui_sd_is_vaild(void)
 {

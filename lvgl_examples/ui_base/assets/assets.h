@@ -9,8 +9,11 @@ extern "C" {
 
 // font
 LV_FONT_DECLARE(Font_Mono_Bold_14);
+LV_FONT_DECLARE(Font_Mono_Bold_15);
 LV_FONT_DECLARE(Font_Mono_Bold_16);
+LV_FONT_DECLARE(Font_Mono_Bold_17);
 LV_FONT_DECLARE(Font_Mono_Bold_18);
+LV_FONT_DECLARE(Font_Mono_Bold_19);
 LV_FONT_DECLARE(Font_Mono_Bold_20);
 LV_FONT_DECLARE(Font_Mono_Bold_25);
 LV_FONT_DECLARE(Font_Mono_Bold_30)

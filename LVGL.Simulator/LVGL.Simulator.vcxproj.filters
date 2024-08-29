@@ -2122,9 +2122,6 @@
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_18.c">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
-    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_20.c">
-      <Filter>lvgl_exams\ui_base\assets</Filter>
-    </ClCompile>
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_25.c">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
@@ -2172,6 +2169,18 @@
     </ClCompile>
     <ClCompile Include="..\lvgl_examples\T_ESP32_P4\ui_esp32p4.c">
       <Filter>lvgl_exams\T_ESP32_P4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_15.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_17.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_19.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Mono_Bold_20.c">
+      <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
