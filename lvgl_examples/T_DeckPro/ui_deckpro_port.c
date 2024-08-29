@@ -20,6 +20,40 @@ void ui_disp_full_refr(void)
 }
 //************************************[ screen 0 ]****************************************** menu
 //************************************[ screen 1 ]****************************************** lora
+static int lora_mode = LORA_MODE_SEND;
+static float lora_freq = 850.0;
+
+float ui_lora_get_freq(void)
+{
+    return lora_freq;
+}
+
+int ui_lora_get_mode(void)
+{
+    return lora_mode;
+}
+void ui_lora_set_mode(int mode)
+{
+    lora_mode = mode;
+}
+void ui_lora_send(const char *str)
+{
+    printf("send-> %s\n", str);
+}
+bool ui_lora_get_recv(const char **str, int *rssi)
+{
+    static int data = 0;
+    static char buf[32];
+    lv_snprintf(buf, 32, "DeckPro #%d", data++);
+
+    *str = buf;
+    *rssi = lv_rand(-100, 0);
+    return true;
+}
+void ui_lora_set_recv_flag(void)
+{
+    
+}
 //************************************[ screen 2 ]****************************************** setting
 // set function
 

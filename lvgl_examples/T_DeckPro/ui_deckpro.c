@@ -5,6 +5,7 @@
 #if UI_DECKPRO_DISPALY
 
 #define line_max 21
+#define GET_BUFF_LEN(a) sizeof(a)/sizeof(a[0])
 
 #define FONT_BOLD_SIZE_15 &Font_Han_Mono_Bold_15
 #define FONT_BOLD_SIZE_16 &Font_Han_Mono_Bold_16
@@ -249,6 +250,13 @@ static scr_lifecycle_t screen0 = {
 #endif
 //************************************[ screen 1 ]****************************************** lora
 #if 1
+static lv_obj_t *scr1_cont;
+static lv_obj_t *lora_lab_buf[11] = {0};
+static lv_obj_t *lora_sw_btn;
+static lv_obj_t *lora_sw_btn_info;
+static lv_timer_t *lora_RT_timer = NULL;
+static int lora_cnt = 0;
+
 static void scr1_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
@@ -256,47 +264,123 @@ static void scr1_btn_event_cb(lv_event_t * e)
     }
 }
 
-static void ta_event_cb(lv_event_t * e)
+static void lora_mode_sw_event(lv_event_t * e)
 {
-    lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t * ta = lv_event_get_target(e);
-    lv_obj_t * kb = (lv_obj_t *)lv_event_get_user_data(e);
-    if(code == LV_EVENT_FOCUSED) {
-        lv_keyboard_set_textarea(kb, ta);
-        lv_obj_clear_flag(kb, LV_OBJ_FLAG_HIDDEN);
-    }
-
-    if(code == LV_EVENT_DEFOCUSED) {
-        lv_keyboard_set_textarea(kb, NULL);
-        lv_obj_add_flag(kb, LV_OBJ_FLAG_HIDDEN);
+    if(e->code == LV_EVENT_CLICKED){
+        if(ui_lora_get_mode() == LORA_MODE_SEND) {
+            ui_lora_set_mode(LORA_MODE_RECV);
+            lv_label_set_text(lora_sw_btn_info, "Recv");
+            for(int i = 0; i < GET_BUFF_LEN(lora_lab_buf); i++){
+                lv_label_set_text_fmt(lora_lab_buf[i], " ", i);
+            }
+            lora_cnt = 0;
+        } else if(ui_lora_get_mode() == LORA_MODE_RECV) {
+            ui_lora_set_mode(LORA_MODE_SEND);
+            lv_label_set_text(lora_sw_btn_info, "Send");
+            for(int i = 0; i < GET_BUFF_LEN(lora_lab_buf); i++){
+                lv_label_set_text_fmt(lora_lab_buf[i], " ", i);
+            }
+            lora_cnt = 0;
+        }
     }
 }
 
-static void create1(lv_obj_t *parent) {
-    
-    /*Create a keyboard to use it with an of the text areas*/
-    lv_obj_t * kb = lv_keyboard_create(parent);
+static void lora_RT_timer_event(lv_timer_t *t)
+{
+    static int data = 0;
+    char buf[32];
+    char *recv_info = NULL;
+    int recv_rssi = 0;
 
-    /*Create a text area. The keyboard will write here*/
-    lv_obj_t * ta;
-    ta = lv_textarea_create(parent);
-    lv_obj_align(ta, LV_ALIGN_TOP_LEFT, 10, 40);
-    lv_obj_add_event_cb(ta, ta_event_cb, LV_EVENT_ALL, kb);
-    lv_textarea_set_placeholder_text(ta, "Hello");
-    lv_obj_set_size(ta, 100, 80);
+    if(ui_lora_get_mode() == LORA_MODE_SEND) 
+    {
+        lv_snprintf(buf, 32, "DeckPro #%d", data++);
+        lv_label_set_text_fmt(lora_lab_buf[lora_cnt], "send-> %s", buf);
+        ui_lora_send(buf);
 
-    ta = lv_textarea_create(parent);
-    lv_obj_align(ta, LV_ALIGN_TOP_RIGHT, -10, 40);
-    lv_obj_add_event_cb(ta, ta_event_cb, LV_EVENT_ALL, kb);
-    lv_obj_set_size(ta, 100, 80);
+        lora_cnt++;
+        if(lora_cnt >= GET_BUFF_LEN(lora_lab_buf)) {
+            lora_cnt = 0;
+        }
+    }
+    else if(ui_lora_get_mode() == LORA_MODE_RECV)
+    {
+        if(ui_lora_get_recv(&recv_info, &recv_rssi))
+        {
+            ui_lora_set_recv_flag();
+            lv_label_set_text_fmt(lora_lab_buf[lora_cnt], "recv-> %s [%d]", recv_info, recv_rssi);
 
-    lv_keyboard_set_textarea(kb, ta);
+            lora_cnt++;
+            if(lora_cnt >= GET_BUFF_LEN(lora_lab_buf)) {
+                lora_cnt = 0;
+            }
+        }
+    }
+}
+
+static lv_obj_t * scr2_create_label(lv_obj_t *parent)
+{
+    lv_obj_t *label = lv_label_create(parent);
+    lv_obj_set_width(label, LV_HOR_RES - 26);
+    lv_obj_set_style_text_font(label, FONT_BOLD_SIZE_15, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(label, 0, LV_PART_MAIN);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_CLIP);
+    return label;
+}
+
+static void create1(lv_obj_t *parent) 
+{
+    scr1_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr1_cont, lv_pct(100), lv_pct(85));
+    lv_obj_set_style_bg_color(scr1_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr1_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr1_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(scr1_cont, 13, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr1_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr1_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr1_cont, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr1_cont, LV_ALIGN_BOTTOM_MID);
+
+    for(int i = 0; i < GET_BUFF_LEN(lora_lab_buf); i++){
+        lora_lab_buf[i] = scr2_create_label(scr1_cont);
+        lv_label_set_text_fmt(lora_lab_buf[i], " ", i);
+    }
+
+    lora_sw_btn = lv_btn_create(parent);
+    lv_obj_set_size(lora_sw_btn, 70, 25);
+    lv_obj_set_style_radius(lora_sw_btn, 5, LV_PART_MAIN);
+    lv_obj_set_style_border_width(lora_sw_btn, 2, LV_PART_MAIN);
+    lora_sw_btn_info = lv_label_create(lora_sw_btn);
+    lv_obj_set_style_text_font(lora_sw_btn_info, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    lv_obj_set_style_text_align(lora_sw_btn_info, LV_TEXT_ALIGN_CENTER, 0);
+    lv_label_set_text(lora_sw_btn_info, "Send");
+    lv_obj_center(lora_sw_btn_info);
+    lv_obj_align(lora_sw_btn, LV_ALIGN_TOP_MID, 0, 5);
+    lv_obj_add_event_cb(lora_sw_btn, lora_mode_sw_event, LV_EVENT_CLICKED, NULL);
+
+    lv_obj_t *lab = lv_label_create(parent);
+    lv_obj_set_style_text_font(lab, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    lv_label_set_text_fmt(lab, "%.1fM", ui_lora_get_freq());
+    lv_obj_align(lab, LV_ALIGN_TOP_RIGHT, -10, 10);
 
     // back
     scr_back_btn_create(parent, ("Lora"), scr1_btn_event_cb);
 }
-static void entry1(void) {ui_disp_full_refr();}
-static void exit1(void) {ui_disp_full_refr();}
+
+static void entry1(void) 
+{
+    ui_disp_full_refr();
+    lora_RT_timer = lv_timer_create(lora_RT_timer_event, 1000, NULL);
+}
+static void exit1(void) {
+    ui_disp_full_refr();
+    if(lora_RT_timer) {
+        lv_timer_del(lora_RT_timer);
+        lora_RT_timer = NULL;
+    }
+}
 static void destroy1(void) { }
 
 static scr_lifecycle_t screen1 = {

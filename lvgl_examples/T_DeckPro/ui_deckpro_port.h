@@ -40,6 +40,16 @@ extern "C" {
 
 void ui_disp_full_refr(void);
 
+// [ screen 1 ] --- lora
+#define LORA_MODE_SEND 0
+#define LORA_MODE_RECV 1
+float ui_lora_get_freq(void);
+int ui_lora_get_mode(void);
+void ui_lora_set_mode(int mode);
+void ui_lora_send(const char *str);
+bool ui_lora_get_recv(const char **str, int *rssi);
+void ui_lora_set_recv_flag(void);
+
 // [ screen 2 ] --- setting
 void ui_setting_set_language(int language);
 void ui_setting_set_keypad_light(bool on);
