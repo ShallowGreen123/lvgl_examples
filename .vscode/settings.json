@@ -1,18 +1,15 @@
 {
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#4E1B36",
+        "titleBar.activeBackground": "#6D264B",
+        "titleBar.activeForeground": "#FEFCFD"
+    },
     "files.associations": {
         "*.projbuild": "cmake",
-        "ui_base.h": "c",
-        "assets.h": "c",
-        "scr_mrg.h": "c",
-        "lvgl.h": "c",
-        "lvgl_app.h": "c",
-        "ui_epd47.h": "c",
-        "ui_embed_pn532.h": "c",
-        "ui_deckpro.h": "c",
-        "ui_port.h": "c",
-        "ui_epd47_port.h": "c",
-        "lv_i18n.h": "c",
-        "ui_deckpro_port.h": "c",
-        "random": "c"
+        "*.defaults": "makefile",
+        "random": "c",
+        "typeinfo": "c",
+        "system_error": "c",
+        "list": "c"
     }
 }

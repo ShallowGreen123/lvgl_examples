@@ -223,4 +223,17 @@ const char * ui_batt_25896_get_ntc_st(void)
     return "hello";
 }
 
+//************************************[ screen 7 ]****************************************** Input
+int ui_input_get_touch_coord(int *x, int *y)
+{
+    *x = lv_rand(0, LCD_HOR_SIZE);
+    *y = lv_rand(0, LCD_VER_SIZE);
+    return 1;
+}
+int ui_input_get_keypay_val(int *v)
+{
+    *v = lv_rand(0, LCD_VER_SIZE);
+    return 1;
+}
+
 #endif

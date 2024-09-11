@@ -11,8 +11,8 @@
 
 // ❗❗❗ -------------- Please select one below -------------- ❗❗❗
 #define UI_BASE_DISPALY        0
-#define UI_EPD47_DISPALY       1
-#define UI_EMBED_PN532_DISPALY 0
+#define UI_EPD47_DISPALY       0
+#define UI_EMBED_PN532_DISPALY 1
 #define UI_DECKPRO_DISPALY     0
 #define UI_ESP32_P4_DISPALY    0
 

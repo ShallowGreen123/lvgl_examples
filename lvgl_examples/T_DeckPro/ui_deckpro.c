@@ -84,8 +84,8 @@ static struct menu_btn menu_btn_list[] =
     {SCREEN4_ID,  "A:/img_wifi.png",    "Wifi",     23,     111},
     {SCREEN5_ID,  "A:/img_test.png",    "Test",     95,     111},
     {SCREEN6_ID,  "A:/img_batt.png",    "Battery",  167,    111},
-    {SCREEN7_ID,  "A:/img_lora.png", "Lora6", 23, 199},
-    {SCREEN8_ID,  "A:/img_lora.png", "Lora7", 95, 199},
+    {SCREEN7_ID,  "A:/img_touch.png",   "Input",    23,     199},
+    {SCREEN8_ID,  "A:/img_A7682.png",   "A7682",    95,     199},
     {SCREEN9_ID,  "A:/img_lora.png", "Lora8", 167, 199},
     {SCREEN10_ID, "A:/img_GPS.png", "Lora9", 23, 23},     // Page two
 };
@@ -675,7 +675,7 @@ static void create4(lv_obj_t *parent)
 static void entry4(void) 
 {
     ui_disp_full_refr();
-    wifi_scan_timer = lv_timer_create(wifi_scan_timer_event, 5000, NULL);
+    wifi_scan_timer = lv_timer_create(wifi_scan_timer_event, 3000, NULL);
     lv_timer_ready(wifi_scan_timer);
 }
 static void exit4(void) {
@@ -901,6 +901,11 @@ static scr_lifecycle_t screen6 = {
 #endif
 //************************************[ screen 7 ]******************************************  
 #if 1
+static lv_obj_t *scr7_cont;
+static lv_obj_t *input_touch;
+static lv_obj_t *input_keypad;
+static lv_timer_t *input_timer;
+
 static void scr7_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
@@ -908,16 +913,82 @@ static void scr7_btn_event_cb(lv_event_t * e)
     }
 }
 
+static void input_timer_event(lv_timer_t *t)
+{
+    int touch_x, touch_y;
+
+    int ret = ui_input_get_touch_coord(&touch_x, &touch_y);
+
+    if(ret > 0)
+    {
+        lv_label_set_text_fmt(input_touch,  "\nTouch x ---------- %d \n"
+                                            "\nTouch y ---------- %d \n", touch_x, touch_y);
+    }
+
+    int keypay_v;
+    ret = ui_input_get_keypay_val(&keypay_v);
+    if(ret > 0)
+    {
+        lv_label_set_text_fmt(input_keypad, "%d", keypay_v);
+    }
+
+}
+
 static void create7(lv_obj_t *parent) 
 {
-    
-    lv_obj_t *back7_label = scr_back_btn_create(parent, ("777"), scr7_btn_event_cb);
+    scr7_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr7_cont, lv_pct(100), lv_pct(88));
+    lv_obj_set_style_bg_color(scr7_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr7_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr7_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr7_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr7_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(scr7_cont, 13, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr7_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr7_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr7_cont, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr7_cont, LV_ALIGN_BOTTOM_MID);
+
+    lv_obj_t *lab1 = lv_label_create(scr7_cont);
+    lv_obj_set_style_text_font(lab1, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
+    lv_label_set_text(lab1, "Touch");
+
+    input_touch = lv_label_create(scr7_cont);
+    lv_obj_set_height(input_touch, 90);
+    lv_obj_set_width(input_touch, lv_pct(95));
+    lv_obj_set_style_pad_all(input_touch, 0, LV_PART_MAIN);
+    lv_obj_set_style_text_font(input_touch, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(input_touch, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(input_touch, LV_LABEL_LONG_WRAP);
+    lv_label_set_text_fmt(input_touch,  "\nTouch x ---------- \n"
+                                        "\nTouch y ---------- \n");
+
+    lv_obj_t *lab2 = lv_label_create(scr7_cont);
+    lv_obj_set_style_text_font(lab2, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
+    lv_label_set_text(lab2, "Keypad");
+
+    input_keypad = lv_label_create(scr7_cont);
+    lv_obj_set_height(input_keypad, 100);
+    lv_obj_set_width(input_keypad, lv_pct(95));
+    lv_obj_set_style_pad_all(input_keypad, 0, LV_PART_MAIN);
+    lv_obj_set_style_text_font(input_keypad, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(input_keypad, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(input_keypad, LV_LABEL_LONG_WRAP);
+    lv_label_set_text_fmt(input_keypad, "Please press the keyboard key!");
+
+    lv_obj_t *back7_label = scr_back_btn_create(parent, ("Input"), scr7_btn_event_cb);
 }
 static void entry7(void) 
 {
     ui_disp_full_refr();
+    input_timer = lv_timer_create(input_timer_event, 1000, NULL);
 }
 static void exit7(void) {
+    if(input_timer)
+    {
+        lv_timer_del(input_timer);
+        input_timer = NULL;
+    }
     ui_disp_full_refr();
 }
 static void destroy7(void) { }

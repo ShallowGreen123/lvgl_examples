@@ -255,6 +255,8 @@ static scr_lifecycle_t screen1 = {
 static lv_obj_t *scr2_cont;
 static lv_obj_t *scr2_cont_info;
 static lv_obj_t *lora_mode_sw;
+static lv_obj_t *lora_lab_time;
+static lv_obj_t *lora_lab_mode;
 
 static void scr2_btn_event_cb(lv_event_t * e)
 {
@@ -290,7 +292,7 @@ static lv_obj_t * scr2_create_label(lv_obj_t *parent)
     lv_obj_t *label = lv_label_create(parent);
     lv_obj_set_width(label, LCD_HOR_SIZE/2-50);
     lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
-    lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_width(label, 0, LV_PART_MAIN);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     return label;
 }
@@ -302,7 +304,7 @@ static void create2(lv_obj_t *parent) {
     lv_obj_set_style_bg_color(scr2_cont, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
     lv_obj_set_scrollbar_mode(scr2_cont, LV_SCROLLBAR_MODE_OFF);
     lv_obj_clear_flag(scr2_cont, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_set_style_border_width(scr2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr2_cont, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_all(scr2_cont, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_hor(scr2_cont, 20, LV_PART_MAIN);
     lv_obj_set_flex_flow(scr2_cont, LV_FLEX_FLOW_COLUMN);
@@ -315,7 +317,7 @@ static void create2(lv_obj_t *parent) {
     lv_obj_set_style_bg_color(scr2_cont_info, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
     lv_obj_set_scrollbar_mode(scr2_cont_info, LV_SCROLLBAR_MODE_OFF);
     lv_obj_clear_flag(scr2_cont_info, LV_OBJ_FLAG_SCROLLABLE);
-    // lv_obj_set_style_border_width(scr2_cont_info, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr2_cont_info, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_all(scr2_cont_info, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_hor(scr2_cont_info, 10, LV_PART_MAIN);
     lv_obj_set_flex_flow(scr2_cont_info, LV_FLEX_FLOW_COLUMN);
@@ -336,14 +338,22 @@ static void create2(lv_obj_t *parent) {
     //---------------------
     scr_middle_line(parent);
 
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %s", "Mode", "send");
+    lora_lab_mode = scr2_create_label(scr2_cont);
+    // int mode = ui_if_epd_get_LORA_mode();
+    // if(mode == LORA_MODE_SEND ){
+        lv_label_set_text_fmt(lora_lab_mode, "%s : %s", "Mode", "send");
+    // } else {
+    //     lv_label_set_text_fmt(lora_lab_mode, "%s : %s", "Mode", "recv");
+    // }
+
+    lora_lab_time = scr2_create_label(scr2_cont);
+    lv_label_set_text_fmt(lora_lab_time, "%s : %ds", "SendTimeInterval", 5);
 
     label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %0.1fMHz", "Frequency", 433.5);
+    lv_label_set_text_fmt(label, "%s : %0.1fMHz", "Frequency", 850.0);
 
     label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %0.1fKHz", "Bandwidth", 250.0);
+    lv_label_set_text_fmt(label, "%s : %0.1fKHz", "Bandwidth", 125.0);
 
     label = scr2_create_label(scr2_cont);
     lv_label_set_text_fmt(label, "%s : %d", "SpreadingFactor", 10);
@@ -358,7 +368,7 @@ static void create2(lv_obj_t *parent) {
     lv_label_set_text_fmt(label, "%s : %d", "OutputPower", 10);
 
     label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %d", "CurrentLimit", 80);
+    lv_label_set_text_fmt(label, "%s : %d", "CurrentLimit", 140);
 
     label = scr2_create_label(scr2_cont);
     lv_label_set_text_fmt(label, "%s : %d", "PreambleLength", 15);
@@ -371,7 +381,7 @@ static void create2(lv_obj_t *parent) {
 
     for(int i = 0; i < 10; i++) {
         label = scr2_create_label(scr2_cont_info);
-        lv_label_set_text_fmt(label, "%d", i);
+        lv_label_set_text_fmt(label, "Lora Send #%d", i);
     }
 
     //
@@ -436,7 +446,7 @@ static void scr3_add_img_btn(lv_obj_t *parent, const void *src, const char *tetx
     lv_obj_set_size(obj, LCD_HOR_SIZE/11, LCD_HOR_SIZE/11);
     lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
-    // lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(obj, 0, LV_PART_MAIN);
 
     lv_obj_t *img = lv_img_create(obj);
@@ -457,7 +467,7 @@ static void create3(lv_obj_t *parent) {
     lv_obj_set_size(scr3_cont_file, lv_pct(49), lv_pct(85));
     lv_obj_set_style_bg_color(scr3_cont_file, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
     lv_obj_set_scrollbar_mode(scr3_cont_file, LV_SCROLLBAR_MODE_OFF);
-    // lv_obj_set_style_border_width(scr3_cont_file, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr3_cont_file, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_all(scr3_cont_file, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_hor(scr3_cont_file, 5, LV_PART_MAIN);
     lv_obj_set_flex_flow(scr3_cont_file, LV_FLEX_FLOW_ROW_WRAP);
@@ -469,7 +479,7 @@ static void create3(lv_obj_t *parent) {
     lv_obj_set_size(scr3_cont_img, lv_pct(49), lv_pct(85));
     lv_obj_set_style_bg_color(scr3_cont_img, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
     lv_obj_set_scrollbar_mode(scr3_cont_img, LV_SCROLLBAR_MODE_OFF);
-    // lv_obj_set_style_border_width(scr3_cont_img, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr3_cont_img, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_all(scr3_cont_img, 0, LV_PART_MAIN);
     lv_obj_set_align(scr3_cont_img, LV_ALIGN_BOTTOM_RIGHT);
 
@@ -848,18 +858,18 @@ static void scr6_btn_event_cb(lv_event_t * e)
 
 static void create6(lv_obj_t *parent) {
 
-    bool wifi_st = true;
+    bool wifi_st = false;
     wifi_st_lab = lv_label_create(parent);
     lv_obj_set_width(wifi_st_lab, 360);
     // lv_obj_set_style_text_color(wifi_st_lab, lv_color_hex(COLOR_TEXT), LV_PART_MAIN);
     lv_obj_set_style_text_font(wifi_st_lab, &Font_Mono_Bold_25, LV_PART_MAIN);
-    lv_obj_set_style_border_width(wifi_st_lab, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_width(wifi_st_lab, 0, LV_PART_MAIN);
     lv_label_set_text(wifi_st_lab, (wifi_st ? "Wifi Connect" : "Wifi Disconnect"));
     lv_obj_set_style_text_align(wifi_st_lab, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN);
     lv_obj_align(wifi_st_lab, LV_ALIGN_BOTTOM_RIGHT, -0, -190);
 
     // if(ui_if_epd_get_WIFI()) {
-        wifi_info_label_create(parent);
+        // wifi_info_label_create(parent);
     // }
 
     // lv_label_set_text(tips_label,   "Use ESP Touch App Configure your network\n"
