@@ -45,11 +45,6 @@ extern "C" {
     #elif UI_DECKPRO_DISPALY 
         #define LCD_HOR_SIZE  240
         #define LCD_VER_SIZE  320
-    #elif UI_ESP32_P4_DISPALY 
-        // #define LCD_HOR_SIZE  1024
-        // #define LCD_VER_SIZE  600
-        #define LCD_HOR_SIZE  568
-        #define LCD_VER_SIZE  1024
     #endif
 #else
 #define LCD_HOR_SIZE 800

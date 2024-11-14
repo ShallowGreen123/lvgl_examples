@@ -26,8 +26,7 @@
 
     // my demo config
     #if (UI_BASE_DISPALY        || \
-        UI_EMBED_PN532_DISPALY  || \
-        UI_ESP32_P4_DISPALY)
+        UI_EMBED_PN532_DISPALY  )
 
         #define LV_COLOR_DEPTH          16
 

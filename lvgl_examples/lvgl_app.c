@@ -3,12 +3,12 @@
 #include "T_EPD47_S3/ui_epd47.h"
 #include "T_Embed_PN532/ui_embed_pn532.h"
 #include "T_DeckPro/ui_deckpro.h"
-#include "T_ESP32_P4/ui_esp32p4.h"
 
 
 /************************************************
  * UI ENTRY
 ************************************************/
+
 void lvgl_app_init(void)
 {
 #if UI_BASE_DISPALY
@@ -19,7 +19,6 @@ void lvgl_app_init(void)
     ui_embed_pn532_entry();     // https://github.com/Xinyuan-LilyGO/T-Embed-PN532.git
 #elif UI_DECKPRO_DISPALY
     ui_deckpro_entry();         //
-#elif UI_ESP32_P4_DISPALY
-    ui_esp32p4_entry();         // https://github.com/Xinyuan-LilyGO/T-Deck-Pro.git
+
 #endif
 }
