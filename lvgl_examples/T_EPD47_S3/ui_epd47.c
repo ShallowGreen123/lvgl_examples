@@ -3,7 +3,9 @@
 #include "ui_epd47.h"
 #include "ui_epd47_port.h"
 
-#if UI_EPD47_DISPALY
+#if UI_EPD47_DISPALY 1
+
+#define UI_PORTRAIT_SCR_MODE 1
 //************************************[ Other fun ]******************************************
 static void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
 {
@@ -58,18 +60,33 @@ static lv_obj_t *scr0_cont;
 struct menu_icon {
     const void *icon_src;
     const char *icon_str;
+    lv_coord_t offs_x;
+    lv_coord_t offs_y;
 };
 
+#if UI_PORTRAIT_SCR_MODE
 const struct menu_icon icon_buf[] = {
-    {"A:/img_clock.png", "clock"}, 
-    {"A:/img_lora.png", "lora"},
-    {"A:/img_sd_card.png", "sd card"},
-    {"A:/img_setting.png", "setting"},
-    {"A:/img_test.png", "test"},
-    {"A:/img_wifi.png", "wifi"},
-    {"A:/img_battery.png", "battery"},
-    {"A:/img_shutdown.png", "shutdown"},
+    {"A:/ver_clock.png",    "clock",    45, 375}, 
+    {"A:/ver_lora.png",     "lora",     45, 210},
+    {"A:/ver_sd.png",  "sd card",  45, 45},
+    {"A:/ver_setting.png",  "setting",  250, 375},
+    {"A:/ver_test.png",     "test",     250, 210},
+    {"A:/ver_wifi.png",     "wifi",     250, 45},
+    {"A:/ver_battery.png",  "battery",  455, 375},
+    {"A:/ver_shutdown.png", "shutdown", 455, 210},
 };
+#else
+const struct menu_icon icon_buf[] = {
+    {"A:/img_clock.png",    "clock",    0, 0}, 
+    {"A:/img_lora.png",     "lora",     0, 0},
+    {"A:/img_sd_card.png",  "sd card",  0, 0},
+    {"A:/img_setting.png",  "setting",  0, 0},
+    {"A:/img_test.png",     "test",     0, 0},
+    {"A:/img_wifi.png",     "wifi",     0, 0},
+    {"A:/img_battery.png",  "battery",  0, 0},
+    {"A:/img_shutdown.png", "shutdown", 0, 0},
+};
+#endif
 
 static void menu_btn_event(lv_event_t *e)
 {
@@ -93,6 +110,29 @@ static void menu_btn_event(lv_event_t *e)
 
 static void create0(lv_obj_t *parent) 
 {
+#if UI_PORTRAIT_SCR_MODE  // 如果菜单是竖屏
+
+    for(int i = 0; i < sizeof(icon_buf)/sizeof(icon_buf[0]); i++) {
+        lv_obj_t * btn = lv_btn_create(parent);
+        lv_obj_remove_style_all(btn);
+        lv_obj_set_width(btn, 160);
+        lv_obj_set_height(btn, 120);
+        lv_obj_set_x(btn, icon_buf[i].offs_x);
+        lv_obj_set_y(btn, icon_buf[i].offs_y);
+        lv_obj_add_flag(btn, LV_OBJ_FLAG_OVERFLOW_VISIBLE | LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+        lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+        lv_obj_set_style_radius(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_width(btn, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_shadow_width(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_shadow_spread(btn, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_bg_color(btn, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_bg_opa(btn, 255, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_outline_width(btn, 3, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_bg_img_src(btn, icon_buf[i].icon_src, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_add_event_cb(btn, menu_btn_event, LV_EVENT_CLICKED, (void *)i);
+    }
+
+#else
     lv_obj_t *scr0_cont = lv_obj_create(parent);
     lv_obj_set_size(scr0_cont, lv_pct(100), MENU_CONT_HIGH);
     lv_obj_set_style_bg_color(scr0_cont, lv_color_hex(0xffffff), LV_PART_MAIN);
@@ -140,6 +180,7 @@ static void create0(lv_obj_t *parent)
     for(int i = 0; i < MENU_ICON_NUM; i++) {
         lv_obj_align_to(lab_buf[i], img_buf[i], LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
     }
+#endif
 }
 static void entry0(void) { }
 static void exit0(void) { }

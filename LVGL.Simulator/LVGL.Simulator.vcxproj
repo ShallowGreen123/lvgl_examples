@@ -274,13 +274,6 @@
     <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h" />
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h" />
     <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.h" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\app\Calculator.hpp" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ttgo_ui\core\ui_core_type.h" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ttgo_ui\core\ui_core_utils.h" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ttgo_ui\ui_conf_internal.h" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ttgo_ui\widgets\ui_gesture.hpp" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ttgo_ui\widgets\ui_gesture_type.hpp" />
-    <ClInclude Include="..\lvgl_examples\T_ESP32_P4\ui_esp32p4.hpp" />
     <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h" />
     <ClInclude Include="..\lvgl_examples\ui_base\ui_base.h" />
     <ClInclude Include="lv_conf.h" />
@@ -752,9 +745,6 @@
     <ClCompile Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.c" />
     <ClCompile Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.c" />
-    <ClCompile Include="..\lvgl_examples\T_ESP32_P4\app\Calculator.cpp" />
-    <ClCompile Include="..\lvgl_examples\T_ESP32_P4\ttgo_ui\core\ui_core_utils.c" />
-    <ClCompile Include="..\lvgl_examples\T_ESP32_P4\ui_esp32p4.cpp" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Geist_Bold_20.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_15.c" />
     <ClCompile Include="..\lvgl_examples\ui_base\assets\Font_Han_Mono_Bold_16.c" />

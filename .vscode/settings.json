@@ -10,6 +10,11 @@
         "random": "c",
         "typeinfo": "c",
         "system_error": "c",
-        "list": "c"
+        "list": "c",
+        "array": "c",
+        "string": "c",
+        "param.h": "c",
+        "limits.h": "c",
+        "types.h": "c"
     }
 }
