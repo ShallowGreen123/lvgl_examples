@@ -236,4 +236,25 @@ int ui_input_get_keypay_val(int *v)
     return 1;
 }
 
+void ui_input_set_keypay_flag(void)
+{
+    
+}
+
+int ui_other_get_LTR(int *ch0, int *ch1, int *ps)
+{
+    if(ch0 != NULL) *ch0 = lv_rand(0, LCD_VER_SIZE);
+    if(ch1 != NULL) *ch1 = lv_rand(0, LCD_VER_SIZE);
+    if(ps  != NULL) *ps  = lv_rand(0, LCD_VER_SIZE);
+    return 1;
+}
+
+int ui_other_get_gyro(float *gyro_x, float *gyro_y, float *gyro_z)
+{
+    if(gyro_x != NULL) *gyro_x = lv_rand(0, LCD_VER_SIZE);
+    if(gyro_y != NULL) *gyro_y = lv_rand(0, LCD_VER_SIZE);
+    if(gyro_z != NULL) *gyro_z = lv_rand(0, LCD_VER_SIZE);
+    return 1;
+}
+
 #endif

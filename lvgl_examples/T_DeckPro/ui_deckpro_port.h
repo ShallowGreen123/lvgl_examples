@@ -101,6 +101,9 @@ const char * ui_batt_25896_get_ntc_st(void);
 // [ screen 7 ] --- Input
 int ui_input_get_touch_coord(int *x, int *y);
 int ui_input_get_keypay_val(int *v);
+void ui_input_set_keypay_flag(void);
+int ui_other_get_LTR(int *ch0, int *ch1, int *ps);
+int ui_other_get_gyro(float *gyro_x, float *gyro_y, float *gyro_z);
 
 #endif /* UI_DECKPOR_DISPALY */
 #ifdef __cplusplus

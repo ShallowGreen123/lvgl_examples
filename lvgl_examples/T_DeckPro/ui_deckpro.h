@@ -53,6 +53,8 @@ typedef struct _ui_setting
 
 typedef struct _ui_test {
     const char *name;
+    lv_obj_t *obj;
+    lv_obj_t *st;
     bool (*cb)(void);
 } ui_test_handle;
 

@@ -394,7 +394,13 @@ static scr_lifecycle_t screen1 = {
 //************************************[ screen 2 ]****************************************** setting
 #if 1
 
+#define SETTING_PAGE_MAX_ITEM 7
+
+static lv_obj_t *setting_list;
+static lv_obj_t *setting_page;
 static int setting_num = 0;
+static int setting_page_num = 0;
+static int setting_curr_page = 0;
 static _ui_setting_handle setting_handle_list[] = {
     {"Keypad Backlight",    NULL, NULL, ui_setting_set_keypad_light, ui_setting_get_keypad_light},
     {"Motor Status",        NULL, NULL, ui_setting_set_motor_status, ui_setting_get_motor_status},
@@ -402,7 +408,18 @@ static _ui_setting_handle setting_handle_list[] = {
     {"Power Lora",          NULL, NULL, ui_setting_set_lora_status, ui_setting_get_lora_status},
     {"Power Gyro",          NULL, NULL, ui_setting_set_gyro_status, ui_setting_get_gyro_status},
     {"Power A7682",         NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-1",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-2",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-3",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-4",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-5",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-6",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-7",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-8",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+    {"Power A7682-9",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
 };
+
+static void setting_item_create(int curr_apge);
 
 static void scr2_btn_event_cb(lv_event_t * e)
 {
@@ -422,23 +439,44 @@ static void setting_scr_event(lv_event_t *e)
     }
 }
 
-static void create2(lv_obj_t *parent) 
+static void setting_page_switch_cb(lv_event_t *e)
 {
-    lv_obj_t * setting_list = lv_list_create(parent);
-    lv_obj_set_size(setting_list, LV_HOR_RES, lv_pct(88));
-    lv_obj_align(setting_list, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_set_style_bg_color(setting_list, DECKPRO_COLOR_BG, LV_PART_MAIN);
-    lv_obj_set_style_pad_top(setting_list, 2, LV_PART_MAIN);
-    lv_obj_set_style_pad_row(setting_list, 3, LV_PART_MAIN);
-    lv_obj_set_style_radius(setting_list, 0, LV_PART_MAIN);
-    // lv_obj_set_style_outline_pad(setting_list, 2, LV_PART_MAIN);
-    lv_obj_set_style_border_width(setting_list, 0, LV_PART_MAIN);
-    lv_obj_set_style_border_color(setting_list, DECKPRO_COLOR_FG, LV_PART_MAIN);
-    lv_obj_set_style_shadow_width(setting_list, 0, LV_PART_MAIN);
+    char opt = (int)e->user_data;
+    
+    if(setting_num < SETTING_PAGE_MAX_ITEM) return;
 
-    setting_num = sizeof(setting_handle_list) / sizeof(setting_handle_list[0]);
+    int child_cnt = lv_obj_get_child_cnt(setting_list);
+    
+    for(int i = 0; i < child_cnt; i++)
+    {
+        lv_obj_t *child = lv_obj_get_child(setting_list, 0);
+        if(child)
+            lv_obj_del(child);
+    }
 
-    for(int i = 0; i < setting_num; i++) {
+    if(opt == 'p')
+    {
+        setting_curr_page = (setting_curr_page < setting_page_num) ? setting_curr_page + 1 : 0;
+    }
+    else if(opt == 'n')
+    {
+        setting_curr_page = (setting_curr_page > 0) ? setting_curr_page - 1 : setting_page_num;
+    }
+
+    setting_item_create(setting_curr_page);
+    lv_label_set_text_fmt(setting_page, "%d / %d", setting_curr_page, setting_page_num);
+}
+
+static void setting_item_create(int curr_apge)
+{
+    printf("setting_curr_page = %d\n", setting_curr_page);
+    int start = (curr_apge * SETTING_PAGE_MAX_ITEM);
+    int end = start + SETTING_PAGE_MAX_ITEM;
+    if(end > setting_num) end = setting_num;
+
+    printf("start=%d, end=%d\n", start, end);
+
+    for(int i = start; i < end; i++) {
         _ui_setting_handle *h = &setting_handle_list[i];
         h->obj = lv_list_add_btn(setting_list, NULL, h->name);
         h->st = lv_label_create(h->obj);
@@ -454,6 +492,87 @@ static void create2(lv_obj_t *parent)
         lv_obj_set_style_outline_width(h->obj, 3, LV_PART_MAIN | LV_STATE_PRESSED);
         lv_obj_add_event_cb(h->obj, setting_scr_event, LV_EVENT_CLICKED, (void *)h);
     }
+}
+
+static void create2(lv_obj_t *parent) 
+{
+    setting_list = lv_list_create(parent);
+    lv_obj_set_size(setting_list, LV_HOR_RES, lv_pct(88));
+    lv_obj_align(setting_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(setting_list, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_style_pad_top(setting_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(setting_list, 3, LV_PART_MAIN);
+    lv_obj_set_style_radius(setting_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(setting_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_border_width(setting_list, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_color(setting_list, DECKPRO_COLOR_FG, LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(setting_list, 0, LV_PART_MAIN);
+
+    setting_num = sizeof(setting_handle_list) / sizeof(setting_handle_list[0]);
+    setting_page_num = setting_num / SETTING_PAGE_MAX_ITEM;
+
+    setting_item_create(setting_curr_page);
+
+    lv_obj_t * ui_Button2 = lv_btn_create(parent);
+    lv_obj_set_width(ui_Button2, 71);
+    lv_obj_set_height(ui_Button2, 40);
+    lv_obj_set_x(ui_Button2, -70);
+    lv_obj_set_y(ui_Button2, 130);
+    lv_obj_set_align(ui_Button2, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button2, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_Button2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_Button2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button2, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+
+    lv_obj_t * ui_Label1 = lv_label_create(ui_Button2);
+    lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label1, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label1, "Back");
+    lv_obj_set_style_text_color(ui_Label1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t * ui_Button14 = lv_btn_create(parent);
+    lv_obj_set_width(ui_Button14, 71);
+    lv_obj_set_height(ui_Button14, 40);
+    lv_obj_set_x(ui_Button14, 70);
+    lv_obj_set_y(ui_Button14, 130);
+    lv_obj_set_align(ui_Button14, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button14, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button14, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_Button14, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_Button14, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button14, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+
+    lv_obj_t * ui_Label15 = lv_label_create(ui_Button14);
+    lv_obj_set_width(ui_Label15, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label15, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label15, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label15, "Next");
+    lv_obj_set_style_text_color(ui_Label15, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label15, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(ui_Button2, setting_page_switch_cb, LV_EVENT_CLICKED, (void*)'n');
+    lv_obj_add_event_cb(ui_Button14, setting_page_switch_cb, LV_EVENT_CLICKED, (void*)'p');
+
+    setting_page = lv_label_create(parent);
+    lv_obj_set_width(setting_page, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(setting_page, LV_SIZE_CONTENT);    /// 1
+    lv_obj_align(setting_page, LV_ALIGN_BOTTOM_MID, 0, -23);
+    lv_label_set_text_fmt(setting_page, "%d / %d", setting_curr_page, setting_page_num);
+    lv_obj_set_style_text_color(setting_page, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(setting_page, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     scr_back_btn_create(parent, ("Setting"), scr2_btn_event_cb);
 }
@@ -612,7 +731,6 @@ static void scr4_btn_event_cb(lv_event_t * e)
     }
 }
 
-
 static void show_wifi_scan(void)
 {
 #define BUFF_LEN 400
@@ -640,7 +758,6 @@ static void show_wifi_scan(void)
     lv_label_set_text(wifi_scan_lab, buf);
 #undef BUFF_LEN
 }
-
 
 static void wifi_scan_timer_event(lv_timer_t *t)
 {
@@ -696,14 +813,29 @@ static scr_lifecycle_t screen4 = {
 #endif
 //************************************[ screen 5 ]****************************************** Test
 #if 1
+static lv_obj_t *test_list;
+static lv_obj_t *test_page;
+static int test_num = 0;
+static int test_page_num = 0;
+static int test_curr_page = 0;
+
 static ui_test_handle test_handle_list[] = {
-    {"SD Card", ui_sd_is_vaild},
-    {"Lora", ui_lora_is_vaild},
-    {"Keypad", ui_keypad_is_vaild},
-    {"BQ25896", ui_bq25896_is_vaild},
-    {"BQ27220", ui_bq27220_is_vaild},
-    {"LTR553ALS", ui_ltr553_is_vaild},
+    {"SD Card",   NULL, NULL, ui_sd_is_vaild},
+    {"Lora",      NULL, NULL, ui_lora_is_vaild},
+    {"Keypad",    NULL, NULL, ui_keypad_is_vaild},
+    {"BQ25896",   NULL, NULL, ui_bq25896_is_vaild},
+    {"BQ27220",   NULL, NULL, ui_bq27220_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
+    {"LTR553ALS", NULL, NULL, ui_ltr553_is_vaild},
 };
+
+static void test_item_create(int curr_apge);
 
 static void scr5_btn_event_cb(lv_event_t * e)
 {
@@ -711,9 +843,65 @@ static void scr5_btn_event_cb(lv_event_t * e)
         scr_mgr_switch(SCREEN0_ID, false);
     }
 }
+
+static void test_page_switch_cb(lv_event_t *e)
+{
+    char opt = (int)e->user_data;
+    
+    if(test_num < SETTING_PAGE_MAX_ITEM) return;
+
+    int child_cnt = lv_obj_get_child_cnt(test_list);
+    
+    for(int i = 0; i < child_cnt; i++)
+    {
+        lv_obj_t *child = lv_obj_get_child(test_list, 0);
+        if(child)
+            lv_obj_del(child);
+    }
+
+    if(opt == 'p')
+    {
+        test_curr_page = (test_curr_page < test_page_num) ? test_curr_page + 1 : 0;
+    }
+    else if(opt == 'n')
+    {
+        test_curr_page = (test_curr_page > 0) ? test_curr_page - 1 : test_page_num;
+    }
+
+    test_item_create(test_curr_page);
+    lv_label_set_text_fmt(test_page, "%d / %d", test_curr_page, test_page_num);
+}
+
+static void test_item_create(int curr_apge)
+{
+    printf("test_curr_page = %d\n", test_curr_page);
+    int start = (curr_apge * SETTING_PAGE_MAX_ITEM);
+    int end = start + SETTING_PAGE_MAX_ITEM;
+    if(end > test_num) end = test_num;
+
+    printf("start=%d, end=%d\n", start, end);
+
+    for(int i = start; i < end; i++) {
+        ui_test_handle *h = &test_handle_list[i];
+        h->obj = lv_list_add_btn(test_list, NULL, h->name);
+        h->st = lv_label_create(h->obj);
+        lv_obj_set_style_text_font(h->st, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+        lv_obj_align(h->st, LV_ALIGN_RIGHT_MID, 0, 0);
+        lv_label_set_text_fmt(h->st, "%s", (h->cb() ? "PASS" : "----"));
+        // style
+        lv_obj_set_style_text_font(h->obj, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(h->obj, DECKPRO_COLOR_BG, LV_PART_MAIN);
+        lv_obj_set_style_text_color(h->obj, DECKPRO_COLOR_FG, LV_PART_MAIN);
+        lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_outline_width(h->obj, 3, LV_PART_MAIN | LV_STATE_PRESSED);
+        // lv_obj_add_event_cb(h->obj, test_scr_event, LV_EVENT_CLICKED, (void *)h);
+    }
+}
+
 static void create5(lv_obj_t *parent) 
 {
-    lv_obj_t *test_list = lv_list_create(parent);
+    test_list = lv_list_create(parent);
     lv_obj_set_size(test_list, LV_HOR_RES, lv_pct(88));
     lv_obj_align(test_list, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_color(test_list, DECKPRO_COLOR_BG, LV_PART_MAIN);
@@ -725,23 +913,70 @@ static void create5(lv_obj_t *parent)
     lv_obj_set_style_border_color(test_list, DECKPRO_COLOR_FG, LV_PART_MAIN);
     lv_obj_set_style_shadow_width(test_list, 0, LV_PART_MAIN);
 
-    for(int i = 0; i < sizeof(test_handle_list) / sizeof(test_handle_list[0]); i++) {
-        lv_obj_t *item = lv_list_add_btn(test_list, NULL, test_handle_list[i].name);
-        lv_obj_t *label = lv_label_create(item);
-        lv_obj_set_style_text_font(label, FONT_BOLD_MONO_SIZE_16, LV_PART_MAIN);
-        lv_obj_align(label, LV_ALIGN_RIGHT_MID, 0, 0);
-        lv_label_set_text_fmt(label, "%s", (test_handle_list[i].cb() ? "PASS" : "FAIL"));
-    }
+    test_num = sizeof(test_handle_list) / sizeof(test_handle_list[0]);
+    test_page_num = test_num / SETTING_PAGE_MAX_ITEM;
+    test_item_create(test_curr_page);
 
-    for(int i = 0; i < lv_obj_get_child_cnt(test_list); i++) {
-        lv_obj_t *item = lv_obj_get_child(test_list, i);
-        lv_obj_set_style_text_font(item, FONT_BOLD_MONO_SIZE_16, LV_PART_MAIN);
-        lv_obj_set_style_bg_color(item, DECKPRO_COLOR_BG, LV_PART_MAIN);
-        lv_obj_set_style_text_color(item, DECKPRO_COLOR_FG, LV_PART_MAIN);
-        lv_obj_set_style_border_width(item, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_set_style_border_width(item, 1, LV_PART_MAIN | LV_STATE_PRESSED);
-        lv_obj_set_style_outline_width(item, 3, LV_PART_MAIN | LV_STATE_PRESSED);
-    }
+    lv_obj_t * ui_Button2 = lv_btn_create(parent);
+    lv_obj_set_width(ui_Button2, 71);
+    lv_obj_set_height(ui_Button2, 40);
+    lv_obj_set_x(ui_Button2, -70);
+    lv_obj_set_y(ui_Button2, 130);
+    lv_obj_set_align(ui_Button2, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button2, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_Button2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_Button2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button2, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+
+    lv_obj_t * ui_Label1 = lv_label_create(ui_Button2);
+    lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label1, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label1, "Back");
+    lv_obj_set_style_text_color(ui_Label1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t * ui_Button14 = lv_btn_create(parent);
+    lv_obj_set_width(ui_Button14, 71);
+    lv_obj_set_height(ui_Button14, 40);
+    lv_obj_set_x(ui_Button14, 70);
+    lv_obj_set_y(ui_Button14, 130);
+    lv_obj_set_align(ui_Button14, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button14, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button14, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_Button14, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_Button14, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button14, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+
+    lv_obj_t * ui_Label15 = lv_label_create(ui_Button14);
+    lv_obj_set_width(ui_Label15, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label15, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label15, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label15, "Next");
+    lv_obj_set_style_text_color(ui_Label15, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label15, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(ui_Button2, test_page_switch_cb, LV_EVENT_CLICKED, (void*)'n');
+    lv_obj_add_event_cb(ui_Button14, test_page_switch_cb, LV_EVENT_CLICKED, (void*)'p');
+
+    test_page = lv_label_create(parent);
+    lv_obj_set_width(test_page, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(test_page, LV_SIZE_CONTENT);    /// 1
+    lv_obj_align(test_page, LV_ALIGN_BOTTOM_MID, 0, -23);
+    lv_label_set_text_fmt(test_page, "%d / %d", test_curr_page, test_page_num);
+    lv_obj_set_style_text_color(test_page, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(test_page, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t *back5_label = scr_back_btn_create(parent, ("Test"), scr5_btn_event_cb);
 }
@@ -831,11 +1066,11 @@ static void scr6_btn_event_cb(lv_event_t * e)
     }
 }
 
-void batt_trans_event_cb(lv_event_t *e)
+static void batt_trans_event_cb(lv_event_t *e)
 {
     if(e->code == LV_EVENT_CLICKED) {
         show_batt_type = !show_batt_type;
-        // scr6_battert_updata();
+        scr6_battert_updata();
     }
 }
 
@@ -899,11 +1134,13 @@ static scr_lifecycle_t screen6 = {
     .destroy = destroy6,
 };
 #endif
-//************************************[ screen 7 ]******************************************  
+//************************************[ screen 7 ]****************************************** Other
 #if 1
 static lv_obj_t *scr7_cont;
 static lv_obj_t *input_touch;
 static lv_obj_t *input_keypad;
+static lv_obj_t *light_sensor;
+static lv_obj_t *gyroscope;
 static lv_timer_t *input_timer;
 
 static void scr7_btn_event_cb(lv_event_t * e)
@@ -921,17 +1158,35 @@ static void input_timer_event(lv_timer_t *t)
 
     if(ret > 0)
     {
-        lv_label_set_text_fmt(input_touch,  "\nTouch x ---------- %d \n"
-                                            "\nTouch y ---------- %d \n", touch_x, touch_y);
+        lv_label_set_text_fmt(input_touch,  "Touch: x: %03d | y: %03d", touch_x, touch_y);
     }
 
     int keypay_v;
     ret = ui_input_get_keypay_val(&keypay_v);
     if(ret > 0)
     {
-        lv_label_set_text_fmt(input_keypad, "%d", keypay_v);
+        ui_input_set_keypay_flag();
+        lv_label_set_text_fmt(input_keypad, "Keypad: %d", keypay_v);
     }
 
+    static int sec = 0;
+    int ch0, ch1 ,ps;
+    float gyro_x, gyro_y, gyro_z;
+
+    sec++;
+    if(sec > 50) // 5s
+    {
+        sec = 0;
+        ui_other_get_LTR(&ch0, &ch1, &ps);
+        lv_label_set_text_fmt(light_sensor, "   c0: %d\n"
+                                            "   c1: %d\n"
+                                            "   ps: %d", ch0, ch1 ,ps);
+
+        ui_other_get_gyro(&gyro_x, &gyro_y, &gyro_z);
+        lv_label_set_text_fmt(gyroscope,    "   gyros_x: %.3f\n"
+                                            "   gyros_y: %.3f\n"
+                                            "   gyros_z: %.3f", gyro_x, gyro_y, gyro_z);
+    }
 }
 
 static void create7(lv_obj_t *parent) 
@@ -945,43 +1200,64 @@ static void create7(lv_obj_t *parent)
     lv_obj_set_style_pad_all(scr7_cont, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_left(scr7_cont, 13, LV_PART_MAIN);
     lv_obj_set_flex_flow(scr7_cont, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr7_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr7_cont, 10, LV_PART_MAIN);
     lv_obj_set_style_pad_column(scr7_cont, 5, LV_PART_MAIN);
     lv_obj_set_align(scr7_cont, LV_ALIGN_BOTTOM_MID);
 
-    lv_obj_t *lab1 = lv_label_create(scr7_cont);
-    lv_obj_set_style_text_font(lab1, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
-    lv_label_set_text(lab1, "Touch");
-
     input_touch = lv_label_create(scr7_cont);
-    lv_obj_set_height(input_touch, 90);
+    // lv_obj_set_height(input_touch, 90);
     lv_obj_set_width(input_touch, lv_pct(95));
     lv_obj_set_style_pad_all(input_touch, 0, LV_PART_MAIN);
-    lv_obj_set_style_text_font(input_touch, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
-    lv_obj_set_style_border_width(input_touch, 1, LV_PART_MAIN);
+    lv_obj_set_style_text_font(input_touch, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_border_width(input_touch, 1, LV_PART_MAIN);
     lv_label_set_long_mode(input_touch, LV_LABEL_LONG_WRAP);
-    lv_label_set_text_fmt(input_touch,  "\nTouch x ---------- \n"
-                                        "\nTouch y ---------- \n");
-
-    lv_obj_t *lab2 = lv_label_create(scr7_cont);
-    lv_obj_set_style_text_font(lab2, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
-    lv_label_set_text(lab2, "Keypad");
+    lv_label_set_text(input_touch,  "Touch: x:     | y:    ");
 
     input_keypad = lv_label_create(scr7_cont);
-    lv_obj_set_height(input_keypad, 100);
+    // lv_obj_set_height(input_keypad, 100);
     lv_obj_set_width(input_keypad, lv_pct(95));
     lv_obj_set_style_pad_all(input_keypad, 0, LV_PART_MAIN);
-    lv_obj_set_style_text_font(input_keypad, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
-    lv_obj_set_style_border_width(input_keypad, 1, LV_PART_MAIN);
+    lv_obj_set_style_text_font(input_keypad, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_border_width(input_keypad, 1, LV_PART_MAIN);
     lv_label_set_long_mode(input_keypad, LV_LABEL_LONG_WRAP);
-    lv_label_set_text_fmt(input_keypad, "Please press the keyboard key!");
+    lv_label_set_text_fmt(input_keypad, "Keypad: ");
 
-    lv_obj_t *back7_label = scr_back_btn_create(parent, ("Input"), scr7_btn_event_cb);
+    lv_obj_t *lab1 = lv_label_create(scr7_cont);
+    lv_obj_set_style_text_font(lab1, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
+    lv_label_set_text(lab1, "light sensor");
+
+    light_sensor = lv_label_create(scr7_cont);
+    // lv_obj_set_height(input_keypad, 100);
+    lv_obj_set_width(light_sensor, lv_pct(95));
+    lv_obj_set_style_pad_all(light_sensor, 0, LV_PART_MAIN);
+    lv_obj_set_style_text_font(light_sensor, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_border_width(light_sensor, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(light_sensor, LV_LABEL_LONG_WRAP);
+    lv_label_set_text_fmt(light_sensor, "   c0: \n"
+                                        "   c1: \n"
+                                        "   ps: ");
+
+    lv_obj_t *lab2 = lv_label_create(scr7_cont);
+    lv_obj_set_style_text_font(lab2, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
+    lv_label_set_text(lab2, "gyroscope");
+
+    gyroscope = lv_label_create(scr7_cont);
+    // lv_obj_set_height(input_keypad, 100);
+    lv_obj_set_width(gyroscope, lv_pct(95));
+    lv_obj_set_style_pad_all(gyroscope, 0, LV_PART_MAIN);
+    lv_obj_set_style_text_font(gyroscope, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_border_width(gyroscope, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(gyroscope, LV_LABEL_LONG_WRAP);
+    lv_label_set_text_fmt(gyroscope,    "   gyros_x: \n"
+                                        "   gyros_y: \n"
+                                        "   gyros_z: ");
+
+    lv_obj_t *back7_label = scr_back_btn_create(parent, ("Other"), scr7_btn_event_cb);
 }
 static void entry7(void) 
 {
     ui_disp_full_refr();
-    input_timer = lv_timer_create(input_timer_event, 1000, NULL);
+    input_timer = lv_timer_create(input_timer_event, 100, NULL);
 }
 static void exit7(void) {
     if(input_timer)
@@ -1041,7 +1317,6 @@ static void scr9_btn_event_cb(lv_event_t * e)
 
 static void create9(lv_obj_t *parent) 
 {
-    
     lv_obj_t *back9_label = scr_back_btn_create(parent, ("999"), scr9_btn_event_cb);
 }
 static void entry9(void) 
