@@ -926,6 +926,63 @@ static scr_lifecycle_t screen3 = {
 };
 #endif
 //************************************[ screen 4 ]****************************************** setting
+
+// --------------------- screen 4.1 --------------------- About System
+#if 1
+static lv_obj_t *scr4_1_cont;
+
+static void entry4_1_anim(lv_obj_t *obj) { entry1_anim(obj); }
+static void exit4_1_anim(int user_data, lv_obj_t *obj) { exit1_anim(user_data, obj); }
+
+static void scr4_1_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        exit4_1_anim(SCREEN4_ID, scr4_1_cont);
+    }
+}
+
+static void create4_1(lv_obj_t *parent) 
+{   
+    scr4_1_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr4_1_cont, lv_pct(100), lv_pct(100));
+    lv_obj_set_style_bg_color(scr4_1_cont, lv_color_hex(EMBED_PN532_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr4_1_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_set_style_border_width(scr4_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr4_1_cont, 0, LV_PART_MAIN);
+
+    lv_obj_t *label = lv_label_create(scr4_1_cont);
+    lv_obj_set_style_text_color(label, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, &Font_Mono_Bold_14, LV_PART_MAIN);
+    lv_label_set_text(label, "About System");
+    lv_obj_align(label, LV_ALIGN_TOP_MID, 0, 10);
+
+    lv_obj_t *info = lv_label_create(scr4_1_cont);
+    lv_obj_set_width(info, LCD_HOR_SIZE * 0.9);
+    lv_obj_set_style_text_color(info, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
+    lv_obj_set_style_text_font(info, &Font_Mono_Bold_14, LV_PART_MAIN);
+    lv_label_set_long_mode(info, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(info, "Version:              v1.0 24.12.03 \n"
+                            "----------------------------------- \n"
+                            "Version:              v1.0 24.12.03 \n");
+    lv_obj_align_to(info, label, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+    // back bottom
+    scr_back_btn_create(scr4_1_cont, scr4_1_btn_event_cb);
+}
+static void entry4_1(void) {
+    entry4_1_anim(scr4_1_cont);
+}
+static void exit4_1(void) {}
+static void destroy4_1(void) {}
+
+static scr_lifecycle_t screen4_1 = {
+    .create = create4_1,
+    .entry = entry4_1,
+    .exit  = exit4_1,
+    .destroy = destroy4_1,
+};
+#endif
+// --------------------- screen 4 ----------------------- 
 #if 1
 static lv_obj_t *scr4_cont;
 static lv_obj_t *setting_list;
@@ -1012,7 +1069,7 @@ void setting_scr_event(lv_event_t *e)
         case 2: // "UI Theme"
             break;
         case 3: // "System Sound"
-            prompt_info("No speaker found", 1000);
+            scr_mgr_switch(SCREEN4_1_ID, false);
             break;
         case 4: {// "Shutdown"
                 lv_obj_clear_flag(shutdown_up, LV_OBJ_FLAG_HIDDEN);
@@ -1080,7 +1137,7 @@ static void create4(lv_obj_t *parent) {
     lv_obj_t *setting1 = lv_list_add_btn(setting_list, NULL, "- Rotatoion");
     lv_obj_t *setting2 = lv_list_add_btn(setting_list, NULL, "- Deep Sleep");
     lv_obj_t *setting3 = lv_list_add_btn(setting_list, NULL, "- UI Theme");
-    lv_obj_t *setting4 = lv_list_add_btn(setting_list, NULL, "- System Sound");
+    lv_obj_t *setting4 = lv_list_add_btn(setting_list, NULL, "- About System");
     lv_obj_t *setting5 = lv_list_add_btn(setting_list, NULL, "- Shutdown");
 
     for(int i = 0; i < lv_obj_get_child_cnt(setting_list); i++) {
@@ -1865,23 +1922,24 @@ void ui_embed_pn532_entry(void)
 { 
     scr_mgr_init();
     scr_mgr_set_bg_color(EMBED_PN532_COLOR_BG);
-    scr_mgr_register(SCREEN0_ID, &screen0);
-    scr_mgr_register(SCREEN1_ID, &screen1);
-    scr_mgr_register(SCREEN2_ID, &screen2);
-    scr_mgr_register(SCREEN3_ID, &screen3);
-    scr_mgr_register(SCREEN4_ID, &screen4);
-    scr_mgr_register(SCREEN5_ID, &screen5);
-    scr_mgr_register(SCREEN6_ID, &screen6);
-    scr_mgr_register(SCREEN7_ID, &screen7);
-    scr_mgr_register(SCREEN7_1_ID, &screen7_1); //   -IR
-    scr_mgr_register(SCREEN7_2_ID, &screen7_2); //   -MIC
-    scr_mgr_register(SCREEN7_3_ID, &screen7_3); //   -TF Card
-    scr_mgr_register(SCREEN8_ID, &screen8);
+    scr_mgr_register(SCREEN0_ID,    &screen0);
+    scr_mgr_register(SCREEN1_ID,    &screen1);
+    scr_mgr_register(SCREEN2_ID,    &screen2);
+    scr_mgr_register(SCREEN3_ID,    &screen3);
+    scr_mgr_register(SCREEN4_ID,    &screen4);
+    scr_mgr_register(SCREEN4_1_ID,  &screen4_1); // setting - about
+    scr_mgr_register(SCREEN5_ID,    &screen5);
+    scr_mgr_register(SCREEN6_ID,    &screen6);
+    scr_mgr_register(SCREEN7_ID,    &screen7);
+    scr_mgr_register(SCREEN7_1_ID,  &screen7_1); // other - IR
+    scr_mgr_register(SCREEN7_2_ID,  &screen7_2); // other - MIC
+    scr_mgr_register(SCREEN7_3_ID,  &screen7_3); // other - TF Card
+    scr_mgr_register(SCREEN8_ID,    &screen8);
 
     // set root
     scr_mgr_switch(SCREEN0_ID, false);
 
-    ui_embed_starting_up();
+    // ui_embed_starting_up();
 }
 
 #endif // UI_EMBED_PN532_DISPALY   

@@ -922,6 +922,15 @@ static void create4(lv_obj_t *parent) {
 
     // lv_obj_align_to(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 
+    lv_obj_t *info = lv_label_create(parent);
+    lv_obj_set_width(info, LCD_HOR_SIZE * 0.9);
+    // lv_obj_set_style_text_color(info, lv_color_hex(EMBED_PN532_COLOR_TEXT), LV_PART_MAIN);
+    lv_obj_set_style_text_font(info, &Font_Mono_Bold_30, LV_PART_MAIN);
+    lv_label_set_long_mode(info, LV_LABEL_LONG_WRAP);
+    lv_label_set_text_fmt(info, "%s", T5_EPER_S3_SF_VER);
+    lv_obj_align(info, LV_ALIGN_BOTTOM_MID, 0, -10);
+    lv_obj_set_style_text_align(info, LV_TEXT_ALIGN_CENTER, 0);
+
     // back
     scr_back_btn_create(parent, "Setting", scr4_btn_event_cb);
 }
