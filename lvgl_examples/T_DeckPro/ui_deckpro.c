@@ -5,6 +5,7 @@
 #if UI_DECKPRO_DISPALY
 
 #define line_max 21
+#define SETTING_PAGE_MAX_ITEM 7
 #define GET_BUFF_LEN(a) sizeof(a)/sizeof(a[0])
 
 #define FONT_BOLD_SIZE_14 &Font_Mono_Bold_14
@@ -19,6 +20,8 @@
 #define FONT_BOLD_MONO_SIZE_17 &Font_Mono_Bold_17
 #define FONT_BOLD_MONO_SIZE_18 &Font_Mono_Bold_18
 #define FONT_BOLD_MONO_SIZE_19 &Font_Mono_Bold_19
+
+static char tmp_buf[30];
 
 static lv_timer_t *touch_chk_timer = NULL;
 static lv_obj_t *label_list[10] = {0};
@@ -62,8 +65,31 @@ static lv_obj_t *scr_back_btn_create(lv_obj_t *parent, const char *text, lv_even
     return label;
 }
 
+static const char *line_full_format(int max_c, const char *str1, const char *str2)
+{
+    int len1 = 0, len2 = 0;
+    int j;
+
+    len1 = strlen(str1);
+
+    strncpy(tmp_buf, str1, len1);
+
+    len2 = strlen(str2);
+    for(j = len1; j < max_c -1 - len2; j++){
+        tmp_buf[j] = ' ';
+    }
+    strncpy(tmp_buf + j, str2, len2);
+    j = j + len2;
+    
+    tmp_buf[j] = '\0'; 
+
+    printf("buf: %s\n", tmp_buf);
+
+    return (const char *)tmp_buf;
+}
+
 #endif
-//************************************[ screen 0 ]****************************************** menu
+//************************************[ screen 0 ]****************************************** Menu
 #if 1
 #define MENU_BTN_NUM (sizeof(menu_btn_list) / sizeof(menu_btn_list[0]))
 
@@ -249,7 +275,7 @@ static scr_lifecycle_t screen0 = {
     .destroy = destroy0,
 };
 #endif
-//************************************[ screen 1 ]****************************************** lora
+//************************************[ screen 1 ]****************************************** Lora
 #if 1
 static lv_obj_t *scr1_cont;
 static lv_obj_t *lora_lab_buf[11] = {0};
@@ -391,32 +417,88 @@ static scr_lifecycle_t screen1 = {
     .destroy = destroy1,
 };
 #endif
-//************************************[ screen 2 ]****************************************** setting
+//************************************[ screen 2 ]****************************************** Setting
+// --------------------- screen 2.1 --------------------- About System
 #if 1
+static void scr2_1_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_switch(SCREEN2_ID, false);
+    }
+}
 
-#define SETTING_PAGE_MAX_ITEM 7
+static void create2_1(lv_obj_t *parent) 
+{
+    lv_obj_t *info = lv_label_create(parent);
+    lv_obj_set_width(info, LCD_HOR_SIZE * 0.9);
+    lv_obj_set_style_text_color(info, DECKPRO_COLOR_FG, LV_PART_MAIN);
+    lv_obj_set_style_text_font(info, &Font_Mono_Bold_14, LV_PART_MAIN);
+    lv_obj_set_style_text_align(info, LV_TEXT_ALIGN_CENTER, 0);
+    lv_label_set_long_mode(info, LV_LABEL_LONG_WRAP);
+    lv_label_set_text_fmt(info, "                           \n"
+                                "%s\n"
+                                "                           \n"
+                                "Version:               v1.0\n"
+                                "                           \n"
+                                "Version:               v1.0\n"
+                                "                           \n"
+                                "Version:               v1.0\n"
+                                "                           \n"
+                                "Version:               v1.0\n"
+                                "                           \n"
+                                "Version:               v1.0\n"
+                                "                           \n"
+                                "Version:               v1.0\n"
+                                "                           \n"
+                                "Version:               v3.0\n"
+                                "                           \n"
+                                ,
+                                line_full_format(28, "Version:", ui_setting_get_sf_ver())
+                                
+                                );
+    lv_obj_align(info, LV_ALIGN_TOP_MID, 0, 35);
+    
+    lv_obj_t *back2_1_label = scr_back_btn_create(parent, ("About System"), scr2_1_btn_event_cb);
+}
+static void entry2_1(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit2_1(void) {
+    ui_disp_full_refr();
+}
+static void destroy2_1(void) { }
 
+static scr_lifecycle_t screen2_1 = {
+    .create = create2_1,
+    .entry = entry2_1,
+    .exit  = exit2_1,
+    .destroy = destroy2_1,
+};
+#endif
+// --------------------- screen --------------------- Setting
+#if 1
 static lv_obj_t *setting_list;
 static lv_obj_t *setting_page;
 static int setting_num = 0;
 static int setting_page_num = 0;
 static int setting_curr_page = 0;
-static _ui_setting_handle setting_handle_list[] = {
-    {"Keypad Backlight",    NULL, NULL, ui_setting_set_keypad_light, ui_setting_get_keypad_light},
-    {"Motor Status",        NULL, NULL, ui_setting_set_motor_status, ui_setting_get_motor_status},
-    {"Power GPS",           NULL, NULL, ui_setting_set_gps_status, ui_setting_get_gps_status},
-    {"Power Lora",          NULL, NULL, ui_setting_set_lora_status, ui_setting_get_lora_status},
-    {"Power Gyro",          NULL, NULL, ui_setting_set_gyro_status, ui_setting_get_gyro_status},
-    {"Power A7682",         NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-1",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-2",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-3",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-4",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-5",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-6",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-7",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-8",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
-    {"Power A7682-9",       NULL, NULL, ui_setting_set_a7682_status, ui_setting_get_a7682_status},
+static ui_setting_handle setting_handle_list[] = {
+    {.name = "Keypad Backlight", .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_keypad_light, .get_cb = ui_setting_get_keypad_light},
+    {.name = "Motor Status",     .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_motor_status, .get_cb = ui_setting_get_motor_status},
+    {.name = "Power GPS",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_gps_status,   .get_cb = ui_setting_get_gps_status},
+    {.name = "Power Lora",       .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_lora_status,  .get_cb = ui_setting_get_lora_status},
+    {.name = "Power Gyro",       .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_gyro_status,  .get_cb = ui_setting_get_gyro_status},
+    {.name = "Power A7682",      .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "- About System",   .type=UI_SETTING_TYPE_SUB, .sub_id = SCREEN2_1_ID, .set_cb = NULL, .get_cb = NULL},
+    {.name = "UI Test-2",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-3",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-4",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-5",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-6",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-7",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-8",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
+    {.name = "UI Test-9",        .type=UI_SETTING_TYPE_SW,  .set_cb = ui_setting_set_a7682_status, .get_cb = ui_setting_get_a7682_status},
 };
 
 static void setting_item_create(int curr_apge);
@@ -431,11 +513,22 @@ static void scr2_btn_event_cb(lv_event_t * e)
 static void setting_scr_event(lv_event_t *e)
 {
     lv_obj_t *tgt = (lv_obj_t *)e->target;
-    _ui_setting_handle *h = (_ui_setting_handle *)e->user_data;
+    ui_setting_handle *h = (ui_setting_handle *)e->user_data;
 
     if(e->code == LV_EVENT_CLICKED) {
-        h->set_cb(!h->get_cb());
-        lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
+        switch (h->type)
+        {
+        case UI_SETTING_TYPE_SW:
+            h->set_cb(!h->get_cb());
+            lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
+            break;
+        case UI_SETTING_TYPE_SUB:
+            scr_mgr_switch(h->sub_id, false);
+            break;
+        default:
+            break;
+        }
+        
     }
 }
 
@@ -477,12 +570,25 @@ static void setting_item_create(int curr_apge)
     printf("start=%d, end=%d\n", start, end);
 
     for(int i = start; i < end; i++) {
-        _ui_setting_handle *h = &setting_handle_list[i];
-        h->obj = lv_list_add_btn(setting_list, NULL, h->name);
-        h->st = lv_label_create(h->obj);
-        lv_obj_set_style_text_font(h->st, FONT_BOLD_SIZE_15, LV_PART_MAIN);
-        lv_obj_align(h->st, LV_ALIGN_RIGHT_MID, 0, 0);
-        lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
+        ui_setting_handle *h = &setting_handle_list[i];
+        
+
+        switch (h->type)
+        {
+        case UI_SETTING_TYPE_SW:
+            h->obj = lv_list_add_btn(setting_list, NULL, h->name);
+            h->st = lv_label_create(h->obj);
+            lv_obj_set_style_text_font(h->st, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+            lv_obj_align(h->st, LV_ALIGN_RIGHT_MID, 0, 0);
+            lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
+            break;
+        case UI_SETTING_TYPE_SUB:
+            h->obj = lv_list_add_btn(setting_list, NULL, h->name);
+            break;
+        default:
+            break;
+        }
+
         // style
         lv_obj_set_style_text_font(h->obj, FONT_BOLD_SIZE_15, LV_PART_MAIN);
         lv_obj_set_style_bg_color(h->obj, DECKPRO_COLOR_BG, LV_PART_MAIN);
@@ -490,6 +596,7 @@ static void setting_item_create(int curr_apge)
         lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
         lv_obj_set_style_outline_width(h->obj, 3, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_radius(h->obj, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_add_event_cb(h->obj, setting_scr_event, LV_EVENT_CLICKED, (void *)h);
     }
 }
@@ -529,6 +636,7 @@ static void create2(lv_obj_t *parent)
     lv_obj_set_style_border_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(ui_Button2, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t * ui_Label1 = lv_label_create(ui_Button2);
     lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
@@ -554,6 +662,7 @@ static void create2(lv_obj_t *parent)
     lv_obj_set_style_border_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(ui_Button14, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t * ui_Label15 = lv_label_create(ui_Button14);
     lv_obj_set_width(ui_Label15, LV_SIZE_CONTENT);   /// 1
@@ -895,6 +1004,7 @@ static void test_item_create(int curr_apge)
         lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
         lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
         lv_obj_set_style_outline_width(h->obj, 3, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_radius(h->obj, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
         // lv_obj_add_event_cb(h->obj, test_scr_event, LV_EVENT_CLICKED, (void *)h);
     }
 }
@@ -933,6 +1043,7 @@ static void create5(lv_obj_t *parent)
     lv_obj_set_style_border_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(ui_Button2, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t * ui_Label1 = lv_label_create(ui_Button2);
     lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
@@ -958,6 +1069,7 @@ static void create5(lv_obj_t *parent)
     lv_obj_set_style_border_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
     lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(ui_Button14, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     lv_obj_t * ui_Label15 = lv_label_create(ui_Button14);
     lv_obj_set_width(ui_Label15, LV_SIZE_CONTENT);   /// 1
@@ -1233,9 +1345,9 @@ static void create7(lv_obj_t *parent)
     lv_obj_set_style_text_font(light_sensor, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
     // lv_obj_set_style_border_width(light_sensor, 1, LV_PART_MAIN);
     lv_label_set_long_mode(light_sensor, LV_LABEL_LONG_WRAP);
-    lv_label_set_text_fmt(light_sensor, "   c0: \n"
-                                        "   c1: \n"
-                                        "   ps: ");
+    lv_label_set_text_fmt(light_sensor, "   c0: 000\n"
+                                        "   c1: 000\n"
+                                        "   ps: 000");
 
     lv_obj_t *lab2 = lv_label_create(scr7_cont);
     lv_obj_set_style_text_font(lab2, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
@@ -1248,9 +1360,9 @@ static void create7(lv_obj_t *parent)
     lv_obj_set_style_text_font(gyroscope, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);
     // lv_obj_set_style_border_width(gyroscope, 1, LV_PART_MAIN);
     lv_label_set_long_mode(gyroscope, LV_LABEL_LONG_WRAP);
-    lv_label_set_text_fmt(gyroscope,    "   gyros_x: \n"
-                                        "   gyros_y: \n"
-                                        "   gyros_z: ");
+    lv_label_set_text_fmt(gyroscope,    "   gyros_x: 000\n"
+                                        "   gyros_y: 000\n"
+                                        "   gyros_z: 000");
 
     lv_obj_t *back7_label = scr_back_btn_create(parent, ("Other"), scr7_btn_event_cb);
 }
@@ -1276,8 +1388,100 @@ static scr_lifecycle_t screen7 = {
     .destroy = destroy7,
 };
 #endif
-//************************************[ screen 8 ]******************************************  
+//************************************[ screen 8 ]****************************************** A7682E
 #if 1
+
+static lv_obj_t *a7682_list;
+static lv_obj_t *a7682_page;
+static int a7682_num = 0;
+static int a7682_page_num = 0;
+static int a7682_curr_page = 0;
+
+static ui_a7682_handle a7682_handle_list[] = {
+    {"Keypad Backlight", NULL, NULL, ui_a7682_at_cb},
+    {"Motor Status",     NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+    {"Power GPS",        NULL, NULL, ui_a7682_at_cb},
+};
+
+static void a7682_item_create(int curr_apge);
+
+static void a7682_scr_event(lv_event_t *e)
+{
+    lv_obj_t *tgt = (lv_obj_t *)e->target;
+    ui_a7682_handle *h = (ui_a7682_handle *)e->user_data;
+
+    if(e->code == LV_EVENT_CLICKED) {
+        // h->set_cb(!h->get_cb());
+        // lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
+        ui_a7682_at_cb(h->name);
+    }
+}
+
+
+static void a7682_item_create(int curr_apge)
+{
+    printf("a7682_curr_page = %d\n", a7682_curr_page);
+    int start = (curr_apge * SETTING_PAGE_MAX_ITEM);
+    int end = start + SETTING_PAGE_MAX_ITEM;
+    if(end > a7682_num) end = a7682_num;
+
+    printf("start=%d, end=%d\n", start, end);
+
+    for(int i = start; i < end; i++) {
+        ui_a7682_handle *h = &a7682_handle_list[i];
+        h->obj = lv_list_add_btn(a7682_list, NULL, h->name);
+        lv_obj_set_height(h->obj, 28);
+        // h->st = lv_label_create(h->obj);
+        // lv_obj_set_style_text_font(h->st, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+        // lv_obj_align(h->st, LV_ALIGN_RIGHT_MID, 0, 0);
+        // lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
+        // style
+        lv_obj_set_style_text_font(h->obj, FONT_BOLD_SIZE_14, LV_PART_MAIN);
+        lv_obj_set_style_bg_color(h->obj, DECKPRO_COLOR_BG, LV_PART_MAIN);
+        lv_obj_set_style_text_color(h->obj, DECKPRO_COLOR_FG, LV_PART_MAIN);
+        lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_set_style_border_width(h->obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_outline_width(h->obj, 3, LV_PART_MAIN | LV_STATE_PRESSED);
+        lv_obj_set_style_radius(h->obj, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_add_event_cb(h->obj, a7682_scr_event, LV_EVENT_CLICKED, (void *)h);
+    }
+}
+
+static void a7682_page_switch_cb(lv_event_t *e)
+{
+    char opt = (int)e->user_data;
+    
+    if(a7682_num < SETTING_PAGE_MAX_ITEM) return;
+
+    int child_cnt = lv_obj_get_child_cnt(a7682_list);
+    
+    for(int i = 0; i < child_cnt; i++)
+    {
+        lv_obj_t *child = lv_obj_get_child(a7682_list, 0);
+        if(child)
+            lv_obj_del(child);
+    }
+
+    if(opt == 'p')
+    {
+        a7682_curr_page = (a7682_curr_page < a7682_page_num) ? a7682_curr_page + 1 : 0;
+    }
+    else if(opt == 'n')
+    {
+        a7682_curr_page = (a7682_curr_page > 0) ? a7682_curr_page - 1 : a7682_page_num;
+    }
+
+    a7682_item_create(a7682_curr_page);
+    lv_label_set_text_fmt(a7682_page, "%d / %d", a7682_curr_page, a7682_page_num);
+}
+
 static void scr8_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
@@ -1287,8 +1491,86 @@ static void scr8_btn_event_cb(lv_event_t * e)
 
 static void create8(lv_obj_t *parent) 
 {
-    
-    lv_obj_t *back8_label = scr_back_btn_create(parent, ("888"), scr8_btn_event_cb);
+    a7682_list = lv_list_create(parent);
+    lv_obj_set_size(a7682_list, LV_HOR_RES, lv_pct(88));
+    lv_obj_align(a7682_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(a7682_list, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_style_pad_top(a7682_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(a7682_list, 3, LV_PART_MAIN);
+    lv_obj_set_style_radius(a7682_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(a7682_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_border_width(a7682_list, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_color(a7682_list, DECKPRO_COLOR_FG, LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(a7682_list, 0, LV_PART_MAIN);
+
+    a7682_num = sizeof(a7682_handle_list) / sizeof(a7682_handle_list[0]);
+    a7682_page_num = a7682_num / SETTING_PAGE_MAX_ITEM;
+    a7682_item_create(a7682_curr_page);
+
+    lv_obj_t * ui_Button2 = lv_btn_create(parent);
+    lv_obj_set_width(ui_Button2, 71);
+    lv_obj_set_height(ui_Button2, 40);
+    lv_obj_set_x(ui_Button2, -70);
+    lv_obj_set_y(ui_Button2, 130);
+    lv_obj_set_align(ui_Button2, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button2, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button2, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_Button2, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_Button2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button2, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_spread(ui_Button2, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(ui_Button2, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t * ui_Label1 = lv_label_create(ui_Button2);
+    lv_obj_set_width(ui_Label1, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label1, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label1, "Back");
+    lv_obj_set_style_text_color(ui_Label1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t * ui_Button14 = lv_btn_create(parent);
+    lv_obj_set_width(ui_Button14, 71);
+    lv_obj_set_height(ui_Button14, 40);
+    lv_obj_set_x(ui_Button14, 70);
+    lv_obj_set_y(ui_Button14, 130);
+    lv_obj_set_align(ui_Button14, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_Button14, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    lv_obj_clear_flag(ui_Button14, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_bg_color(ui_Button14, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_Button14, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button14, 2, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_width(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_shadow_spread(ui_Button14, 0, LV_PART_MAIN | LV_STATE_CHECKED | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(ui_Button14, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t * ui_Label15 = lv_label_create(ui_Button14);
+    lv_obj_set_width(ui_Label15, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label15, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_Label15, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label15, "Next");
+    lv_obj_set_style_text_color(ui_Label15, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label15, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(ui_Button2, a7682_page_switch_cb, LV_EVENT_CLICKED, (void*)'n');
+    lv_obj_add_event_cb(ui_Button14, a7682_page_switch_cb, LV_EVENT_CLICKED, (void*)'p');
+
+    a7682_page = lv_label_create(parent);
+    lv_obj_set_width(a7682_page, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(a7682_page, LV_SIZE_CONTENT);    /// 1
+    lv_obj_align(a7682_page, LV_ALIGN_BOTTOM_MID, 0, -23);
+    lv_label_set_text_fmt(a7682_page, "%d / %d", a7682_curr_page, a7682_page_num);
+    lv_obj_set_style_text_color(a7682_page, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(a7682_page, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t *back8_label = scr_back_btn_create(parent, ("A7682E"), scr8_btn_event_cb);
 }
 static void entry8(void) 
 {
@@ -1430,17 +1712,18 @@ void ui_deckpro_entry(void)
 
     scr_mgr_init();
 
-    scr_mgr_register(SCREEN0_ID, &screen0); // menu
-    scr_mgr_register(SCREEN1_ID, &screen1); // 
-    scr_mgr_register(SCREEN2_ID, &screen2); // 
-    scr_mgr_register(SCREEN3_ID, &screen3); // 
-    scr_mgr_register(SCREEN4_ID, &screen4); // 
-    scr_mgr_register(SCREEN5_ID, &screen5); // 
-    scr_mgr_register(SCREEN6_ID, &screen6); // 
-    scr_mgr_register(SCREEN7_ID, &screen7); // 
-    scr_mgr_register(SCREEN8_ID, &screen8); // 
-    scr_mgr_register(SCREEN9_ID, &screen9); // 
-    scr_mgr_register(SCREEN10_ID, &screen10); // 
+    scr_mgr_register(SCREEN0_ID,    &screen0);      // menu
+    scr_mgr_register(SCREEN1_ID,    &screen1);      // 
+    scr_mgr_register(SCREEN2_ID,    &screen2);      // Setting
+    scr_mgr_register(SCREEN2_1_ID,  &screen2_1);    //  - About System
+    scr_mgr_register(SCREEN3_ID,    &screen3);      // 
+    scr_mgr_register(SCREEN4_ID,    &screen4);      // 
+    scr_mgr_register(SCREEN5_ID,    &screen5);      // 
+    scr_mgr_register(SCREEN6_ID,    &screen6);      // 
+    scr_mgr_register(SCREEN7_ID,    &screen7);      // 
+    scr_mgr_register(SCREEN8_ID,    &screen8);      // 
+    scr_mgr_register(SCREEN9_ID,    &screen9);      // 
+    scr_mgr_register(SCREEN10_ID,   &screen10);     // 
 
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);

@@ -116,6 +116,18 @@ bool ui_setting_get_a7682_status(void)
 {
     return default_a7682_status;
 }
+
+// About System
+const char *ui_setting_get_sf_ver(void)
+{
+    return "v1.0-241205";
+}
+
+const char *ui_setting_get_sd_capacity(void)
+{
+
+    return "1234/32768Mb";
+}
 //************************************[ screen 3 ]****************************************** GPS
 void ui_GPS_print_info(void)
 {
@@ -258,3 +270,10 @@ int ui_other_get_gyro(float *gyro_x, float *gyro_y, float *gyro_z)
 }
 
 #endif
+
+//************************************[ screen 8 ]****************************************** A7682E
+bool ui_a7682_at_cb(const char *at_cmd)
+{
+    printf("[A7682E] at cmd: %s\n", at_cmd);
+    return false;
+}
