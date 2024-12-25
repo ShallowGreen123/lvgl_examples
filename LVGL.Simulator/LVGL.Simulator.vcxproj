@@ -269,11 +269,7 @@
     <ClInclude Include="..\lvgl_examples\scr_mgr\gl_dragable_event.h" />
     <ClInclude Include="..\lvgl_examples\scr_mgr\gl_velocity_tracker.h" />
     <ClInclude Include="..\lvgl_examples\scr_mgr\scr_mrg.h" />
-    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro.h" />
-    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.h" />
     <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h" />
-    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h" />
-    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.h" />
     <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h" />
     <ClInclude Include="..\lvgl_examples\ui_base\ui_base.h" />
     <ClInclude Include="lv_conf.h" />

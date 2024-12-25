@@ -28,6 +28,7 @@ extern "C" {
  *                                   MACROS
  * *******************************************************************************/
 #define EPD_COLOR_BG          0xffffff
+#define EPD_COLOR_FG          0x000000
 #define EPD_COLOR_FOCUS_ON    0x91B821
 #define EPD_COLOR_TEXT        0x000000
 #define EPD_COLOR_BORDER      0xBBBBBB
@@ -37,6 +38,21 @@ extern "C" {
 /*********************************************************************************
  *                                  TYPEDEFS
  * *******************************************************************************/
+enum{
+    UI_SETTING_TYPE_SW,
+    UI_SETTING_TYPE_SUB,
+};
+
+typedef struct _ui_setting
+{
+    const char *name;
+    int type;
+    void (*set_cb)(int);
+    const char* (*get_cb)(int *);
+    int sub_id;
+    lv_obj_t *obj;
+    lv_obj_t *st;
+} ui_setting_handle;
 
 /*********************************************************************************
  *                              GLOBAL PROTOTYPES

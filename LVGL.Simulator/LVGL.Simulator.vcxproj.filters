@@ -717,23 +717,11 @@
     <ClInclude Include="..\lvgl_examples\ui_base\assets\assets.h">
       <Filter>lvgl_exams\ui_base\assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47.h">
-      <Filter>lvgl_exams\T_EPD47_S3</Filter>
-    </ClInclude>
     <ClInclude Include="..\lvgl_examples\lvgl_conf.h">
       <Filter>lvgl_exams</Filter>
     </ClInclude>
     <ClInclude Include="..\lvgl_examples\T_Embed_PN532\ui_embed_pn532.h">
       <Filter>lvgl_exams\T_Embed_PN532</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_EPD47_S3\ui_epd47_port.h">
-      <Filter>lvgl_exams\T_EPD47_S3</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro.h">
-      <Filter>lvgl_exams\T_DeckPro</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lvgl_examples\T_DeckPro\ui_deckpro_port.h">
-      <Filter>lvgl_exams\T_DeckPro</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
