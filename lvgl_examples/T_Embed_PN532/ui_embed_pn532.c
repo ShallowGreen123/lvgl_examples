@@ -76,6 +76,7 @@ static void scr_back_btn_create(lv_obj_t *parent, lv_event_cb_t cb)
 #define MENU_PROPORTION     (0.55)
 #define MENU_LAB_PROPORTION (1 - MENU_PROPORTION)
 
+static lv_obj_t *menu_batt_lab;
 static lv_obj_t *item_cont;
 static lv_obj_t *menu_cont;
 static lv_obj_t *menu_icon;
@@ -340,6 +341,15 @@ static void create0(lv_obj_t *parent)
     lv_group_focus_obj(lv_obj_get_child(item_cont, fouce_item));
 
     lv_group_set_wrap(lv_group_get_default(), false);
+
+    // battery label
+    menu_batt_lab = lv_label_create(parent);
+    lv_obj_align(menu_batt_lab, LV_ALIGN_TOP_RIGHT, -10, 10);
+    lv_obj_set_style_text_align(menu_batt_lab, LV_TEXT_ALIGN_RIGHT, 0);
+    lv_label_set_recolor(menu_batt_lab, true);
+    lv_label_set_text_fmt(menu_batt_lab, "#0000ff %s %s #", LV_SYMBOL_BATTERY_2, LV_SYMBOL_CHARGE);
+    lv_obj_add_flag(menu_batt_lab, LV_OBJ_FLAG_HIDDEN);
+
 }
 static void entry0(void) {   
     entry0_anim();
@@ -1872,50 +1882,37 @@ static scr_lifecycle_t screen8 = {
 };
 #endif
 //******************************************************************************
-static lv_obj_t *starting_up;
-static lv_obj_t *starting_dp;
 
-static void starting_up_anim_cb(void * var, int32_t v)
+void charge_detection_timer_cb(lv_timer_t *t)
 {
-    lv_obj_set_y((lv_obj_t *)starting_up, 0-v);
-    lv_obj_set_y((lv_obj_t *)starting_dp, LV_VER_RES/2+v);
-}
+    static int sec = 0;
+    lv_obj_clear_flag(menu_batt_lab, LV_OBJ_FLAG_HIDDEN);
 
-static void starting_up_ready_cb(struct _lv_anim_t * a)
-{
-    lv_obj_del(starting_up);
-    lv_obj_del(starting_dp);
-}
-
-static void ui_embed_starting_up(void)
-{
-    starting_up = lv_obj_create(lv_layer_top());
-    lv_obj_set_size(starting_up, lv_pct(100), lv_pct(50));
-    lv_obj_set_style_bg_color(starting_up, lv_color_hex(0x000000), LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(starting_up, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_border_width(starting_up, 0, LV_PART_MAIN);
-    lv_obj_set_style_radius(starting_up, 0, 0);
-    lv_obj_set_style_pad_all(starting_up, 0, LV_PART_MAIN);
-    // lv_obj_add_flag(starting_up, LV_OBJ_FLAG_HIDDEN);
-
-    starting_dp = lv_obj_create(lv_layer_top());
-    lv_obj_set_size(starting_dp, lv_pct(100), lv_pct(50));
-    lv_obj_set_style_bg_color(starting_dp, lv_color_hex(0x000000), LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(starting_dp, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_border_width(starting_dp, 0, LV_PART_MAIN);
-    lv_obj_set_style_radius(starting_dp, 0, 0);
-    lv_obj_set_style_pad_all(starting_dp, 0, LV_PART_MAIN);
-    // lv_obj_add_flag(starting_dp, LV_OBJ_FLAG_HIDDEN);
-
-    lv_anim_t a;
-    lv_anim_init(&a);
-    lv_anim_set_var(&a, NULL);
-    lv_anim_set_values(&a, 0, LV_VER_RES/2);
-    lv_anim_set_time(&a, 2000);
-    lv_anim_set_path_cb(&a, lv_anim_path_linear);
-    lv_anim_set_exec_cb(&a, starting_up_anim_cb);
-    lv_anim_set_ready_cb(&a, starting_up_ready_cb);
-    lv_anim_start(&a);
+    switch (sec)
+    {
+    case 0:
+        lv_label_set_text_fmt(menu_batt_lab, "#0000ff %s %s #", LV_SYMBOL_BATTERY_EMPTY, LV_SYMBOL_CHARGE);
+        break;
+    case 1:
+        lv_label_set_text_fmt(menu_batt_lab, "#0000ff %s %s #", LV_SYMBOL_BATTERY_1, LV_SYMBOL_CHARGE);
+        break;
+    case 2:
+        lv_label_set_text_fmt(menu_batt_lab, "%s %s", LV_SYMBOL_BATTERY_2, LV_SYMBOL_CHARGE);
+        break;
+    case 3:
+        lv_label_set_text_fmt(menu_batt_lab, "%s %s", LV_SYMBOL_BATTERY_3, LV_SYMBOL_CHARGE);
+        break;
+    case 4:
+        lv_label_set_text_fmt(menu_batt_lab, "%s %s", LV_SYMBOL_BATTERY_FULL, LV_SYMBOL_CHARGE);
+        break;
+    default:
+        break;
+    }
+    sec++;
+    if(sec > 4){
+        sec = 0;
+    }
+    
 }
 
 void ui_embed_pn532_entry(void)
@@ -1939,7 +1936,7 @@ void ui_embed_pn532_entry(void)
     // set root
     scr_mgr_switch(SCREEN0_ID, false);
 
-    // ui_embed_starting_up();
+    lv_timer_create(charge_detection_timer_cb, 1000, NULL);
 }
 
 #endif // UI_EMBED_PN532_DISPALY   
