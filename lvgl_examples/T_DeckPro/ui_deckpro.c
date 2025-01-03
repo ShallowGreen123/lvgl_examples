@@ -99,21 +99,28 @@ static lv_obj_t *menu_screen1;
 static lv_obj_t *menu_screen2;
 static lv_obj_t *ui_Panel4;
 
+static lv_obj_t * menu_taskbar = NULL;
+static lv_obj_t * menu_taskbar_time = NULL;
+static lv_obj_t * menu_taskbar_charge = NULL;
+static lv_obj_t * menu_taskbar_battery = NULL;
+static lv_obj_t * menu_taskbar_battery_percent = NULL;
+static lv_obj_t * menu_taskbar_wifi = NULL;
+
 static int page_num = 0;
 static int page_curr = 0;
 
 static struct menu_btn menu_btn_list[] = 
 {
-    {SCREEN1_ID,  "A:/img_lora.png",    "Lora",     23,     23},
-    {SCREEN2_ID,  "A:/img_setting.png", "Setting",  95,     23},
-    {SCREEN3_ID,  "A:/img_GPS.png",     "GPS",      167,    23},
-    {SCREEN4_ID,  "A:/img_wifi.png",    "Wifi",     23,     111},
-    {SCREEN5_ID,  "A:/img_test.png",    "Test",     95,     111},
-    {SCREEN6_ID,  "A:/img_batt.png",    "Battery",  167,    111},
-    {SCREEN7_ID,  "A:/img_touch.png",   "Input",    23,     199},
-    {SCREEN8_ID,  "A:/img_A7682.png",   "A7682",    95,     199},
-    {SCREEN9_ID,  "A:/img_lora.png", "Lora8", 167, 199},
-    {SCREEN10_ID, "A:/img_GPS.png", "Lora9", 23, 23},     // Page two
+    {SCREEN1_ID,  "A:/img_lora.png",    "Lora",     23,     13},
+    {SCREEN2_ID,  "A:/img_setting.png", "Setting",  95,     13},
+    {SCREEN3_ID,  "A:/img_GPS.png",     "GPS",      167,    13},
+    {SCREEN4_ID,  "A:/img_wifi.png",    "Wifi",     23,     101},
+    {SCREEN5_ID,  "A:/img_test.png",    "Test",     95,     101},
+    {SCREEN6_ID,  "A:/img_batt.png",    "Battery",  167,    101},
+    {SCREEN7_ID,  "A:/img_touch.png",   "Input",    23,     189},
+    {SCREEN8_ID,  "A:/img_A7682.png",   "A7682",    95,     189},
+    {SCREEN9_ID,  "A:/img_lora.png",    "Shutdown", 167,    189},
+    // {SCREEN10_ID, "A:/img_GPS.png",     "Lora9",    23,     13},     // Page two
 };
 
 static void menu_btn_event_cb(lv_event_t *e)
@@ -193,19 +200,68 @@ static void menu_btn_create(lv_obj_t *parent, struct menu_btn *info)
 
 static void create0(lv_obj_t *parent) 
 {
+    int status_bar_height = 25;
+
+    menu_taskbar = lv_obj_create(parent);
+    lv_obj_set_size(menu_taskbar, LV_HOR_RES, status_bar_height);
+    lv_obj_set_style_pad_all(menu_taskbar, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(menu_taskbar, 0, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(menu_taskbar, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(menu_taskbar, LV_OBJ_FLAG_SCROLLABLE);
+    
+    menu_taskbar_time = lv_label_create(menu_taskbar);
+    lv_obj_set_style_border_width(menu_taskbar_time, 0, 0);
+    lv_label_set_text_fmt(menu_taskbar_time, "%02d:%02d", 10, 19);
+    // lv_obj_set_style_text_font(menu_taskbar_time, &Font_Mono_Bold_25, LV_PART_MAIN);
+    lv_obj_align(menu_taskbar_time, LV_ALIGN_LEFT_MID, 10, 0);
+
+    lv_obj_t *status_parent = lv_obj_create(menu_taskbar);
+    lv_obj_set_size(status_parent, lv_pct(80)-2, status_bar_height-2);
+    lv_obj_set_style_pad_all(status_parent, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(status_parent, 0, LV_PART_MAIN);
+    lv_obj_set_flex_flow(status_parent, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(status_parent, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_left(status_parent, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(status_parent, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(status_parent, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(status_parent, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_row(status_parent, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(status_parent, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_scrollbar_mode(status_parent, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(status_parent, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_align(status_parent, LV_ALIGN_RIGHT_MID, 0, 0);
+
+    menu_taskbar_wifi = lv_label_create(status_parent);
+    lv_label_set_text_fmt(menu_taskbar_wifi, "%s", LV_SYMBOL_WIFI);
+    lv_obj_add_flag(menu_taskbar_wifi, LV_OBJ_FLAG_HIDDEN);
+
+    menu_taskbar_charge = lv_label_create(status_parent);
+    lv_label_set_text_fmt(menu_taskbar_charge, "%s", LV_SYMBOL_CHARGE);
+    lv_obj_add_flag(menu_taskbar_charge, LV_OBJ_FLAG_HIDDEN);
+
+    menu_taskbar_battery = lv_label_create(status_parent);
+    lv_label_set_text_fmt(menu_taskbar_battery, "%s", LV_SYMBOL_BATTERY_2);
+
+    menu_taskbar_battery_percent = lv_label_create(status_parent);
+    // lv_obj_set_style_text_font(menu_taskbar_battery_percent, &Font_Mono_Bold_25, LV_PART_MAIN);
+    lv_label_set_text_fmt(menu_taskbar_battery_percent, "%d", 50);
+
+    //
     page_num = MENU_BTN_NUM / 9;
 
     menu_screen1 = lv_obj_create(parent);
-    lv_obj_set_size(menu_screen1, lv_pct(100), lv_pct(100));
+    lv_obj_set_size(menu_screen1, lv_pct(100), LV_VER_RES - status_bar_height);
     lv_obj_set_style_bg_color(menu_screen1, DECKPRO_COLOR_BG, LV_PART_MAIN);
     lv_obj_set_scrollbar_mode(menu_screen1, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_border_width(menu_screen1, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(menu_screen1, 1, LV_PART_MAIN);
     lv_obj_set_style_border_color(menu_screen1, DECKPRO_COLOR_FG, LV_PART_MAIN);
+    lv_obj_set_style_border_side(menu_screen1, LV_BORDER_SIDE_TOP, LV_PART_MAIN);
     lv_obj_set_style_pad_all(menu_screen1, 0, LV_PART_MAIN);
+    lv_obj_align(menu_screen1, LV_ALIGN_BOTTOM_MID, 0, 0);
     // lv_obj_add_flag(menu_screen1, LV_OBJ_FLAG_HIDDEN);
 
     menu_screen2 = lv_obj_create(parent);
-    lv_obj_set_size(menu_screen2, lv_pct(100), lv_pct(100));
+    lv_obj_set_size(menu_screen2, lv_pct(100), LV_VER_RES - status_bar_height);
     lv_obj_set_style_bg_color(menu_screen2, DECKPRO_COLOR_BG, LV_PART_MAIN);
     lv_obj_set_scrollbar_mode(menu_screen2, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_style_border_width(menu_screen2, 0, LV_PART_MAIN);
@@ -224,7 +280,7 @@ static void create0(lv_obj_t *parent)
     if(MENU_BTN_NUM > 9) {
         ui_Panel4 = lv_obj_create(parent);
         lv_obj_set_width(ui_Panel4, 240);
-        lv_obj_set_height(ui_Panel4, 35);
+        lv_obj_set_height(ui_Panel4, 25);
         lv_obj_set_align(ui_Panel4, LV_ALIGN_BOTTOM_MID);
         lv_obj_set_flex_flow(ui_Panel4, LV_FLEX_FLOW_ROW);
         lv_obj_set_flex_align(ui_Panel4, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
