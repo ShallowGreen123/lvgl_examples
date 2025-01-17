@@ -120,7 +120,7 @@ static struct menu_btn menu_btn_list[] =
     {SCREEN7_ID,  "A:/img_touch.png",   "Input",    23,     189},
     {SCREEN8_ID,  "A:/img_A7682.png",   "A7682",    95,     189},
     {SCREEN9_ID,  "A:/img_lora.png",    "Shutdown", 167,    189},
-    // {SCREEN10_ID, "A:/img_GPS.png",     "Lora9",    23,     13},     // Page two
+    {SCREEN10_ID, "A:/img_GPS.png",     "Lora9",    23,     13},     // Page two
 };
 
 static void menu_btn_event_cb(lv_event_t *e)
@@ -196,6 +196,27 @@ static void menu_btn_create(lv_obj_t *parent, struct menu_btn *info)
     lv_label_set_text(label, (info->name));
     lv_obj_set_style_border_width(label, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_add_event_cb(btn, menu_btn_event_cb, LV_EVENT_CLICKED, (void *)info);
+}
+
+static void menu_gesture_event(lv_event_t *e)
+{
+    lv_indev_t * encode_indev = lv_indev_get_next(NULL);
+    lv_indev_t * keypad_indev = lv_indev_get_next(encode_indev);
+    lv_indev_t * touch_indev = lv_indev_get_next(keypad_indev);
+
+    // lv_indev_wait_release(keypad_indev);
+
+    printf("code=%d gesture = %d\n", e->code, lv_indev_get_gesture_dir(touch_indev));
+
+
+    // lv_indev_t * indev_pointer = lv_indev_get_next(NULL);
+    // lv_coord_t diff_x = 0;
+    // lv_coord_t diff_y = 0;
+
+    // static lv_point_t last_point;
+    // static bool is_press = false;
+
+    // _lv_indev_read(indev_pointer, &data);
 }
 
 static void create0(lv_obj_t *parent) 
@@ -316,7 +337,8 @@ static void create0(lv_obj_t *parent)
 
 static void entry0(void) {
     ui_get_gesture_dir = menu_get_gesture_dir;
-    lv_timer_resume(touch_chk_timer);
+    // lv_timer_resume(touch_chk_timer);
+    lv_obj_add_event_cb(scr_mgr_get_top_obj(), menu_gesture_event, LV_EVENT_GESTURE, NULL);
 }
 static void exit0(void) {
     ui_get_gesture_dir = NULL;
@@ -1711,8 +1733,12 @@ extern lv_indev_t* lv_win32_encoder_device_object;
 
 void indev_get_gesture_dir(lv_timer_t *t)
 {
+    lv_indev_t * encode_indev = lv_indev_get_next(NULL);
+    lv_indev_t * keypad_indev = lv_indev_get_next(encode_indev);
+    lv_indev_t * touch_indev = lv_indev_get_next(keypad_indev);
+
     lv_indev_data_t data;
-    lv_indev_t * indev_pointer = lv_win32_pointer_device_object;
+    lv_indev_t * indev_pointer = touch_indev;
     lv_dir_t dir = lv_indev_get_gesture_dir(indev_pointer);
     static lv_dir_t curr_dir = LV_DIR_NONE;
     static int test_id = 0;

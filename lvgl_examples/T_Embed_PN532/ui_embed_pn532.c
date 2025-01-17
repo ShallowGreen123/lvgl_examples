@@ -76,12 +76,20 @@ static void scr_back_btn_create(lv_obj_t *parent, lv_event_cb_t cb)
 #define MENU_PROPORTION     (0.55)
 #define MENU_LAB_PROPORTION (1 - MENU_PROPORTION)
 
-static lv_obj_t *menu_batt_lab;
+static lv_obj_t *menu_taskbar = NULL;
+static lv_obj_t *menu_taskbar_sd = NULL;
+static lv_obj_t *menu_taskbar_charge = NULL;
+static lv_obj_t *menu_taskbar_battery = NULL;
+static lv_obj_t *menu_taskbar_battery_percent = NULL;
+static lv_obj_t *menu_taskbar_wifi = NULL;
+
 static lv_obj_t *item_cont;
 static lv_obj_t *menu_cont;
 static lv_obj_t *menu_icon;
 static lv_obj_t *menu_icon_lab;
 static lv_obj_t *menu_time_lab;
+
+
 
 static int fouce_item = 0;
 static int hour = 10;
@@ -342,13 +350,54 @@ static void create0(lv_obj_t *parent)
 
     lv_group_set_wrap(lv_group_get_default(), false);
 
-    // battery label
-    menu_batt_lab = lv_label_create(parent);
-    lv_obj_align(menu_batt_lab, LV_ALIGN_TOP_RIGHT, -10, 10);
-    lv_obj_set_style_text_align(menu_batt_lab, LV_TEXT_ALIGN_RIGHT, 0);
-    lv_label_set_recolor(menu_batt_lab, true);
-    lv_label_set_text_fmt(menu_batt_lab, "#0000ff %s %s #", LV_SYMBOL_BATTERY_2, LV_SYMBOL_CHARGE);
-    lv_obj_add_flag(menu_batt_lab, LV_OBJ_FLAG_HIDDEN);
+    
+
+    int status_bar_height = 25;
+
+    menu_taskbar = lv_obj_create(parent);
+    lv_obj_set_size(menu_taskbar, LV_HOR_RES, status_bar_height);
+    lv_obj_set_style_pad_all(menu_taskbar, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(menu_taskbar, 0, LV_PART_MAIN);
+    lv_obj_set_flex_flow(menu_taskbar, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(menu_taskbar, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_left(menu_taskbar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(menu_taskbar, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(menu_taskbar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(menu_taskbar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_row(menu_taskbar, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(menu_taskbar, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_scrollbar_mode(menu_taskbar, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(menu_taskbar, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_bg_opa(menu_taskbar, 0, LV_PART_MAIN);
+    lv_obj_align(menu_taskbar, LV_ALIGN_TOP_MID, 0, 0);
+
+    // wifi
+    menu_taskbar_wifi = lv_label_create(menu_taskbar);
+    lv_label_set_recolor(menu_taskbar_wifi, true);
+    lv_label_set_text_fmt(menu_taskbar_wifi, "#000000 %s #", LV_SYMBOL_WIFI);
+    // lv_obj_add_flag(menu_taskbar_wifi, LV_OBJ_FLAG_HIDDEN);
+
+    menu_taskbar_sd = lv_label_create(menu_taskbar);
+    lv_label_set_recolor(menu_taskbar_sd, true);
+    lv_label_set_text_fmt(menu_taskbar_sd, "#%x %s #", 0x000000, LV_SYMBOL_SD_CARD);
+    // lv_obj_add_flag(menu_taskbar_sd, LV_OBJ_FLAG_HIDDEN);
+
+    menu_taskbar_charge = lv_label_create(menu_taskbar);
+    lv_obj_align(menu_taskbar_charge, LV_ALIGN_TOP_RIGHT, -10, 10);
+    lv_obj_set_style_text_align(menu_taskbar_charge, LV_TEXT_ALIGN_RIGHT, 0);
+    lv_label_set_recolor(menu_taskbar_charge, true);
+    lv_label_set_text_fmt(menu_taskbar_charge, "#000000 %s #", LV_SYMBOL_CHARGE);
+    // lv_obj_add_flag(menu_taskbar_charge, LV_OBJ_FLAG_HIDDEN);
+
+    menu_taskbar_battery = lv_label_create(menu_taskbar);
+    lv_label_set_recolor(menu_taskbar_battery, true);
+    lv_label_set_text_fmt(menu_taskbar_battery, "#000000 %s #", LV_SYMBOL_BATTERY_FULL);
+    // lv_obj_add_flag(menu_taskbar_battery, LV_OBJ_FLAG_HIDDEN);
+
+    menu_taskbar_battery_percent = lv_label_create(menu_taskbar);
+    lv_label_set_recolor(menu_taskbar_battery_percent, true);
+    lv_label_set_text_fmt(menu_taskbar_battery_percent, "#000000 %d #", 90);
+    // lv_obj_add_flag(menu_taskbar_battery_percent, LV_OBJ_FLAG_HIDDEN);
 
 }
 static void entry0(void) {   
@@ -936,7 +985,6 @@ static scr_lifecycle_t screen3 = {
 };
 #endif
 //************************************[ screen 4 ]****************************************** setting
-
 // --------------------- screen 4.1 --------------------- About System
 #if 1
 static lv_obj_t *scr4_1_cont;
@@ -1885,33 +1933,33 @@ static scr_lifecycle_t screen8 = {
 
 void charge_detection_timer_cb(lv_timer_t *t)
 {
-    static int sec = 0;
-    lv_obj_clear_flag(menu_batt_lab, LV_OBJ_FLAG_HIDDEN);
+    // static int sec = 0;
+    // lv_obj_clear_flag(menu_taskbar_charge, LV_OBJ_FLAG_HIDDEN);
 
-    switch (sec)
-    {
-    case 0:
-        lv_label_set_text_fmt(menu_batt_lab, "#0000ff %s %s #", LV_SYMBOL_BATTERY_EMPTY, LV_SYMBOL_CHARGE);
-        break;
-    case 1:
-        lv_label_set_text_fmt(menu_batt_lab, "#0000ff %s %s #", LV_SYMBOL_BATTERY_1, LV_SYMBOL_CHARGE);
-        break;
-    case 2:
-        lv_label_set_text_fmt(menu_batt_lab, "%s %s", LV_SYMBOL_BATTERY_2, LV_SYMBOL_CHARGE);
-        break;
-    case 3:
-        lv_label_set_text_fmt(menu_batt_lab, "%s %s", LV_SYMBOL_BATTERY_3, LV_SYMBOL_CHARGE);
-        break;
-    case 4:
-        lv_label_set_text_fmt(menu_batt_lab, "%s %s", LV_SYMBOL_BATTERY_FULL, LV_SYMBOL_CHARGE);
-        break;
-    default:
-        break;
-    }
-    sec++;
-    if(sec > 4){
-        sec = 0;
-    }
+    // switch (sec)
+    // {
+    // case 0:
+    //     lv_label_set_text_fmt(menu_taskbar_charge, "#0000ff %s %s #", LV_SYMBOL_BATTERY_EMPTY, LV_SYMBOL_CHARGE);
+    //     break;
+    // case 1:
+    //     lv_label_set_text_fmt(menu_taskbar_charge, "#0000ff %s %s #", LV_SYMBOL_BATTERY_1, LV_SYMBOL_CHARGE);
+    //     break;
+    // case 2:
+    //     lv_label_set_text_fmt(menu_taskbar_charge, "%s %s", LV_SYMBOL_BATTERY_2, LV_SYMBOL_CHARGE);
+    //     break;
+    // case 3:
+    //     lv_label_set_text_fmt(menu_taskbar_charge, "%s %s", LV_SYMBOL_BATTERY_3, LV_SYMBOL_CHARGE);
+    //     break;
+    // case 4:
+    //     lv_label_set_text_fmt(menu_taskbar_charge, "%s %s", LV_SYMBOL_BATTERY_FULL, LV_SYMBOL_CHARGE);
+    //     break;
+    // default:
+    //     break;
+    // }
+    // sec++;
+    // if(sec > 4){
+    //     sec = 0;
+    // }
     
 }
 

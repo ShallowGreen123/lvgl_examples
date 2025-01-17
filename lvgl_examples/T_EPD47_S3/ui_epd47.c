@@ -9,6 +9,8 @@
 
 #define UI_PORTRAIT_SCR_MODE    1
 #define UI_LORA_AUTO_SEND       0
+
+#define ARRAY_LEN(a) (sizeof(a)/sizeof(a[0]))
 //************************************[ Other fun ]******************************************
 #if 1
 static void scr_back_btn_create(lv_obj_t *parent, const char *text, lv_event_cb_t cb)
@@ -58,7 +60,7 @@ static void scr_middle_line(lv_obj_t *parent)
 /**
  * func:      setting
  * handle:    setting_handle_list
- * list:      setting_list
+ * list:      scr2_list
  * num:       setting_num
  * page_num:  setting_page_num
  * curr_page: setting_curr_page
@@ -133,7 +135,7 @@ static void scr_middle_line(lv_obj_t *parent)
     }
 /**
  * func:      setting
- * list:      setting_list
+ * list:      scr2_list
  * page:      setting_page
  * num:       setting_num
  * page_num:  setting_page_num
@@ -174,7 +176,6 @@ static void scr_middle_line(lv_obj_t *parent)
 #endif
 //************************************[ screen 0 ]****************************************** menu
 #if 1
-
 #define MENU_ICON_NUM  (sizeof(icon_buf)/sizeof(icon_buf[0]))
 #define MENU_CONT_HIGH (LCD_VER_SIZE * 0.84)
 
@@ -472,165 +473,206 @@ static scr_lifecycle_t screen1 = {
 };
 #endif
 //************************************[ screen 2 ]****************************************** lora
+// --------------------- screen 2 --------------------- LoRa
 #if 1
-static lv_obj_t *lora_mode_sw;
-
-static void scr2_btn_event_cb(lv_event_t * e)
-{
-    if(e->code == LV_EVENT_CLICKED){
-        
-        scr_mgr_pop(false);
-    }
-}
-
-
-#if UI_LORA_AUTO_SEND
-
-static lv_obj_t *scr2_cont;
-static lv_obj_t *scr2_cont_info;
-
-static lv_obj_t *lora_lab_time;
-static lv_obj_t *lora_lab_mode;
-
-
-static void label_buf_fill_20(const char *text, int idx)
-{
-#define ONE_LINE_LEN 35
-    char buf[ONE_LINE_LEN];
-    int text_len = strlen(text);
-    int i = text_len;
-    int digi = 0;
-    
-    while(idx > 0) {
-        idx = idx / 10;
-        digi++;
-    }
-    
-    strncpy(buf, ONE_LINE_LEN-3, text);
-
-    while(i < (ONE_LINE_LEN-3)) {
-        buf[i] = '-';
-    };
-#undef ONE_LINE_LEN
-}
+lv_obj_t * scr2_list;
+static lv_obj_t *scr2_lab_buf[20];
 
 static lv_obj_t * scr2_create_label(lv_obj_t *parent)
 {
     lv_obj_t *label = lv_label_create(parent);
-    lv_obj_set_width(label, LCD_HOR_SIZE/2-50);
-    lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
-    lv_obj_set_style_border_width(label, 0, LV_PART_MAIN);
+    lv_obj_set_width(label, lv_pct(99));
+    lv_obj_set_style_text_font(label, &Font_Mono_Bold_20, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_obj_set_style_border_side(label, LV_BORDER_SIDE_BOTTOM, LV_PART_MAIN);
     return label;
 }
 
-static void create2(lv_obj_t *parent) {
-
-    scr2_cont = lv_obj_create(parent);
-    lv_obj_set_size(scr2_cont, lv_pct(49), lv_pct(85));
-    lv_obj_set_style_bg_color(scr2_cont, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(scr2_cont, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_clear_flag(scr2_cont, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(scr2_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(scr2_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_hor(scr2_cont, 20, LV_PART_MAIN);
-    lv_obj_set_flex_flow(scr2_cont, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr2_cont, 10, LV_PART_MAIN);
-    lv_obj_set_style_pad_column(scr2_cont, 5, LV_PART_MAIN);
-    lv_obj_set_align(scr2_cont, LV_ALIGN_BOTTOM_LEFT);
-
-    scr2_cont_info = lv_obj_create(parent);
-    lv_obj_set_size(scr2_cont_info, lv_pct(49), lv_pct(85));
-    lv_obj_set_style_bg_color(scr2_cont_info, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(scr2_cont_info, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_clear_flag(scr2_cont_info, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(scr2_cont_info, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(scr2_cont_info, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_hor(scr2_cont_info, 10, LV_PART_MAIN);
-    lv_obj_set_flex_flow(scr2_cont_info, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr2_cont_info, 10, LV_PART_MAIN);
-    lv_obj_set_style_pad_column(scr2_cont_info, 5, LV_PART_MAIN);
-    lv_obj_set_align(scr2_cont_info, LV_ALIGN_BOTTOM_RIGHT);
-
-    //
-    lora_mode_sw = lv_btn_create(parent);
-    lv_obj_set_style_radius(lora_mode_sw, 5, LV_PART_MAIN);
-    lv_obj_set_style_border_width(lora_mode_sw, 2, LV_PART_MAIN);
-    
-    lv_obj_t *label;
-    label = lv_label_create(lora_mode_sw);
-    lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
-    lv_label_set_text(label, "MODE SW");
-    
-    //---------------------
-    scr_middle_line(parent);
-
-    lora_lab_mode = scr2_create_label(scr2_cont);
-    // int mode = ui_if_epd_get_LORA_mode();
-    // if(mode == LORA_MODE_SEND ){
-        lv_label_set_text_fmt(lora_lab_mode, "%s : %s", "Mode", "send");
-    // } else {
-    //     lv_label_set_text_fmt(lora_lab_mode, "%s : %s", "Mode", "recv");
-    // }
-
-    lora_lab_time = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(lora_lab_time, "%s : %ds", "SendTimeInterval", 5);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %0.1fMHz", "Frequency", 850.0);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %0.1fKHz", "Bandwidth", 125.0);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %d", "SpreadingFactor", 10);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %d", "CodingRate", 6);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : 0x%X", "SyncWord", 0xAB);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %d", "OutputPower", 10);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %d", "CurrentLimit", 140);
-
-    label = scr2_create_label(scr2_cont);
-    lv_label_set_text_fmt(label, "%s : %d", "PreambleLength", 15);
-
-
-    // --------------- RIGHT ---------------
-    label = scr2_create_label(scr2_cont_info);
-    lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
-    lv_label_set_text(label, "SEND");
-
-    for(int i = 0; i < 10; i++) {
-        label = scr2_create_label(scr2_cont_info);
-        lv_label_set_text_fmt(label, "Lora Send #%d", i);
+static void scr2_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
     }
+}
 
-    //
-    // for(int i = 0; i < 10; i++) {
-    //     char buf[35];
-    //     lv_snprintf(buf, 35, "%d-%s", i, "Test Label");
-    //     scr2_create_label(scr2_cont, buf);
-        // label = lv_label_create(scr2_cont);
-        // lv_obj_set_width(label, LCD_HOR_SIZE/2-50);
-        // lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
-        // lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
-        // lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
-        // lv_label_set_text_fmt(label, "1234567890123456789012345678");
-        // lv_label_set_text_fmt(label, "1234567890123456789012345678901234567890");
-    // }
+static void scr2_list_event(lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    for(int i = 0; i < lv_obj_get_child_cnt(obj); i++) 
+    {
+        lv_obj_t * child = lv_obj_get_child(obj, i);
+        if(lv_obj_check_type(child, &lv_label_class)) {
+            char *str = lv_label_get_text(child);
+
+            if(strcmp("Auto Send", str) == 0)
+            {
+                scr_mgr_push(SCREEN2_1_ID, false);
+            }
+            if(strcmp("Manual Send", str) == 0)
+            {
+                scr_mgr_push(SCREEN2_2_ID, false);
+            }
+        }
+    }
+}
+
+static void scr2_item_create(const char *name, lv_event_cb_t cb)
+{
+    lv_obj_t * obj = lv_obj_class_create_obj(&lv_list_btn_class, scr2_list);
+    lv_obj_class_init_obj(obj);
+    lv_obj_set_size(obj, LV_PCT(100), LV_SIZE_CONTENT);
+
+    lv_obj_t *label = lv_label_create(obj);
+    lv_label_set_text(label, name);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_obj_align(label, LV_ALIGN_LEFT_MID, 10, 0);
+
+    lv_obj_set_height(obj, 130);
+    lv_obj_set_style_text_font(obj, &Font_Mono_Bold_30, LV_PART_MAIN);
+    lv_obj_set_style_bg_color(obj, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_style_text_color(obj, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_border_width(obj, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(obj, 3, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_outline_width(obj, 0, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(obj, 30, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(obj, cb, LV_EVENT_CLICKED, NULL); 
+}
+
+static void create2(lv_obj_t *parent)
+{
+    scr2_list = lv_list_create(parent);
+    lv_obj_set_size(scr2_list, lv_pct(93), lv_pct(91));
+    lv_obj_align(scr2_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(scr2_list, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_style_pad_top(scr2_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr2_list, 15, LV_PART_MAIN);
+    lv_obj_set_style_radius(scr2_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(scr2_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr2_list, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_color(scr2_list, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(scr2_list, 0, LV_PART_MAIN);
+
+    scr2_item_create("Auto Send", scr2_list_event);
+    scr2_item_create("Manual Send", scr2_list_event);
+
     // back
     scr_back_btn_create(parent, "Lora", scr2_btn_event_cb);
 }
-#else 
 
+static void entry2(void) { }
+static void exit2(void) { }
+static void destroy2(void) { }
+
+static scr_lifecycle_t screen2 = {
+    .create = create2,
+    .entry = entry2,
+    .exit  = exit2,
+    .destroy = destroy2,
+};
+#endif
+// --------------------- screen 2.1 --------------------- Auto Send
+#if 1
+static lv_obj_t *scr2_1_cont;
+static lv_timer_t *scr2_1_timer = NULL;
+static lv_obj_t *scr2_1_sw_btn;
+static lv_obj_t *scr2_1_sw_btn_info;
+
+static int scr2_1_mode = 0;
+
+static void scr2_1_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+static void lora_auto_send_event(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        if(scr2_1_mode == 0) {
+            scr2_1_mode = 1;
+            lv_label_set_text(scr2_1_sw_btn_info, "Recv");
+        } else if(scr2_1_mode == 1) {
+            scr2_1_mode = 0;
+            lv_label_set_text(scr2_1_sw_btn_info, "Send");
+        }
+    }
+}
+
+static void lora_timer_event(lv_timer_t *t)
+{
+}
+
+static void create2_1(lv_obj_t *parent) 
+{
+    scr2_1_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr2_1_cont, lv_pct(98), lv_pct(80));
+    lv_obj_set_style_bg_color(scr2_1_cont, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr2_1_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr2_1_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr2_1_cont, 1, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr2_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_hor(scr2_1_cont, 20, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr2_1_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr2_1_cont, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr2_1_cont, 5, LV_PART_MAIN);
+    lv_obj_align(scr2_1_cont, LV_ALIGN_BOTTOM_MID, 0, -20);
+
+    for(int i = 0; i < ARRAY_LEN(scr2_lab_buf); i++) {
+        scr2_lab_buf[i] = scr2_create_label(scr2_1_cont);
+        
+        // lv_obj_set_width(scr2_lab_buf[i], lv_pct(90));
+        lv_obj_set_width(scr2_lab_buf[i], LV_SIZE_CONTENT);   /// 1
+        lv_obj_set_height(scr2_lab_buf[i], LV_SIZE_CONTENT);    /// 1
+        lv_obj_set_style_border_width(scr2_lab_buf[i], 1, LV_PART_MAIN);
+        lv_label_set_long_mode(scr2_lab_buf[i], LV_LABEL_LONG_DOT);
+        lv_label_set_text_fmt(scr2_lab_buf[i], "Send #%d fadfasdfasdfasfadfasdfasdfasdfasdfadfasdfa", i);
+    }
+
+    scr2_1_sw_btn = lv_btn_create(parent);
+    lv_obj_set_size(scr2_1_sw_btn, 100, 50);
+    lv_obj_set_style_radius(scr2_1_sw_btn, 5, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr2_1_sw_btn, 2, LV_PART_MAIN);
+    scr2_1_sw_btn_info = lv_label_create(scr2_1_sw_btn);
+    // lv_obj_set_style_text_font(scr2_1_sw_btn_info, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    lv_obj_set_style_text_align(scr2_1_sw_btn_info, LV_TEXT_ALIGN_CENTER, 0);
+    lv_label_set_text(scr2_1_sw_btn_info, "Send");
+    lv_obj_center(scr2_1_sw_btn_info);
+    lv_obj_align(scr2_1_sw_btn, LV_ALIGN_TOP_RIGHT, -10, 20);
+    lv_obj_add_event_cb(scr2_1_sw_btn, lora_auto_send_event, LV_EVENT_CLICKED, NULL);
+
+    scr_back_btn_create(parent, ("Auto Send"), scr2_1_btn_event_cb);
+}
+static void entry2_1(void) 
+{
+    scr2_1_timer = lv_timer_create(lora_timer_event, 3000, NULL);
+}
+static void exit2_1(void) 
+{
+    if(scr2_1_timer) {
+        lv_timer_del(scr2_1_timer);
+        scr2_1_timer = NULL;
+    }
+}
+static void destroy2_1(void) { }
+
+static scr_lifecycle_t screen2_1 = {
+    .create = create2_1,
+    .entry = entry2_1,
+    .exit  = exit2_1,
+    .destroy = destroy2_1,
+};
+#endif
+// --------------------- screen 2.2 --------------------- Manual Send
+#if 1
 #define LORA_MODE_SEND 0
 #define LORA_MODE_RECV 1
+
+#define MANUAL_SEND_LINE_MAX 15
+#define MANUAL_SEND_LINE_MAX_CH 42
 
 static bool lora_mode_st = LORA_MODE_SEND;
 static lv_obj_t *lora_mode_lab;
@@ -638,46 +680,23 @@ static lv_obj_t *keyborad;
 static lv_obj_t *textarea;
 static lv_obj_t *cnt_label;
 
+static lv_obj_t *lora_mode_sw;
+
 int send_cnt = 10000;
 int recv_cnt = 0;
 
-static lv_obj_t *scr2_cont_info;
-static lv_obj_t *lora_lab_buf[12] = {0};
+int lab_idx = 0;
+
+static lv_obj_t *scr2_2_cont_info;
+static lv_obj_t *lora_lab_buf[15] = {0};
 
 
-static lv_obj_t * scr2_create_label(lv_obj_t *parent)
+static void scr2_2_btn_event_cb(lv_event_t * e)
 {
-    lv_obj_t *label = lv_label_create(parent);
-    lv_obj_set_width(label, LCD_HOR_SIZE/2-50);
-    lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
-    // lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
-    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
-    return label;
-}
-
-
-static void lora_mode_sw_event(lv_event_t * e)
-{
-    if(lora_mode_st == LORA_MODE_SEND)
-    {
-        lora_mode_st = LORA_MODE_RECV;
-        lv_obj_add_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_clear_flag(scr2_cont_info, LV_OBJ_FLAG_HIDDEN);
-        
-    } 
-    else if(lora_mode_st == LORA_MODE_RECV) 
-    {
-        lora_mode_st = LORA_MODE_SEND;
-        lv_obj_clear_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_clear_flag(textarea, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(scr2_cont_info, LV_OBJ_FLAG_HIDDEN);
-        
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
     }
-
-    lv_label_set_text_fmt(lora_mode_lab, "MODE : %s", (lora_mode_st == LORA_MODE_SEND)? "SEND" : "RECV");
 }
-
 
 static void ta_event_cb(lv_event_t * e)
 {
@@ -698,12 +717,12 @@ static void ta_event_cb(lv_event_t * e)
 
     if(code == LV_EVENT_VALUE_CHANGED)
     {
-        printf("LV_EVENT_VALUE_CHANGED\n");
+        // printf("LV_EVENT_VALUE_CHANGED\n");
     }
 
     if(code == LV_EVENT_READY)
     {
-        printf("LV_EVENT_READY\n");
+        // printf("LV_EVENT_READY\n");
 
         char *str = lv_textarea_get_text(ta);
         int str_len = strlen(str);
@@ -711,46 +730,116 @@ static void ta_event_cb(lv_event_t * e)
         send_cnt += str_len;
         lv_label_set_text_fmt(cnt_label, "S:%d", send_cnt);
 
-        printf("mode=%d, len=%d, %s\n", lora_mode_st, str_len, str);
-        lv_textarea_set_text(ta,"");
+        printf("lab_idx=%d, mode=%d, len=%d, %s\n", lab_idx, lora_mode_st, str_len, str);
+        
 
+        // 
+
+        static bool negation = true;
+
+        if(negation)
+        {
+            lv_label_set_text_fmt(scr2_lab_buf[lab_idx], "S:%s", str);
+        } else {
+            char buf[43];
+            lv_snprintf(buf, 43, "%s:R", str);
+            int len = strlen(buf);
+            int i;
+            for(i = 0; i < 43-len; i++)
+            {
+                buf[i] = ' ';
+            }
+
+            printf("len=%d, i=%d\n", len, i);
+            strcpy(&buf[i], str);
+            lv_label_set_text_fmt(scr2_lab_buf[lab_idx], "%s:R", buf);
+        }
+        negation = !negation;
+
+        lab_idx++;
+        if(lab_idx >= MANUAL_SEND_LINE_MAX) {
+            lab_idx = 0;
+        }
+
+        lv_textarea_set_text(ta,"");
     }
 }
 
-static void create2(lv_obj_t *parent) 
+static void lora_mode_sw_event(lv_event_t * e)
+{
+    if(lora_mode_st == LORA_MODE_SEND)
+    {
+        lora_mode_st = LORA_MODE_RECV;
+        lv_obj_add_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(scr2_2_cont_info, LV_OBJ_FLAG_HIDDEN);
+        
+    } 
+    else if(lora_mode_st == LORA_MODE_RECV) 
+    {
+        lora_mode_st = LORA_MODE_SEND;
+        lv_obj_clear_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(textarea, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(scr2_2_cont_info, LV_OBJ_FLAG_HIDDEN);
+        
+    }
+
+    lv_label_set_text_fmt(lora_mode_lab, "MODE : %s", (lora_mode_st == LORA_MODE_SEND)? "SEND" : "RECV");
+}
+
+static lv_obj_t * scr2_2_create_label(lv_obj_t *parent)
+{
+    lv_obj_t *label = lv_label_create(parent);
+    lv_obj_set_width(label, lv_pct(99));
+    lv_obj_set_style_text_font(label, &Font_Mono_Bold_20, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_obj_set_style_border_side(label, LV_BORDER_SIDE_BOTTOM, LV_PART_MAIN);
+    return label;
+}
+
+static void create2_2(lv_obj_t *parent) 
 {
     /*Create a keyboard to use it with an of the text areas*/
     keyborad = lv_keyboard_create(parent);
+    lv_obj_set_height(keyborad, lv_pct(40));
+    lv_obj_align(keyborad, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_border_width(keyborad, 0, LV_PART_MAIN);
 
     /*Create a text area. The keyboard will write here*/
     textarea = lv_textarea_create(parent);
-    lv_obj_align(textarea, LV_ALIGN_TOP_MID, 0, 100);
+    lv_obj_set_style_text_font(textarea, &Font_Mono_Bold_20, LV_PART_MAIN);  
     lv_obj_add_event_cb(textarea, ta_event_cb, LV_EVENT_VALUE_CHANGED, keyborad);
     lv_obj_add_event_cb(textarea, ta_event_cb, LV_EVENT_READY, keyborad);
-    lv_obj_set_size(textarea, lv_pct(98), 150);
+    lv_obj_set_size(textarea, lv_pct(98), lv_pct(6));
+    lv_obj_add_state(textarea, LV_STATE_FOCUSED);       /// States
     lv_obj_clear_flag(textarea, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_set_style_text_letter_space(textarea, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_letter_space(textarea, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_line_space(textarea, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_keyboard_set_textarea(keyborad, textarea);
+    // lv_obj_set_style_border_width(textarea, 0, LV_PART_MAIN);
+    // lv_obj_set_style_shadow_width(textarea, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_width(textarea, 0, LV_PART_MAIN);
+    lv_obj_align_to(textarea, keyborad, LV_ALIGN_OUT_TOP_MID, 0, -5);
 
-    scr2_cont_info = lv_obj_create(parent);
-    lv_obj_set_size(scr2_cont_info, lv_pct(98), lv_pct(84));
-    lv_obj_set_style_bg_color(scr2_cont_info, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(scr2_cont_info, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_clear_flag(scr2_cont_info, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(scr2_cont_info, 1, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(scr2_cont_info, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_left(scr2_cont_info, 50, LV_PART_MAIN);
-    lv_obj_set_flex_flow(scr2_cont_info, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr2_cont_info, 10, LV_PART_MAIN);
-    lv_obj_set_style_pad_column(scr2_cont_info, 5, LV_PART_MAIN);
-    lv_obj_align(scr2_cont_info, LV_ALIGN_BOTTOM_MID, 0, -10);
+    scr2_2_cont_info = lv_obj_create(parent);
+    
+    lv_obj_set_size(scr2_2_cont_info, lv_pct(100), lv_pct(45));
+    lv_obj_set_style_bg_color(scr2_2_cont_info, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr2_2_cont_info, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr2_2_cont_info, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr2_2_cont_info, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr2_2_cont_info, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(scr2_2_cont_info, 10, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr2_2_cont_info, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr2_2_cont_info, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr2_2_cont_info, 0, LV_PART_MAIN);
+    lv_obj_align_to(scr2_2_cont_info, textarea, LV_ALIGN_OUT_TOP_MID, 0, 0);
 
-    for(int i = 0; i < sizeof(lora_lab_buf)/sizeof(lora_lab_buf[0]); i++) {
-        lv_obj_t *label = scr2_create_label(scr2_cont_info);
-        lv_label_set_text_fmt(label, "Lora Send #%d", i);
+    for(int i = 0; i < MANUAL_SEND_LINE_MAX; i++) {
+        scr2_lab_buf[i] = scr2_2_create_label(scr2_2_cont_info);
+        lv_label_set_text_fmt(scr2_lab_buf[i], "%d:1234567890", i);
     }
-
     // 
     lora_mode_sw = lv_btn_create(parent);
     lv_obj_set_style_radius(lora_mode_sw, 5, LV_PART_MAIN);
@@ -764,43 +853,39 @@ static void create2(lv_obj_t *parent)
     lv_obj_set_style_text_font(cnt_label, &Font_Mono_Bold_25, LV_PART_MAIN);
     lv_obj_align(cnt_label, LV_ALIGN_TOP_RIGHT, -30, 22);
 
-    // back
-    scr_back_btn_create(parent, "Lora", scr2_btn_event_cb);
+    scr_back_btn_create(parent, ("Manual Send"), scr2_2_btn_event_cb);
 }
-
-#endif
-
-
-static void entry2(void) 
-{ 
+static void entry2_2(void) 
+{
     send_cnt = 0;
     recv_cnt = 0;
 
-    if(lora_mode_st == LORA_MODE_SEND)
-    {
-        lv_label_set_text(lora_mode_lab, "MODE : SEND");
-        lv_label_set_text_fmt(cnt_label, "S:%d", send_cnt);
-        lv_obj_clear_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_clear_flag(textarea, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(scr2_cont_info, LV_OBJ_FLAG_HIDDEN);
-    }
-    else
-    {
-        lv_label_set_text(lora_mode_lab, "MODE : RECV");
-        lv_label_set_text_fmt(cnt_label, "R:%d", recv_cnt);
-        lv_obj_add_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_clear_flag(scr2_cont_info, LV_OBJ_FLAG_HIDDEN);
-    }
+    // if(lora_mode_st == LORA_MODE_SEND)
+    // {
+    //     lv_label_set_text(lora_mode_lab, "MODE : SEND");
+    //     lv_label_set_text_fmt(cnt_label, "S:%d", send_cnt);
+    //     lv_obj_clear_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
+    //     lv_obj_clear_flag(textarea, LV_OBJ_FLAG_HIDDEN);
+    //     lv_obj_add_flag(scr2_2_cont_info, LV_OBJ_FLAG_HIDDEN);
+    // }
+    // else
+    // {
+    //     lv_label_set_text(lora_mode_lab, "MODE : RECV");
+    //     lv_label_set_text_fmt(cnt_label, "R:%d", recv_cnt);
+    //     lv_obj_add_flag(keyborad, LV_OBJ_FLAG_HIDDEN);
+    //     lv_obj_add_flag(textarea, LV_OBJ_FLAG_HIDDEN);
+    //     lv_obj_clear_flag(scr2_2_cont_info, LV_OBJ_FLAG_HIDDEN);
+    // }
 }
-static void exit2(void) { }
-static void destroy2(void) { }
+static void exit2_2(void) {
+}
+static void destroy2_2(void) { }
 
-static scr_lifecycle_t screen2 = {
-    .create = create2,
-    .entry = entry2,
-    .exit  = exit2,
-    .destroy = destroy2,
+static scr_lifecycle_t screen2_2 = {
+    .create = create2_2,
+    .entry = entry2_2,
+    .exit  = exit2_2,
+    .destroy = destroy2_2,
 };
 #endif
 //************************************[ screen 3 ]****************************************** sd_card
@@ -1169,7 +1254,7 @@ static scr_lifecycle_t screen4_2 = {
 #endif
 // --------------------- screen --------------------- Setting
 #if 1
-static lv_obj_t *setting_list;
+static lv_obj_t *scr4_list;
 static lv_obj_t *setting_page;
 static int setting_num = 0;
 static int setting_page_num = 0;
@@ -1209,24 +1294,24 @@ static void scr4_btn_event_cb(lv_event_t * e)
 /**
  * func:      setting
  * handle:    setting_handle_list
- * list:      setting_list
+ * list:      scr4_list
  * num:       setting_num
  * page_num:  setting_page_num
  * curr_page: setting_curr_page
  */
 // #define UI_LIST_CREATE(func, handle, list, num, page_num, curr_page) 
-UI_LIST_CREATE(setting, setting_handle_list, setting_list, setting_num, setting_page_num, setting_curr_page)
+UI_LIST_CREATE(setting, setting_handle_list, scr4_list, setting_num, setting_page_num, setting_curr_page)
 
 /**
  * func:      setting
- * list:      setting_list
+ * list:      scr4_list
  * page:      setting_page
  * num:       setting_num
  * page_num:  setting_page_num
  * curr_page: setting_curr_page
  */
 // #define UI_LIST_BTN_CREATE(func, list, page, num, page_num, curr_page) 
-UI_LIST_BTN_CREATE(setting, setting_list, setting_page, setting_num, setting_page_num, setting_curr_page)
+UI_LIST_BTN_CREATE(setting, scr4_list, setting_page, setting_num, setting_page_num, setting_curr_page)
 
 
 void ui_list_btn_create(lv_obj_t *parent)
@@ -1289,17 +1374,17 @@ static void create4(lv_obj_t *parent)
 {
     printf("vcom = %s\n", setting_handle_list[1].get_cb(NULL));
 
-    setting_list = lv_list_create(parent);
-    lv_obj_set_size(setting_list, lv_pct(93), lv_pct(91));
-    lv_obj_align(setting_list, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_set_style_bg_color(setting_list, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
-    lv_obj_set_style_pad_top(setting_list, 2, LV_PART_MAIN);
-    lv_obj_set_style_pad_row(setting_list, 10, LV_PART_MAIN);
-    lv_obj_set_style_radius(setting_list, 0, LV_PART_MAIN);
-    // lv_obj_set_style_outline_pad(setting_list, 2, LV_PART_MAIN);
-    lv_obj_set_style_border_width(setting_list, 0, LV_PART_MAIN);
-    lv_obj_set_style_border_color(setting_list, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
-    lv_obj_set_style_shadow_width(setting_list, 0, LV_PART_MAIN);
+    scr4_list = lv_list_create(parent);
+    lv_obj_set_size(scr4_list, lv_pct(93), lv_pct(91));
+    lv_obj_align(scr4_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_set_style_bg_color(scr4_list, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_style_pad_top(scr4_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr4_list, 10, LV_PART_MAIN);
+    lv_obj_set_style_radius(scr4_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(scr4_list, 2, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr4_list, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_color(scr4_list, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(scr4_list, 0, LV_PART_MAIN);
 
     setting_item_create();
 
@@ -1844,6 +1929,8 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN0_ID,   &screen0);    // menu
     scr_mgr_register(SCREEN1_ID,   &screen1);    // clock
     scr_mgr_register(SCREEN2_ID,   &screen2);    // lora
+    scr_mgr_register(SCREEN2_1_ID, &screen2_1);  //     - Auto Send
+    scr_mgr_register(SCREEN2_2_ID, &screen2_2);  //     - Manual Send
     scr_mgr_register(SCREEN3_ID,   &screen3);    // sd card
     scr_mgr_register(SCREEN4_ID,   &screen4);    // setting
     scr_mgr_register(SCREEN4_1_ID, &screen4_1);  //     - About System
@@ -1853,7 +1940,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN7_ID,   &screen7);    // battery
     scr_mgr_register(SCREEN8_ID,   &screen8);    // battery
 
-    scr_mgr_switch(SCREEN0_ID, false); // set root screen
+    scr_mgr_switch(SCREEN2_2_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);
 }
 
