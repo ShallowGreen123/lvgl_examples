@@ -59,6 +59,7 @@ extern "C" {
 enum {
     SCREEN0_ID = 0,
     SCREEN1_ID,
+    SCREEN1_1_ID,
     SCREEN2_ID,
     SCREEN2_1_ID,
     SCREEN2_2_ID,
@@ -68,6 +69,8 @@ enum {
     SCREEN4_2_ID,
     SCREEN5_ID,
     SCREEN6_ID,
+    SCREEN6_1_ID,
+    SCREEN6_2_ID,
     SCREEN7_ID,
     SCREEN7_1_ID,
     SCREEN7_2_ID,

@@ -579,7 +579,6 @@ static lv_obj_t *scr2_1_cont;
 static lv_timer_t *scr2_1_timer = NULL;
 static lv_obj_t *scr2_1_sw_btn;
 static lv_obj_t *scr2_1_sw_btn_info;
-
 static int scr2_1_mode = 0;
 
 static void scr2_1_btn_event_cb(lv_event_t * e)
@@ -617,13 +616,21 @@ static void create2_1(lv_obj_t *parent)
     lv_obj_set_style_pad_all(scr2_1_cont, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_hor(scr2_1_cont, 20, LV_PART_MAIN);
     lv_obj_set_flex_flow(scr2_1_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_top(scr2_1_cont, 10, LV_PART_MAIN);
     lv_obj_set_style_pad_row(scr2_1_cont, 10, LV_PART_MAIN);
     lv_obj_set_style_pad_column(scr2_1_cont, 5, LV_PART_MAIN);
     lv_obj_align(scr2_1_cont, LV_ALIGN_BOTTOM_MID, 0, -20);
 
+    lv_obj_t *scr2_1_info = lv_label_create(parent);
+    lv_obj_set_style_text_font(scr2_1_info, &Font_Mono_Bold_25, LV_PART_MAIN);
+    lv_obj_set_style_text_align(scr2_1_info, LV_TEXT_ALIGN_LEFT, 0);
+    lv_label_set_text(scr2_1_info,  "Freq: 868MHz    BD: 250KHz\n"
+                                    "Power: 22       Spread: 10");
+    lv_obj_set_style_border_width(scr2_1_info, 1, LV_PART_MAIN);
+    lv_obj_align(scr2_1_info, LV_ALIGN_TOP_MID, 0, 85);
+
     for(int i = 0; i < ARRAY_LEN(scr2_lab_buf); i++) {
         scr2_lab_buf[i] = scr2_create_label(scr2_1_cont);
-        
         // lv_obj_set_width(scr2_lab_buf[i], lv_pct(90));
         lv_obj_set_width(scr2_lab_buf[i], LV_SIZE_CONTENT);   /// 1
         lv_obj_set_height(scr2_lab_buf[i], LV_SIZE_CONTENT);    /// 1
@@ -671,8 +678,8 @@ static scr_lifecycle_t screen2_1 = {
 #define LORA_MODE_SEND 0
 #define LORA_MODE_RECV 1
 
-#define MANUAL_SEND_LINE_MAX 15
-#define MANUAL_SEND_LINE_MAX_CH 42
+#define MANUAL_SEND_LINE_MAX 12
+#define MANUAL_SEND_LINE_MAX_CH 34
 
 static bool lora_mode_st = LORA_MODE_SEND;
 static lv_obj_t *lora_mode_lab;
@@ -741,11 +748,11 @@ static void ta_event_cb(lv_event_t * e)
         {
             lv_label_set_text_fmt(scr2_lab_buf[lab_idx], "S:%s", str);
         } else {
-            char buf[43];
-            lv_snprintf(buf, 43, "%s:R", str);
+            char buf[MANUAL_SEND_LINE_MAX_CH];
+            lv_snprintf(buf, MANUAL_SEND_LINE_MAX_CH, "%s:R", str);
             int len = strlen(buf);
             int i;
-            for(i = 0; i < 43-len; i++)
+            for(i = 0; i < MANUAL_SEND_LINE_MAX_CH-len; i++)
             {
                 buf[i] = ' ';
             }
@@ -791,7 +798,7 @@ static lv_obj_t * scr2_2_create_label(lv_obj_t *parent)
 {
     lv_obj_t *label = lv_label_create(parent);
     lv_obj_set_width(label, lv_pct(99));
-    lv_obj_set_style_text_font(label, &Font_Mono_Bold_20, LV_PART_MAIN);   
+    lv_obj_set_style_text_font(label, &Font_Mono_Bold_25, LV_PART_MAIN);   
     lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_obj_set_style_border_side(label, LV_BORDER_SIDE_BOTTOM, LV_PART_MAIN);
@@ -808,11 +815,11 @@ static void create2_2(lv_obj_t *parent)
 
     /*Create a text area. The keyboard will write here*/
     textarea = lv_textarea_create(parent);
-    lv_obj_set_style_text_font(textarea, &Font_Mono_Bold_20, LV_PART_MAIN);  
+    lv_obj_set_style_text_font(textarea, &Font_Mono_Bold_25, LV_PART_MAIN);  
     lv_obj_add_event_cb(textarea, ta_event_cb, LV_EVENT_VALUE_CHANGED, keyborad);
     lv_obj_add_event_cb(textarea, ta_event_cb, LV_EVENT_READY, keyborad);
-    lv_obj_set_size(textarea, lv_pct(98), lv_pct(6));
-    lv_obj_add_state(textarea, LV_STATE_FOCUSED);       /// States
+    lv_obj_set_size(textarea, lv_pct(98), lv_pct(7));
+    // lv_obj_add_state(textarea, LV_STATE_FOCUSED);       /// States
     lv_obj_clear_flag(textarea, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_style_text_letter_space(textarea, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_line_space(textarea, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -831,23 +838,24 @@ static void create2_2(lv_obj_t *parent)
     lv_obj_set_style_border_width(scr2_2_cont_info, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_all(scr2_2_cont_info, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_left(scr2_2_cont_info, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_top(scr2_2_cont_info, 10, LV_PART_MAIN);
     lv_obj_set_flex_flow(scr2_2_cont_info, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr2_2_cont_info, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr2_2_cont_info, 6, LV_PART_MAIN);
     lv_obj_set_style_pad_column(scr2_2_cont_info, 0, LV_PART_MAIN);
-    lv_obj_align_to(scr2_2_cont_info, textarea, LV_ALIGN_OUT_TOP_MID, 0, 0);
+    lv_obj_align_to(scr2_2_cont_info, textarea, LV_ALIGN_OUT_TOP_MID, 0, -5);
 
     for(int i = 0; i < MANUAL_SEND_LINE_MAX; i++) {
         scr2_lab_buf[i] = scr2_2_create_label(scr2_2_cont_info);
         lv_label_set_text_fmt(scr2_lab_buf[i], "%d:1234567890", i);
     }
     // 
-    lora_mode_sw = lv_btn_create(parent);
-    lv_obj_set_style_radius(lora_mode_sw, 5, LV_PART_MAIN);
-    lv_obj_set_style_border_width(lora_mode_sw, 2, LV_PART_MAIN);
-    lora_mode_lab = lv_label_create(lora_mode_sw);
-    lv_obj_set_style_text_font(lora_mode_lab, &Font_Mono_Bold_25, LV_PART_MAIN);
-    lv_obj_align(lora_mode_sw, LV_ALIGN_TOP_MID, 0, 22);
-    lv_obj_add_event_cb(lora_mode_sw, lora_mode_sw_event, LV_EVENT_CLICKED, NULL);
+    // lora_mode_sw = lv_btn_create(parent);
+    // lv_obj_set_style_radius(lora_mode_sw, 5, LV_PART_MAIN);
+    // lv_obj_set_style_border_width(lora_mode_sw, 2, LV_PART_MAIN);
+    // lora_mode_lab = lv_label_create(lora_mode_sw);
+    // lv_obj_set_style_text_font(lora_mode_lab, &Font_Mono_Bold_25, LV_PART_MAIN);
+    // lv_obj_align(lora_mode_sw, LV_ALIGN_TOP_MID, 0, 22);
+    // lv_obj_add_event_cb(lora_mode_sw, lora_mode_sw_event, LV_EVENT_CLICKED, NULL);
 
     cnt_label = lv_label_create(parent);
     lv_obj_set_style_text_font(cnt_label, &Font_Mono_Bold_25, LV_PART_MAIN);
@@ -1940,7 +1948,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN7_ID,   &screen7);    // battery
     scr_mgr_register(SCREEN8_ID,   &screen8);    // battery
 
-    scr_mgr_switch(SCREEN2_2_ID, false); // set root screen
+    scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);
 }
 

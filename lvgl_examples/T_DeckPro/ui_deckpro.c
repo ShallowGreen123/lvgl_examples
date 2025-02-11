@@ -354,15 +354,112 @@ static scr_lifecycle_t screen0 = {
 };
 #endif
 //************************************[ screen 1 ]****************************************** Lora
+// --------------------- screen 1 --------------------- lora
 #if 1
-static lv_obj_t *scr1_cont;
+lv_obj_t * scr1_list;
+static lv_obj_t *scr1_lab_buf[20];
+
+static void scr1_list_event(lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    for(int i = 0; i < lv_obj_get_child_cnt(obj); i++) 
+    {
+        lv_obj_t * child = lv_obj_get_child(obj, i);
+        if(lv_obj_check_type(child, &lv_label_class)) {
+            char *str = lv_label_get_text(child);
+
+            if(strcmp("-Auto Test", str) == 0)
+            {
+                scr_mgr_push(SCREEN1_1_ID, false);
+            }
+            if(strcmp("-Manual Test", str) == 0)
+            {
+                scr_mgr_push(SCREEN2_2_ID, false);
+            }
+            printf("%s\n", str);
+        }
+    }
+}
+
+static void scr1_item_create(const char *name, lv_event_cb_t cb)
+{
+    lv_obj_t * obj = lv_obj_class_create_obj(&lv_list_btn_class, scr1_list);
+    lv_obj_class_init_obj(obj);
+    lv_obj_set_size(obj, LV_PCT(100), LV_SIZE_CONTENT);
+
+    lv_obj_t *label = lv_label_create(obj);
+    lv_label_set_text(label, name);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_obj_align(label, LV_ALIGN_LEFT_MID, 10, 0);
+
+    lv_obj_set_height(obj, LV_VER_RES / 6);
+    lv_obj_set_style_text_font(obj, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_bg_color(obj, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    // lv_obj_set_style_text_color(obj, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_border_width(obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_outline_width(obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(obj, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(obj, cb, LV_EVENT_CLICKED, NULL); 
+}
+
+static void scr1_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        // ui_full_refresh();
+        scr_mgr_pop(false);
+    }
+}
+
+static void create1(lv_obj_t *parent) 
+{
+    scr1_list = lv_list_create(parent);
+    lv_obj_set_size(scr1_list, lv_pct(93), lv_pct(91));
+    lv_obj_align(scr1_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    // lv_obj_set_style_bg_color(scr1_list, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_style_pad_top(scr1_list, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr1_list, 15, LV_PART_MAIN);
+    lv_obj_set_style_radius(scr1_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(scr1_list, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr1_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_border_color(scr1_list, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(scr1_list, 0, LV_PART_MAIN);
+
+    scr1_item_create("-Auto Test", scr1_list_event);
+    // scr1_item_create("-Manual Test", scr1_list_event);
+
+    // back
+    scr_back_btn_create(parent, "Lora", scr1_btn_event_cb);
+}
+
+static void entry1(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit1(void) {
+    ui_disp_full_refr();
+}
+static void destroy1(void) { }
+
+static scr_lifecycle_t screen1 = {
+    .create = create1,
+    .entry = entry1,
+    .exit  = exit1,
+    .destroy = destroy1,
+};
+#endif
+// --------------------- screen 1.1 --------------------- Auto Send
+#if 1
+static lv_obj_t *scr1_1_cont;
 static lv_obj_t *lora_lab_buf[11] = {0};
 static lv_obj_t *lora_sw_btn;
 static lv_obj_t *lora_sw_btn_info;
 static lv_timer_t *lora_RT_timer = NULL;
 static int lora_cnt = 0;
 
-static void scr1_btn_event_cb(lv_event_t * e)
+static void scr1_1_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
         scr_mgr_pop(false);
@@ -433,23 +530,23 @@ static lv_obj_t * scr2_create_label(lv_obj_t *parent)
     return label;
 }
 
-static void create1(lv_obj_t *parent) 
+static void create1_1(lv_obj_t *parent) 
 {
-    scr1_cont = lv_obj_create(parent);
-    lv_obj_set_size(scr1_cont, lv_pct(100), lv_pct(85));
-    lv_obj_set_style_bg_color(scr1_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(scr1_cont, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_clear_flag(scr1_cont, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(scr1_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(scr1_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_left(scr1_cont, 13, LV_PART_MAIN);
-    lv_obj_set_flex_flow(scr1_cont, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr1_cont, 5, LV_PART_MAIN);
-    lv_obj_set_style_pad_column(scr1_cont, 5, LV_PART_MAIN);
-    lv_obj_set_align(scr1_cont, LV_ALIGN_BOTTOM_MID);
+    scr1_1_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr1_1_cont, lv_pct(100), lv_pct(85));
+    lv_obj_set_style_bg_color(scr1_1_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr1_1_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr1_1_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr1_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr1_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(scr1_1_cont, 13, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr1_1_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr1_1_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr1_1_cont, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr1_1_cont, LV_ALIGN_BOTTOM_MID);
 
     for(int i = 0; i < GET_BUFF_LEN(lora_lab_buf); i++){
-        lora_lab_buf[i] = scr2_create_label(scr1_cont);
+        lora_lab_buf[i] = scr2_create_label(scr1_1_cont);
         lv_label_set_text_fmt(lora_lab_buf[i], " ", i);
     }
 
@@ -471,29 +568,30 @@ static void create1(lv_obj_t *parent)
     lv_obj_align(lab, LV_ALIGN_TOP_RIGHT, -10, 10);
 
     // back
-    scr_back_btn_create(parent, ("Lora"), scr1_btn_event_cb);
+    scr_back_btn_create(parent, ("Lora"), scr1_1_btn_event_cb);
 }
 
-static void entry1(void) 
+static void entry1_1(void) 
 {
     ui_disp_full_refr();
     lora_RT_timer = lv_timer_create(lora_RT_timer_event, 1000, NULL);
 }
-static void exit1(void) {
+static void exit1_1(void) {
     ui_disp_full_refr();
     if(lora_RT_timer) {
         lv_timer_del(lora_RT_timer);
         lora_RT_timer = NULL;
     }
 }
-static void destroy1(void) { }
+static void destroy1_1(void) { }
 
-static scr_lifecycle_t screen1 = {
-    .create = create1,
-    .entry = entry1,
-    .exit  = exit1,
-    .destroy = destroy1,
+static scr_lifecycle_t screen1_1 = {
+    .create = create1_1,
+    .entry = entry1_1,
+    .exit  = exit1_1,
+    .destroy = destroy1_1,
 };
+
 #endif
 //************************************[ screen 2 ]****************************************** Setting
 // --------------------- screen 2.1 --------------------- About System
@@ -501,7 +599,7 @@ static scr_lifecycle_t screen1 = {
 static void scr2_1_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN2_ID, false);
+        scr_mgr_pop(SCREEN0_ID);
     }
 }
 
@@ -554,7 +652,7 @@ static scr_lifecycle_t screen2_1 = {
     .destroy = destroy2_1,
 };
 #endif
-// --------------------- screen --------------------- Setting
+// --------------------- screen 2 --------------------- Setting
 #if 1
 static lv_obj_t *setting_list;
 static lv_obj_t *setting_page;
@@ -584,7 +682,7 @@ static void setting_item_create(int curr_apge);
 static void scr2_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(SCREEN0_ID);
     }
 }
 
@@ -601,7 +699,7 @@ static void setting_scr_event(lv_event_t *e)
             lv_label_set_text_fmt(h->st, "%s", (h->get_cb() ? "ON" : "OFF"));
             break;
         case UI_SETTING_TYPE_SUB:
-            scr_mgr_switch(h->sub_id, false);
+            scr_mgr_push(h->sub_id, false);
             break;
         default:
             break;
@@ -854,7 +952,7 @@ static void GPS_loop_timer_event(lv_timer_t * t)
 static void scr3_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(false);
     }
 }
 
@@ -903,18 +1001,148 @@ static scr_lifecycle_t screen3 = {
     .destroy = destroy3,
 };
 #endif
-//************************************[ screen 4 ]****************************************** Wifi Scan
+//************************************[ screen 4 ]****************************************** WIFI
+// --------------------- screen 4 --------------------- WIFI
 #if 1
-static lv_obj_t *scr4_cont;
+lv_obj_t * scr4_list;
+static lv_obj_t *scr4_lab_buf[20];
+
+static void scr4_list_event(lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    for(int i = 0; i < lv_obj_get_child_cnt(obj); i++) 
+    {
+        lv_obj_t * child = lv_obj_get_child(obj, i);
+        if(lv_obj_check_type(child, &lv_label_class)) {
+            char *str = lv_label_get_text(child);
+
+            if(strcmp("- WIFI Config", str) == 0)
+            {
+                scr_mgr_push(SCREEN4_1_ID, false);
+            }
+            if(strcmp("- WIFI Scan", str) == 0)
+            {
+                scr_mgr_push(SCREEN4_2_ID, false);
+            }
+            printf("%s\n", str);
+        }
+    }
+}
+
+static void scr4_item_create(const char *name, lv_event_cb_t cb)
+{
+    lv_obj_t * obj = lv_obj_class_create_obj(&lv_list_btn_class, scr4_list);
+    lv_obj_class_init_obj(obj);
+    lv_obj_set_size(obj, LV_PCT(100), LV_SIZE_CONTENT);
+
+    lv_obj_t *label = lv_label_create(obj);
+    lv_label_set_text(label, name);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_obj_align(label, LV_ALIGN_LEFT_MID, 10, 0);
+
+    lv_obj_set_height(obj, LV_VER_RES / 6);
+    lv_obj_set_style_text_font(obj, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_bg_color(obj, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    // lv_obj_set_style_text_color(obj, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_border_width(obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_outline_width(obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(obj, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(obj, cb, LV_EVENT_CLICKED, NULL); 
+}
+
+static void scr4_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        // ui_full_refresh();
+        scr_mgr_pop(false);
+    }
+}
+
+static void create4(lv_obj_t *parent) 
+{
+    scr4_list = lv_list_create(parent);
+    lv_obj_set_size(scr4_list, lv_pct(93), lv_pct(91));
+    lv_obj_align(scr4_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    // lv_obj_set_style_bg_color(scr4_list, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_style_pad_top(scr4_list, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr4_list, 15, LV_PART_MAIN);
+    lv_obj_set_style_radius(scr4_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(scr4_list, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr4_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_border_color(scr4_list, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(scr4_list, 0, LV_PART_MAIN);
+
+    scr4_item_create("- WIFI Config", scr4_list_event);
+    scr4_item_create("- WIFI Scan", scr4_list_event);
+
+    // back
+    scr_back_btn_create(parent, "WIFI", scr4_btn_event_cb);
+}
+
+static void entry4(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit4(void) {
+    ui_disp_full_refr();
+}
+static void destroy4(void) { }
+
+static scr_lifecycle_t screen4 = {
+    .create = create4,
+    .entry = entry4,
+    .exit  = exit4,
+    .destroy = destroy4,
+};
+#endif
+// --------------------- screen 4.2 --------------------- Wifi Config
+#if 1
+static void scr4_1_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+static void create4_1(lv_obj_t *parent) 
+{
+
+
+    // back
+    scr_back_btn_create(parent, "Wifi Config", scr4_1_btn_event_cb);
+}
+
+static void entry4_1(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit4_1(void) {
+    ui_disp_full_refr();
+}
+static void destroy4_1(void) { }
+
+static scr_lifecycle_t screen4_1 = {
+    .create = create4_1,
+    .entry = entry4_1,
+    .exit  = exit4_1,
+    .destroy = destroy4_1,
+};
+#endif
+// --------------------- screen 4.2 --------------------- Wifi Scan
+#if 1
+static lv_obj_t *scr4_2_cont;
 static lv_obj_t *wifi_scan_lab;
 static lv_timer_t *wifi_scan_timer = NULL;
 
 static ui_wifi_scan_info_t wifi_info_list[UI_WIFI_SCAN_ITEM_MAX];
 
-static void scr4_btn_event_cb(lv_event_t * e)
+static void scr4_2_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(false);
     }
 }
 
@@ -952,50 +1180,50 @@ static void wifi_scan_timer_event(lv_timer_t *t)
     show_wifi_scan();
 }
 
-static void create4(lv_obj_t *parent) 
+static void create4_2(lv_obj_t *parent) 
 {
-    scr4_cont = lv_obj_create(parent);
-    lv_obj_set_size(scr4_cont, lv_pct(100), lv_pct(90));
-    lv_obj_set_style_bg_color(scr4_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(scr4_cont, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_clear_flag(scr4_cont, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(scr4_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(scr4_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_left(scr4_cont, 13, LV_PART_MAIN);
-    lv_obj_set_flex_flow(scr4_cont, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(scr4_cont, 5, LV_PART_MAIN);
-    lv_obj_set_style_pad_column(scr4_cont, 5, LV_PART_MAIN);
-    lv_obj_set_align(scr4_cont, LV_ALIGN_BOTTOM_MID);
+    scr4_2_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr4_2_cont, lv_pct(100), lv_pct(90));
+    lv_obj_set_style_bg_color(scr4_2_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr4_2_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr4_2_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr4_2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr4_2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(scr4_2_cont, 13, LV_PART_MAIN);
+    lv_obj_set_flex_flow(scr4_2_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(scr4_2_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr4_2_cont, 5, LV_PART_MAIN);
+    lv_obj_set_align(scr4_2_cont, LV_ALIGN_BOTTOM_MID);
 
-    wifi_scan_lab = lv_label_create(scr4_cont);
+    wifi_scan_lab = lv_label_create(scr4_2_cont);
     lv_obj_set_width(wifi_scan_lab, lv_pct(95));
     lv_obj_set_style_pad_all(wifi_scan_lab, 0, LV_PART_MAIN);
     lv_obj_set_style_text_font(wifi_scan_lab, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
     lv_obj_set_style_border_width(wifi_scan_lab, 0, LV_PART_MAIN);
     lv_label_set_long_mode(wifi_scan_lab, LV_LABEL_LONG_WRAP);
 
-    lv_obj_t *back4_label = scr_back_btn_create(parent, ("Wifi"), scr4_btn_event_cb);
+    lv_obj_t *back4_label = scr_back_btn_create(parent, ("WIFI Scan"), scr4_2_btn_event_cb);
 }
-static void entry4(void) 
+static void entry4_2(void) 
 {
     ui_disp_full_refr();
     wifi_scan_timer = lv_timer_create(wifi_scan_timer_event, 3000, NULL);
     lv_timer_ready(wifi_scan_timer);
 }
-static void exit4(void) {
+static void exit4_2(void) {
     ui_disp_full_refr();
     if(wifi_scan_timer) {
         lv_timer_del(wifi_scan_timer);
         wifi_scan_timer = NULL;
     }
 }
-static void destroy4(void) { }
+static void destroy4_2(void) { }
 
-static scr_lifecycle_t screen4 = {
-    .create = create4,
-    .entry = entry4,
-    .exit  = exit4,
-    .destroy = destroy4,
+static scr_lifecycle_t screen4_2 = {
+    .create = create4_2,
+    .entry = entry4_2,
+    .exit  = exit4_2,
+    .destroy = destroy4_2,
 };
 #endif
 //************************************[ screen 5 ]****************************************** Test
@@ -1027,7 +1255,7 @@ static void test_item_create(int curr_apge);
 static void scr5_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(false);
     }
 }
 
@@ -1187,12 +1415,107 @@ static scr_lifecycle_t screen5 = {
 };
 #endif
 //************************************[ screen 6 ]****************************************** Battery
+// --------------------- screen 6 --------------------- Battery
 #if 1
-static lv_obj_t *back6_label;
-static bool show_batt_type = true;
+lv_obj_t * scr6_list;
+static lv_obj_t *scr6_lab_buf[20];
+
+static void scr6_list_event(lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    for(int i = 0; i < lv_obj_get_child_cnt(obj); i++) 
+    {
+        lv_obj_t * child = lv_obj_get_child(obj, i);
+        if(lv_obj_check_type(child, &lv_label_class)) {
+            char *str = lv_label_get_text(child);
+
+            if(strcmp("-BQ25896", str) == 0)
+            {
+                scr_mgr_push(SCREEN6_1_ID, false);
+            }
+            if(strcmp("-BQ27220", str) == 0)
+            {
+                scr_mgr_push(SCREEN6_2_ID, false);
+            }
+            printf("%s\n", str);
+        }
+    }
+}
+
+static void scr6_item_create(const char *name, lv_event_cb_t cb)
+{
+    lv_obj_t * obj = lv_obj_class_create_obj(&lv_list_btn_class, scr6_list);
+    lv_obj_class_init_obj(obj);
+    lv_obj_set_size(obj, LV_PCT(100), LV_SIZE_CONTENT);
+
+    lv_obj_t *label = lv_label_create(obj);
+    lv_label_set_text(label, name);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_obj_align(label, LV_ALIGN_LEFT_MID, 10, 0);
+
+    lv_obj_set_height(obj, LV_VER_RES / 6);
+    lv_obj_set_style_text_font(obj, FONT_BOLD_SIZE_15, LV_PART_MAIN);
+    // lv_obj_set_style_bg_color(obj, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    // lv_obj_set_style_text_color(obj, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_border_width(obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_outline_width(obj, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_radius(obj, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_add_event_cb(obj, cb, LV_EVENT_CLICKED, NULL); 
+}
+
+static void scr6_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        // ui_full_refresh();
+        scr_mgr_pop(false);
+    }
+}
+
+static void create6(lv_obj_t *parent) 
+{
+    scr6_list = lv_list_create(parent);
+    lv_obj_set_size(scr6_list, lv_pct(93), lv_pct(91));
+    lv_obj_align(scr6_list, LV_ALIGN_BOTTOM_MID, 0, 0);
+    // lv_obj_set_style_bg_color(scr6_list, lv_color_hex(EPD_COLOR_BG), LV_PART_MAIN);
+    lv_obj_set_style_pad_top(scr6_list, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr6_list, 15, LV_PART_MAIN);
+    lv_obj_set_style_radius(scr6_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_outline_pad(scr6_list, 1, LV_PART_MAIN);
+    lv_obj_set_style_border_width(scr6_list, 0, LV_PART_MAIN);
+    // lv_obj_set_style_border_color(scr6_list, lv_color_hex(EPD_COLOR_FG), LV_PART_MAIN);
+    lv_obj_set_style_shadow_width(scr6_list, 0, LV_PART_MAIN);
+
+    scr6_item_create("-BQ25896", scr6_list_event);
+    scr6_item_create("-BQ27220", scr6_list_event);
+
+    // back
+    scr_back_btn_create(parent, "Battery", scr6_btn_event_cb);
+}
+
+static void entry6(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit6(void) {
+    ui_disp_full_refr();
+}
+static void destroy6(void) { }
+
+static scr_lifecycle_t screen6 = {
+    .create = create6,
+    .entry = entry6,
+    .exit  = exit6,
+    .destroy = destroy6,
+};
+#endif
+// --------------------- screen 6.1 --------------------- BQ25896
+#if 1
 static lv_timer_t *batt_updata_timer = NULL;
 
-static lv_obj_t * scr6_create_label(lv_obj_t *parent)
+static lv_obj_t * scr6_1_create_label(lv_obj_t *parent)
 {
     lv_obj_t *label = lv_label_create(parent);
     lv_obj_set_width(label, lv_pct(90));
@@ -1203,125 +1526,197 @@ static lv_obj_t * scr6_create_label(lv_obj_t *parent)
     return label;
 }
 
-static void scr6_battert_updata(void)
+static void scr6_1_battert_updata(void)
 {
     char buf[line_max];
-    if(show_batt_type) {
-        /// BQ25896
-        lv_label_set_text(back6_label, "BQ25896");
 
-        scr_label_line_algin(label_list[0], line_max, "Charge:", (ui_batt_25896_is_chg() == true ? "Charging" : "Not charged"));
+    scr_label_line_algin(label_list[0], line_max, "Charge:", (ui_batt_25896_is_chg() == true ? "Charging" : "Not charged"));
 
-        lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vbus());
-        scr_label_line_algin(label_list[1], line_max, "VBUS:", buf);
+    lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vbus());
+    scr_label_line_algin(label_list[1], line_max, "VBUS:", buf);
 
-        lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vsys());
-        scr_label_line_algin(label_list[2], line_max, "VSYS:", buf);
+    lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vsys());
+    scr_label_line_algin(label_list[2], line_max, "VSYS:", buf);
 
-        lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vbat());
-        scr_label_line_algin(label_list[3], line_max, "VBAT:", buf);
+    lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vbat());
+    scr_label_line_algin(label_list[3], line_max, "VBAT:", buf);
 
-        lv_snprintf(buf, line_max, "%.2fv", ui_batt_25896_get_volt_targ());
-        scr_label_line_algin(label_list[4], line_max, "VOLT Target:", buf);
+    lv_snprintf(buf, line_max, "%.2fv", ui_batt_25896_get_volt_targ());
+    scr_label_line_algin(label_list[4], line_max, "VOLT Target:", buf);
 
-        lv_snprintf(buf, line_max, "%.2fmA", ui_batt_25896_get_chg_curr());
-        scr_label_line_algin(label_list[5], line_max, "Charge Curr:", buf);
+    lv_snprintf(buf, line_max, "%.2fmA", ui_batt_25896_get_chg_curr());
+    scr_label_line_algin(label_list[5], line_max, "Charge Curr:", buf);
 
-        lv_snprintf(buf, line_max, "%.2fmA", ui_batt_25896_get_pre_curr());
-        scr_label_line_algin(label_list[6], line_max, "Prechg Curr:", buf);
+    lv_snprintf(buf, line_max, "%.2fmA", ui_batt_25896_get_pre_curr());
+    scr_label_line_algin(label_list[6], line_max, "Prechg Curr:", buf);
 
-        lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_chg_st());
-        scr_label_line_algin(label_list[7], line_max, "CHG Status:", buf);
+    lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_chg_st());
+    scr_label_line_algin(label_list[7], line_max, "CHG Status:", buf);
 
-        lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_vbus_st());
-        scr_label_line_algin(label_list[8], line_max, "VBUS Status:", buf);
+    lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_vbus_st());
+    scr_label_line_algin(label_list[8], line_max, "VBUS Status:", buf);
 
-        lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_ntc_st());
-        scr_label_line_algin(label_list[9], line_max, "NCT:", buf);
-    } else {
-        /// BQ27220
-        lv_label_set_text(back6_label, "BQ27220");
-    }
+    lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_ntc_st());
+    scr_label_line_algin(label_list[9], line_max, "NCT:", buf);
+
 }
 
 static void batt_updata_timer_event(lv_timer_t *t) 
 {
-    scr6_battert_updata();
+    scr6_1_battert_updata();
 }
 
-static void scr6_btn_event_cb(lv_event_t * e)
+static void scr6_1_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(false);
     }
 }
 
-static void batt_trans_event_cb(lv_event_t *e)
+static void create6_1(lv_obj_t *parent) 
 {
-    if(e->code == LV_EVENT_CLICKED) {
-        show_batt_type = !show_batt_type;
-        scr6_battert_updata();
-    }
-}
-
-static void create6(lv_obj_t *parent) 
-{
-    lv_obj_t *scr6_cont = lv_obj_create(parent);
-    lv_obj_set_size(scr6_cont, lv_pct(100), lv_pct(88));
-    lv_obj_set_style_bg_color(scr6_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(scr6_cont, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_clear_flag(scr6_cont, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_style_border_width(scr6_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_all(scr6_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_hor(scr6_cont, 0, LV_PART_MAIN);
-    lv_obj_set_style_pad_row(scr6_cont, 5, LV_PART_MAIN);
-    lv_obj_set_style_pad_column(scr6_cont, 0, LV_PART_MAIN);
-    lv_obj_set_align(scr6_cont, LV_ALIGN_BOTTOM_LEFT);
-    lv_obj_set_flex_flow(scr6_cont, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_flex_align(scr6_cont, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER);
+    lv_obj_t *scr6_1_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr6_1_cont, lv_pct(100), lv_pct(88));
+    lv_obj_set_style_bg_color(scr6_1_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr6_1_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr6_1_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr6_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr6_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_hor(scr6_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr6_1_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr6_1_cont, 0, LV_PART_MAIN);
+    lv_obj_set_align(scr6_1_cont, LV_ALIGN_BOTTOM_LEFT);
+    lv_obj_set_flex_flow(scr6_1_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(scr6_1_cont, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER);
 
     for(int i = 0; i < sizeof(label_list) / sizeof(label_list[0]); i++) {
-        label_list[i] = scr6_create_label(scr6_cont);
+        label_list[i] = scr6_1_create_label(scr6_1_cont);
     }
 
-    lv_obj_t *batt_trans = lv_btn_create(parent);
-    // lv_group_add_obj(lv_group_get_default(), btn);
-    lv_obj_set_style_pad_all(batt_trans, 0, 0);
-    lv_obj_set_height(batt_trans, 20);
-    lv_obj_align(batt_trans, LV_ALIGN_TOP_RIGHT, -8, 8);
-    lv_obj_set_style_radius(batt_trans, 5, LV_PART_MAIN);
-    lv_obj_set_style_shadow_width(batt_trans, 0, LV_PART_MAIN);
-    lv_obj_set_style_border_width(batt_trans, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(batt_trans, 1, LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_outline_width(batt_trans, 2, LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_add_event_cb(batt_trans, batt_trans_event_cb, LV_EVENT_CLICKED, NULL);
-    lv_obj_t *label2 = lv_label_create(batt_trans);
-    lv_obj_align(label2, LV_ALIGN_LEFT_MID, 0, 0);
-    lv_obj_set_style_text_font(label2, FONT_BOLD_MONO_SIZE_16, LV_PART_MAIN);   
-    lv_label_set_text(label2, " Switch ");
-
-    back6_label = scr_back_btn_create(parent, ("BQ25896"), scr6_btn_event_cb);
+    scr_back_btn_create(parent, ("BQ25896"), scr6_btn_event_cb);
 }
-static void entry6(void) 
+static void entry6_1(void) 
 {
-    scr6_battert_updata();
+    scr6_1_battert_updata();
     ui_disp_full_refr();
     batt_updata_timer = lv_timer_create(batt_updata_timer_event, 5000, NULL);
 }
-static void exit6(void) {
+static void exit6_1(void) {
     if(batt_updata_timer) {
         lv_timer_del(batt_updata_timer);
         batt_updata_timer = NULL;
     }
     ui_disp_full_refr();
 }
-static void destroy6(void) { }
+static void destroy6_1(void) { }
 
-static scr_lifecycle_t screen6 = {
-    .create = create6,
-    .entry = entry6,
-    .exit  = exit6,
-    .destroy = destroy6,
+static scr_lifecycle_t screen6_1 = {
+    .create = create6_1,
+    .entry = entry6_1,
+    .exit  = exit6_1,
+    .destroy = destroy6_1,
+};
+#endif
+// --------------------- screen 6.1 --------------------- BQ27220
+#if 1
+
+static lv_obj_t *back6_2_label;
+// static lv_timer_t *batt_updata_timer = NULL;
+
+static lv_obj_t * scr6_2_create_label(lv_obj_t *parent)
+{
+    lv_obj_t *label = lv_label_create(parent);
+    lv_obj_set_width(label, lv_pct(90));
+    lv_obj_set_style_text_font(label, FONT_BOLD_MONO_SIZE_16, LV_PART_MAIN);   
+    lv_obj_set_style_border_width(label, 1, LV_PART_MAIN);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+    lv_obj_set_style_border_side(label, LV_BORDER_SIDE_BOTTOM, LV_PART_MAIN);
+    return label;
+}
+
+
+static void scr6_2_battert_updata(void)
+{
+    char buf[line_max];
+
+    scr_label_line_algin(label_list[0], line_max, "Charge:", (ui_batt_25896_is_chg() == true ? "Charging" : "Not charged"));
+
+    lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vbus());
+    scr_label_line_algin(label_list[1], line_max, "VBUS:", buf);
+
+    lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vsys());
+    scr_label_line_algin(label_list[2], line_max, "VSYS:", buf);
+
+    lv_snprintf(buf, line_max, "%.2fV", ui_batt_25896_get_vbat());
+    scr_label_line_algin(label_list[3], line_max, "VBAT:", buf);
+
+    lv_snprintf(buf, line_max, "%.2fv", ui_batt_25896_get_volt_targ());
+    scr_label_line_algin(label_list[4], line_max, "VOLT Target:", buf);
+
+    lv_snprintf(buf, line_max, "%.2fmA", ui_batt_25896_get_chg_curr());
+    scr_label_line_algin(label_list[5], line_max, "Charge Curr:", buf);
+
+    lv_snprintf(buf, line_max, "%.2fmA", ui_batt_25896_get_pre_curr());
+    scr_label_line_algin(label_list[6], line_max, "Prechg Curr:", buf);
+
+    lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_chg_st());
+    scr_label_line_algin(label_list[7], line_max, "CHG Status:", buf);
+
+    lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_vbus_st());
+    scr_label_line_algin(label_list[8], line_max, "VBUS Status:", buf);
+
+    lv_snprintf(buf, line_max, "%s", ui_batt_25896_get_ntc_st());
+    scr_label_line_algin(label_list[9], line_max, "NCT:", buf);
+
+}
+
+static void scr6_2_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+static void create6_2(lv_obj_t *parent) 
+{
+    lv_obj_t *scr6_2_cont = lv_obj_create(parent);
+    lv_obj_set_size(scr6_2_cont, lv_pct(100), lv_pct(88));
+    lv_obj_set_style_bg_color(scr6_2_cont, DECKPRO_COLOR_BG, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(scr6_2_cont, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_clear_flag(scr6_2_cont, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_style_border_width(scr6_2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(scr6_2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_hor(scr6_2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_row(scr6_2_cont, 5, LV_PART_MAIN);
+    lv_obj_set_style_pad_column(scr6_2_cont, 0, LV_PART_MAIN);
+    lv_obj_set_align(scr6_2_cont, LV_ALIGN_BOTTOM_LEFT);
+    lv_obj_set_flex_flow(scr6_2_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(scr6_2_cont, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER);
+
+    for(int i = 0; i < sizeof(label_list) / sizeof(label_list[0]); i++) {
+        label_list[i] = scr6_1_create_label(scr6_2_cont);
+    }
+    // back
+    scr_back_btn_create(parent, ("BQ27220"), scr6_btn_event_cb);
+}
+
+static void entry6_2(void) 
+{
+    scr6_2_battert_updata();
+    ui_disp_full_refr();
+}
+static void exit6_2(void) {
+
+    ui_disp_full_refr();
+}
+
+static void destroy6_2(void) { }
+
+static scr_lifecycle_t screen6_2 = {
+    .create = create6_2,
+    .entry = entry6_2,
+    .exit  = exit6_2,
+    .destroy = destroy6_2,
 };
 #endif
 //************************************[ screen 7 ]****************************************** Other
@@ -1336,7 +1731,7 @@ static lv_timer_t *input_timer;
 static void scr7_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(SCREEN0_ID);
     }
 }
 
@@ -1468,7 +1863,6 @@ static scr_lifecycle_t screen7 = {
 #endif
 //************************************[ screen 8 ]****************************************** A7682E
 #if 1
-
 static lv_obj_t *a7682_list;
 static lv_obj_t *a7682_page;
 static int a7682_num = 0;
@@ -1563,7 +1957,7 @@ static void a7682_page_switch_cb(lv_event_t *e)
 static void scr8_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(SCREEN0_ID);
     }
 }
 
@@ -1671,7 +2065,7 @@ static scr_lifecycle_t screen8 = {
 static void scr9_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(SCREEN0_ID);
     }
 }
 
@@ -1700,7 +2094,7 @@ static scr_lifecycle_t screen9 = {
 static void scr10_btn_event_cb(lv_event_t * e)
 {
     if(e->code == LV_EVENT_CLICKED){
-        scr_mgr_switch(SCREEN0_ID, false);
+        scr_mgr_pop(SCREEN0_ID);
     }
 }
 
@@ -1784,24 +2178,21 @@ void ui_deckpro_entry(void)
     touch_chk_timer = lv_timer_create(indev_get_gesture_dir, LV_INDEV_DEF_READ_PERIOD, NULL);
     lv_timer_pause(touch_chk_timer);
 
-    // init language
-    // lv_i18n_init(lv_i18n_language_pack);
-    // if(ui_setting_get_language() == DEFAULT_LANGUAGE_CN) {
-    //     lv_i18n_set_locale("zh-cn");
-    // } else {
-    //     lv_i18n_set_locale("en-us");
-    // }
-
     scr_mgr_init();
 
     scr_mgr_register(SCREEN0_ID,    &screen0);      // menu
-    scr_mgr_register(SCREEN1_ID,    &screen1);      // 
+    scr_mgr_register(SCREEN1_ID,    &screen1);      // lora
+    scr_mgr_register(SCREEN1_1_ID,  &screen1_1);    //  - auto send
     scr_mgr_register(SCREEN2_ID,    &screen2);      // Setting
     scr_mgr_register(SCREEN2_1_ID,  &screen2_1);    //  - About System
     scr_mgr_register(SCREEN3_ID,    &screen3);      // 
-    scr_mgr_register(SCREEN4_ID,    &screen4);      // 
+    scr_mgr_register(SCREEN4_ID,    &screen4);      // WIFI
+    scr_mgr_register(SCREEN4_1_ID,  &screen4_1);    //  - WIFI Config
+    scr_mgr_register(SCREEN4_2_ID,  &screen4_2);    //  - WIFI Scan
     scr_mgr_register(SCREEN5_ID,    &screen5);      // 
-    scr_mgr_register(SCREEN6_ID,    &screen6);      // 
+    scr_mgr_register(SCREEN6_ID,    &screen6);      // Battery
+    scr_mgr_register(SCREEN6_1_ID,  &screen6_1);    //  - BQ25896
+    scr_mgr_register(SCREEN6_2_ID,  &screen6_2);    //  - BQ27220
     scr_mgr_register(SCREEN7_ID,    &screen7);      // 
     scr_mgr_register(SCREEN8_ID,    &screen8);      // 
     scr_mgr_register(SCREEN9_ID,    &screen9);      // 
