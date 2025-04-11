@@ -118,9 +118,9 @@ static struct menu_btn menu_btn_list[] =
     {SCREEN5_ID,  "A:/img_test.png",    "Test",     95,     101},
     {SCREEN6_ID,  "A:/img_batt.png",    "Battery",  167,    101},
     {SCREEN7_ID,  "A:/img_touch.png",   "Input",    23,     189},
-    {SCREEN8_ID,  "A:/img_A7682.png",   "A7682",    95,     189},
+    {SCREEN8_ID,  "A:/img_A7682E.png",  "A7682",    95,     189},
     {SCREEN9_ID,  "A:/img_lora.png",    "Shutdown", 167,    189},
-    {SCREEN10_ID, "A:/img_GPS.png",     "Lora9",    23,     13},     // Page two
+    {SCREEN10_ID, "A:/img_PCM5102.png", "PCM5102",  23,     13},     // Page two
 };
 
 static void menu_btn_event_cb(lv_event_t *e)
@@ -337,8 +337,8 @@ static void create0(lv_obj_t *parent)
 
 static void entry0(void) {
     ui_get_gesture_dir = menu_get_gesture_dir;
-    // lv_timer_resume(touch_chk_timer);
-    lv_obj_add_event_cb(scr_mgr_get_top_obj(), menu_gesture_event, LV_EVENT_GESTURE, NULL);
+    lv_timer_resume(touch_chk_timer);
+    // lv_obj_add_event_cb(scr_mgr_get_top_obj(), menu_gesture_event, LV_EVENT_GESTURE, NULL);
 }
 static void exit0(void) {
     ui_get_gesture_dir = NULL;
@@ -2120,7 +2120,6 @@ static scr_lifecycle_t screen10 = {
 };
 #endif
 //************************************[ UI ENTRY ]******************************************
-
 extern lv_indev_t* lv_win32_pointer_device_object;
 extern lv_indev_t* lv_win32_keypad_device_object; 
 extern lv_indev_t* lv_win32_encoder_device_object;
@@ -2148,13 +2147,13 @@ void indev_get_gesture_dir(lv_timer_t *t)
                 if(ui_get_gesture_dir) {
                     ui_get_gesture_dir(LV_DIR_LEFT);
                 }
-                // printf("scroll left\n");
+                printf("scroll left\n");
                 break;
             case LV_DIR_RIGHT: 
                 if(ui_get_gesture_dir) {
                     ui_get_gesture_dir(LV_DIR_RIGHT);
                 }
-                // printf("scroll right\n"); 
+                printf("scroll right\n"); 
                 break;
             case LV_DIR_TOP:
                 // printf("scroll top\n");
