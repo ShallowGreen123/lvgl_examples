@@ -45,6 +45,11 @@ void ui_disp_full_refr(void);
 #define LORA_MODE_SEND 0
 #define LORA_MODE_RECV 1
 float ui_lora_get_freq(void);
+void ui_lora_set_freq(float freq);
+int ui_lora_get_bandwidth(void);
+void ui_lora_set_bandwidth(float bd);
+int ui_lora_get_power(void);
+void ui_lora_set_power(float po);
 int ui_lora_get_mode(void);
 void ui_lora_set_mode(int mode);
 void ui_lora_send(const char *str);

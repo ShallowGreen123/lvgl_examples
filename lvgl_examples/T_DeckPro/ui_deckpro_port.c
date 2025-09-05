@@ -21,12 +21,17 @@ void ui_disp_full_refr(void)
 //************************************[ screen 0 ]****************************************** menu
 //************************************[ screen 1 ]****************************************** lora
 static int lora_mode = LORA_MODE_SEND;
-static float lora_freq = 850.0;
+static float lora_default_freq = 850.0;
+static int lora_default_band = 125;
+static int lora_default_power = 22;
 
-float ui_lora_get_freq(void)
-{
-    return lora_freq;
-}
+float ui_lora_get_freq(void) { return lora_default_freq; }
+void ui_lora_set_freq(float freq) { lora_default_freq = freq; }
+int ui_lora_get_bandwidth(void) { return lora_default_band; }
+void ui_lora_set_bandwidth(float bd) { lora_default_band = bd; }
+int ui_lora_get_power(void) { return lora_default_power; }
+void ui_lora_set_power(float po) { lora_default_power = po; }
+
 
 int ui_lora_get_mode(void)
 {

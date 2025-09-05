@@ -118,7 +118,7 @@ static struct menu_btn menu_btn_list[] =
     {SCREEN5_ID,  "A:/img_test.png",    "Test",     95,     101},
     {SCREEN6_ID,  "A:/img_batt.png",    "Battery",  167,    101},
     {SCREEN7_ID,  "A:/img_touch.png",   "Input",    23,     189},
-    {SCREEN8_ID,  "A:/img_A7682E.png",  "A7682",    95,     189},
+    {SCREEN8_1_ID, "A:/img_A7682E.png",  "A7682",    95,     189},
     {SCREEN9_ID,  "A:/img_lora.png",    "Shutdown", 167,    189},
     {SCREEN10_ID, "A:/img_PCM5102.png", "PCM5102",  23,     13},     // Page two
 };
@@ -373,9 +373,9 @@ static void scr1_list_event(lv_event_t *e)
             {
                 scr_mgr_push(SCREEN1_1_ID, false);
             }
-            if(strcmp("-Manual Test", str) == 0)
+            if(strcmp("-Lora Setting", str) == 0)
             {
-                scr_mgr_push(SCREEN2_2_ID, false);
+                scr_mgr_push(SCREEN1_2_ID, false);
             }
             printf("%s\n", str);
         }
@@ -428,7 +428,7 @@ static void create1(lv_obj_t *parent)
     lv_obj_set_style_shadow_width(scr1_list, 0, LV_PART_MAIN);
 
     scr1_item_create("-Auto Test", scr1_list_event);
-    // scr1_item_create("-Manual Test", scr1_list_event);
+    scr1_item_create("-Lora Setting", scr1_list_event);
 
     // back
     scr_back_btn_create(parent, "Lora", scr1_btn_event_cb);
@@ -592,6 +592,169 @@ static scr_lifecycle_t screen1_1 = {
     .destroy = destroy1_1,
 };
 
+#endif
+// --------------------- screen 1.2 --------------------- Lora Setting
+#if 1
+
+#define RADIO_FREQUENCY_LIST "433MHz\n 850MHz\n 868MHz\n 915MHz\n 920MHz"
+#define RADIO_BANDWIDTH "125KHz\n 250KHz\n 500KHz"
+#define RADIO_TX_POWER "10dBm\n 22dBm"
+
+static float lora_freq_list[] = {433.0, 850.0, 868.0, 915.0, 920.0};
+static int lora_band_list[] = {125, 250, 500};
+static int lora_power_list[] = {10, 22};
+
+static lv_obj_t *scr1_2_cont;
+static lv_obj_t *dropdown_freq;
+static lv_obj_t *dropdown_band;
+static lv_obj_t *dropdown_power;
+
+static void scr1_2_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+static void lora_setting_event_handler(lv_event_t * e)
+{
+    char buf[32]={0};
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    char flag = (  char )lv_event_get_user_data(e);
+    int select = lv_dropdown_get_selected(obj);
+
+    lv_dropdown_get_selected_str(obj, buf, sizeof(buf));
+    switch (flag)
+    {
+    case 'f': 
+        for(int i = 0; i < GET_BUFF_LEN(lora_freq_list); i++) {
+            if(lora_freq_list[select] == lora_freq_list[i]) {
+                printf("set freq %.1fMHz\n", lora_freq_list[i]);
+                ui_lora_set_freq(lora_freq_list[i]);
+            }
+        }
+        break;
+    case 'b': 
+        for(int i = 0; i < GET_BUFF_LEN(lora_band_list); i++) {
+            if(lora_band_list[select] == lora_band_list[i]) {
+                printf("set bandwidth %dKhz\n", lora_band_list[i]);
+                ui_lora_set_bandwidth(lora_band_list[i]);
+            }
+        }
+        break;
+    case 'p': 
+        for(int i = 0; i < GET_BUFF_LEN(lora_power_list); i++) {
+            if(lora_power_list[select] == lora_power_list[i]) {
+                printf("set power %ddBm\n", lora_power_list[i]);
+                ui_lora_set_power(lora_power_list[i]);
+            }
+        }
+        break;
+    
+    default:
+        break;
+    }
+}
+
+static lv_obj_t * scr1_2_lora_setting_create(lv_obj_t *parent, const char *text)
+{
+    lv_obj_t *ui_Container1 = lv_obj_create(parent);
+    lv_obj_remove_style_all(ui_Container1);
+    lv_obj_set_height(ui_Container1, 42);
+    lv_obj_set_width(ui_Container1, lv_pct(100));
+    lv_obj_set_x(ui_Container1, 35);
+    lv_obj_set_y(ui_Container1, -16);
+    lv_obj_set_align(ui_Container1, LV_ALIGN_CENTER);
+    lv_obj_set_flex_flow(ui_Container1, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(ui_Container1, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START);
+    lv_obj_clear_flag(ui_Container1, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_pad_row(ui_Container1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(ui_Container1, 20, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t *ui_Label14 = lv_label_create(ui_Container1);
+    lv_obj_set_width(ui_Label14, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label14, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label14, -60);
+    lv_obj_set_y(ui_Label14, -42);
+    lv_obj_set_align(ui_Label14, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label14, text);
+    lv_obj_set_style_text_font(ui_Label14, FONT_BOLD_MONO_SIZE_15, LV_PART_MAIN);   
+
+    lv_obj_t *ui_Dropdown1 = lv_dropdown_create(ui_Container1);
+    lv_obj_set_width(ui_Dropdown1, lv_pct(60));
+    lv_obj_set_height(ui_Dropdown1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Dropdown1, 19);
+    lv_obj_set_y(ui_Dropdown1, -1);
+    lv_obj_add_flag(ui_Dropdown1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+
+    // lv_obj_set_style_bg_opa(ui_Dropdown1, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_border_width(ui_Dropdown1, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    // lv_obj_set_style_shadow_width(ui_Dropdown1, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_PRESSED);
+
+    return ui_Dropdown1;
+}
+
+static void create1_2(lv_obj_t *parent) 
+{
+    scr1_2_cont = lv_obj_create(parent);
+    lv_obj_remove_style_all(scr1_2_cont);
+    lv_obj_set_width(scr1_2_cont, lv_pct(100));
+    lv_obj_set_height(scr1_2_cont, lv_pct(85));
+    lv_obj_set_align(scr1_2_cont, LV_ALIGN_CENTER);
+    lv_obj_set_flex_flow(scr1_2_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(scr1_2_cont, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
+    lv_obj_clear_flag(scr1_2_cont, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_pad_row(scr1_2_cont, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(scr1_2_cont, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_border_width(scr1_2_cont, 3, LV_PART_MAIN);
+    lv_obj_set_align(scr1_2_cont, LV_ALIGN_BOTTOM_MID);
+
+    dropdown_freq = scr1_2_lora_setting_create(scr1_2_cont, "Freq: ");
+    lv_dropdown_set_options(dropdown_freq, RADIO_FREQUENCY_LIST);
+    for(int i = 0; i < GET_BUFF_LEN(lora_freq_list); i++) {
+        if(ui_lora_get_freq() == lora_freq_list[i]) {
+            lv_dropdown_set_selected(dropdown_freq, i);
+        }
+    }
+
+    dropdown_band = scr1_2_lora_setting_create(scr1_2_cont, "Band: ");
+    lv_dropdown_set_options(dropdown_band, RADIO_BANDWIDTH);
+    for(int i = 0; i < GET_BUFF_LEN(lora_band_list); i++) {
+        if(ui_lora_get_bandwidth() == lora_band_list[i]) {
+            lv_dropdown_set_selected(dropdown_band, i);
+        }
+    }
+
+    dropdown_power = scr1_2_lora_setting_create(scr1_2_cont, "Power:");
+    lv_dropdown_set_options(dropdown_power, RADIO_TX_POWER);
+    for(int i = 0; i < GET_BUFF_LEN(lora_power_list); i++) {
+        if(ui_lora_get_power() == lora_power_list[i]) {
+            lv_dropdown_set_selected(dropdown_power, i);
+        }
+    }
+
+    lv_obj_add_event_cb(dropdown_freq, lora_setting_event_handler, LV_EVENT_VALUE_CHANGED, 'f');
+    lv_obj_add_event_cb(dropdown_band, lora_setting_event_handler, LV_EVENT_VALUE_CHANGED, 'b');
+    lv_obj_add_event_cb(dropdown_power,   lora_setting_event_handler, LV_EVENT_VALUE_CHANGED, 'p');
+    // back
+    scr_back_btn_create(parent, ("Lora Setting"), scr1_2_btn_event_cb);
+}
+static void entry1_2(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit1_2(void) {
+    ui_disp_full_refr();
+}
+static void destroy1_2(void) { }
+
+static scr_lifecycle_t screen1_2 = {
+    .create = create1_2,
+    .entry = entry1_2,
+    .exit  = exit1_2,
+    .destroy = destroy1_2,
+};
 #endif
 //************************************[ screen 2 ]****************************************** Setting
 // --------------------- screen 2.1 --------------------- About System
@@ -1619,7 +1782,6 @@ static scr_lifecycle_t screen6_1 = {
 #endif
 // --------------------- screen 6.1 --------------------- BQ27220
 #if 1
-
 static lv_obj_t *back6_2_label;
 // static lv_timer_t *batt_updata_timer = NULL;
 
@@ -1862,6 +2024,7 @@ static scr_lifecycle_t screen7 = {
 };
 #endif
 //************************************[ screen 8 ]****************************************** A7682E
+// --------------------- screen 8 --------------------- A7682E
 #if 1
 static lv_obj_t *a7682_list;
 static lv_obj_t *a7682_page;
@@ -2060,6 +2223,88 @@ static scr_lifecycle_t screen8 = {
     .destroy = destroy8,
 };
 #endif
+// --------------------- screen 8.1 --------------------- Call test
+#if 1
+static void event_handler(lv_event_t * e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    lv_obj_t * ta = lv_event_get_user_data(e);
+
+    if(code == LV_EVENT_VALUE_CHANGED) {
+        uint32_t id = lv_btnmatrix_get_selected_btn(obj);
+        const char * txt = lv_btnmatrix_get_btn_text(obj, id);
+        int len = strlen(txt);
+ 
+        if(!strcmp(txt, LV_SYMBOL_CALL)) {
+            printf("%s\n", lv_textarea_get_text(ta));
+        } else if(!strcmp(txt, "Hang up"))
+        {
+            printf("Hang\n");
+        } else if(!strcmp(txt, LV_SYMBOL_BACKSPACE))
+        {
+            lv_textarea_del_char(ta);
+        }else{
+            lv_textarea_add_text(ta, txt);
+        }
+    }
+}
+
+static const char * btnm_map[] = {  "1", "2", "3", "\n",
+                                    "4", "5", "6", "\n",
+                                    "7", "8", "9", "\n",
+                                    "*", "0", "#", "\n",
+                                    LV_SYMBOL_CALL, "Hang up", LV_SYMBOL_BACKSPACE,""
+                                 };
+
+
+static void scr8_1_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+static void create8_1(lv_obj_t *parent) 
+{
+    lv_obj_t * ta = lv_textarea_create(parent);
+    lv_textarea_set_one_line(ta, true);
+    lv_obj_set_width(ta, lv_pct(98));
+    lv_obj_align(ta, LV_ALIGN_TOP_MID, 0, lv_pct(20));
+    lv_obj_set_style_text_font(ta, &Font_Mono_Bold_25, LV_PART_MAIN);
+    // lv_obj_add_state(ta, LV_STATE_FOCUSED); /*To be sure the cursor is visible*/
+    lv_obj_clear_flag(ta, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_style_text_letter_space(ta, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_line_space(ta, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    lv_obj_t * btnm1 = lv_btnmatrix_create(parent);
+    lv_btnmatrix_set_map(btnm1, btnm_map);
+    lv_obj_set_size(btnm1, lv_pct(100)-2, lv_pct(60));
+    lv_obj_set_style_border_width(btnm1, 0, 0);
+    // lv_btnmatrix_set_btn_width(btnm1, 10, 2);        /*Make "Action1" twice as wide as "Action2"*/
+    // lv_btnmatrix_set_btn_ctrl(btnm1, 10, LV_BTNMATRIX_CTRL_CHECKABLE);
+    // lv_btnmatrix_set_btn_ctrl(btnm1, 11, LV_BTNMATRIX_CTRL_CHECKED);
+    lv_obj_align(btnm1, LV_ALIGN_BOTTOM_MID, 0, 0);
+    lv_obj_add_event_cb(btnm1, event_handler, LV_EVENT_VALUE_CHANGED, ta);
+    
+    lv_obj_t *back8_1_label = scr_back_btn_create(parent, ("Call"), scr8_1_btn_event_cb);
+}
+static void entry8_1(void) 
+{
+    ui_disp_full_refr();
+}
+static void exit8_1(void) {
+    ui_disp_full_refr();
+}
+static void destroy8_1(void) { }
+
+static scr_lifecycle_t screen8_1 = {
+    .create = create8_1,
+    .entry = entry8_1,
+    .exit  = exit8_1,
+    .destroy = destroy8_1,
+};
+#endif
 //************************************[ screen 9 ]******************************************  
 #if 1
 static void scr9_btn_event_cb(lv_event_t * e)
@@ -2099,7 +2344,14 @@ static void scr10_btn_event_cb(lv_event_t * e)
 }
 
 static void create10(lv_obj_t *parent) 
-{
+{   
+
+    lv_obj_t *lab = lv_label_create(parent);
+    lv_obj_set_width(lab, lv_pct(95));
+    lv_obj_set_style_text_font(lab, FONT_BOLD_SIZE_17, LV_PART_MAIN);
+    lv_label_set_text(lab, "Open the serial port, set the baud rate to 115200, "
+                            "and send the AT command of A7682E to test the function.");
+    lv_obj_center(lab);
     
     lv_obj_t *back10_label = scr_back_btn_create(parent, ("101010"), scr10_btn_event_cb);
 }
@@ -2182,6 +2434,7 @@ void ui_deckpro_entry(void)
     scr_mgr_register(SCREEN0_ID,    &screen0);      // menu
     scr_mgr_register(SCREEN1_ID,    &screen1);      // lora
     scr_mgr_register(SCREEN1_1_ID,  &screen1_1);    //  - auto send
+    scr_mgr_register(SCREEN1_2_ID,  &screen1_2);    //  - lora setting
     scr_mgr_register(SCREEN2_ID,    &screen2);      // Setting
     scr_mgr_register(SCREEN2_1_ID,  &screen2_1);    //  - About System
     scr_mgr_register(SCREEN3_ID,    &screen3);      // 
@@ -2193,7 +2446,8 @@ void ui_deckpro_entry(void)
     scr_mgr_register(SCREEN6_1_ID,  &screen6_1);    //  - BQ25896
     scr_mgr_register(SCREEN6_2_ID,  &screen6_2);    //  - BQ27220
     scr_mgr_register(SCREEN7_ID,    &screen7);      // 
-    scr_mgr_register(SCREEN8_ID,    &screen8);      // 
+    scr_mgr_register(SCREEN8_ID,    &screen8);      // A7882E
+    scr_mgr_register(SCREEN8_1_ID,  &screen8_1);    //  - Call test
     scr_mgr_register(SCREEN9_ID,    &screen9);      // 
     scr_mgr_register(SCREEN10_ID,   &screen10);     // 
 

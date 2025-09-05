@@ -5,7 +5,7 @@
 
 /* clang-format off */
 #define SETTING_PAGE_MAX_ITEM 7
-#if UI_EPD47_DISPALY 1
+#if UI_EPD47_DISPALY
 
 #define UI_PORTRAIT_SCR_MODE    1
 #define UI_LORA_AUTO_SEND       0

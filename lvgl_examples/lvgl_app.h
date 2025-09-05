@@ -60,6 +60,7 @@ enum {
     SCREEN0_ID = 0,
     SCREEN1_ID,
     SCREEN1_1_ID,
+    SCREEN1_2_ID,
     SCREEN2_ID,
     SCREEN2_1_ID,
     SCREEN2_2_ID,
@@ -76,6 +77,7 @@ enum {
     SCREEN7_2_ID,
     SCREEN7_3_ID,
     SCREEN8_ID,
+    SCREEN8_1_ID,
     SCREEN9_ID,
     SCREEN10_ID,
 };
