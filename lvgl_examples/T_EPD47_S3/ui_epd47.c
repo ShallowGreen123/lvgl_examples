@@ -208,6 +208,7 @@ const struct menu_icon icon_buf[] = {
     {"A:/ver_wifi.png",     "wifi",     250, 45},
     {"A:/ver_battery.png",  "battery",  455, 375},
     {"A:/ver_shutdown.png", "shutdown", 455, 210},
+    {"A:/img_gif.png", "gif", 455, 45},
 };
 #else
 const struct menu_icon icon_buf[] = {
@@ -237,6 +238,7 @@ static void menu_btn_event(lv_event_t *e)
             case 5: scr_mgr_push(SCREEN6_ID, false); break;
             case 6: scr_mgr_push(SCREEN7_ID, false); break;
             case 7: scr_mgr_push(SCREEN8_ID, false); break;
+            case 8: scr_mgr_push(SCREEN10_ID, false); break;
             default:
                 break;
         }
@@ -514,6 +516,10 @@ static void scr2_list_event(lv_event_t *e)
             {
                 scr_mgr_push(SCREEN2_2_ID, false);
             }
+            if(strcmp("Lora Setting", str) == 0)
+            {
+                scr_mgr_push(SCREEN2_3_ID, false);
+            }
         }
     }
 }
@@ -557,6 +563,7 @@ static void create2(lv_obj_t *parent)
 
     scr2_item_create("Auto Send", scr2_list_event);
     scr2_item_create("Manual Send", scr2_list_event);
+    scr2_item_create("Lora Setting", scr2_list_event);
 
     // back
     scr_back_btn_create(parent, "Lora", scr2_btn_event_cb);
@@ -894,6 +901,171 @@ static scr_lifecycle_t screen2_2 = {
     .entry = entry2_2,
     .exit  = exit2_2,
     .destroy = destroy2_2,
+};
+#endif
+// --------------------- screen 2.3 --------------------- Lora Setting
+#if 1
+
+#define RADIO_FREQUENCY_LIST "433MHz\n 850MHz\n 868MHz\n 915MHz\n 920MHz"
+#define RADIO_BANDWIDTH "125KHz\n 250KHz\n 500KHz"
+#define RADIO_TX_POWER "10dBm\n 22dBm"
+
+static float lora_freq_list[] = {433.0, 850.0, 868.0, 915.0, 920.0};
+static int lora_band_list[] = {125, 250, 500};
+static int lora_power_list[] = {10, 22};
+
+static lv_obj_t *scr2_3_cont;
+static lv_obj_t *dropdown_freq;
+static lv_obj_t *dropdown_band;
+static lv_obj_t *dropdown_power;
+
+static void scr2_3_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_pop(false);
+    }
+}
+
+static void lora_setting_event_handler(lv_event_t * e)
+{
+    char buf[32]={0};
+    lv_event_code_t code = lv_event_get_code(e);
+    lv_obj_t * obj = lv_event_get_target(e);
+    char flag = (  char )lv_event_get_user_data(e);
+    int select = lv_dropdown_get_selected(obj);
+
+    lv_dropdown_get_selected_str(obj, buf, sizeof(buf));
+    switch (flag)
+    {
+    case 'f': 
+        for(int i = 0; i < ARRAY_LEN(lora_freq_list); i++) {
+            if(lora_freq_list[select] == lora_freq_list[i]) {
+                printf("set freq %.1fMHz\n", lora_freq_list[i]);
+                // ui_lora_set_freq(lora_freq_list[i]);
+            }
+        }
+        break;
+    case 'b': 
+        for(int i = 0; i < ARRAY_LEN(lora_band_list); i++) {
+            if(lora_band_list[select] == lora_band_list[i]) {
+                printf("set bandwidth %dKhz\n", lora_band_list[i]);
+                // ui_lora_set_bandwidth(lora_band_list[i]);
+            }
+        }
+        break;
+    case 'p': 
+        for(int i = 0; i < ARRAY_LEN(lora_power_list); i++) {
+            if(lora_power_list[select] == lora_power_list[i]) {
+                printf("set power %ddBm\n", lora_power_list[i]);
+                // ui_lora_set_power(lora_power_list[i]);
+            }
+        }
+        break;
+    
+    default:
+        break;
+    }
+}
+
+static lv_obj_t * scr2_3_lora_setting_create(lv_obj_t *parent, const char *text)
+{
+    lv_obj_t *ui_Container1 = lv_obj_create(parent);
+    lv_obj_remove_style_all(ui_Container1);
+    lv_obj_set_height(ui_Container1, lv_pct(7));
+    lv_obj_set_width(ui_Container1, lv_pct(100));
+    lv_obj_set_x(ui_Container1, 35);
+    lv_obj_set_y(ui_Container1, -16);
+    lv_obj_set_align(ui_Container1, LV_ALIGN_CENTER);
+    lv_obj_set_flex_flow(ui_Container1, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(ui_Container1, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START);
+    lv_obj_clear_flag(ui_Container1, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_pad_row(ui_Container1, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(ui_Container1, 20, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_border_width(ui_Container1, 3, LV_PART_MAIN);
+
+    lv_obj_t *ui_Label14 = lv_label_create(ui_Container1);
+    lv_obj_set_width(ui_Label14, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_Label14, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Label14, -60);
+    lv_obj_set_y(ui_Label14, -42);
+    lv_obj_set_align(ui_Label14, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_Label14, text);
+    lv_obj_set_style_text_font(ui_Label14, &Font_Mono_Bold_25, LV_PART_MAIN);   
+
+    lv_obj_t *ui_Dropdown1 = lv_dropdown_create(ui_Container1);
+    lv_obj_set_width(ui_Dropdown1, lv_pct(60));
+    lv_obj_set_height(ui_Dropdown1, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_x(ui_Dropdown1, 19);
+    lv_obj_set_y(ui_Dropdown1, -1);
+    lv_obj_add_flag(ui_Dropdown1, LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
+    // lv_obj_set_style_text_font(ui_Label14, &Font_Mono_Bold_25, LV_PART_ITEMS);  
+
+    // lv_obj_set_style_bg_opa(ui_Dropdown1, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_border_width(ui_Dropdown1, 1, LV_PART_MAIN | LV_STATE_PRESSED);
+    // lv_obj_set_style_shadow_width(ui_Dropdown1, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_PRESSED);
+
+    return ui_Dropdown1;
+}
+
+static void create2_3(lv_obj_t *parent) 
+{
+    scr2_3_cont = lv_obj_create(parent);
+    lv_obj_remove_style_all(scr2_3_cont);
+    lv_obj_set_width(scr2_3_cont, lv_pct(100));
+    lv_obj_set_height(scr2_3_cont, lv_pct(85));
+    lv_obj_set_align(scr2_3_cont, LV_ALIGN_CENTER);
+    lv_obj_set_flex_flow(scr2_3_cont, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_flex_align(scr2_3_cont, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
+    lv_obj_clear_flag(scr2_3_cont, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_style_pad_row(scr2_3_cont, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(scr2_3_cont, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    // lv_obj_set_style_border_width(scr2_3_cont, 3, LV_PART_MAIN);
+    lv_obj_set_align(scr2_3_cont, LV_ALIGN_BOTTOM_MID);
+
+    dropdown_freq = scr2_3_lora_setting_create(scr2_3_cont, "Freq: ");
+    lv_dropdown_set_options(dropdown_freq, RADIO_FREQUENCY_LIST);
+    for(int i = 0; i < ARRAY_LEN(lora_freq_list); i++) {
+        // if(ui_lora_get_freq() == lora_freq_list[i]) {
+        //     lv_dropdown_set_selected(dropdown_freq, i);
+        // }
+    }
+
+    dropdown_band = scr2_3_lora_setting_create(scr2_3_cont, "Band: ");
+    lv_dropdown_set_options(dropdown_band, RADIO_BANDWIDTH);
+    for(int i = 0; i < ARRAY_LEN(lora_band_list); i++) {
+        // if(ui_lora_get_bandwidth() == lora_band_list[i]) {
+        //     lv_dropdown_set_selected(dropdown_band, i);
+        // }
+    }
+
+    dropdown_power = scr2_3_lora_setting_create(scr2_3_cont, "Power:");
+    lv_dropdown_set_options(dropdown_power, RADIO_TX_POWER);
+    for(int i = 0; i < ARRAY_LEN(lora_power_list); i++) {
+        // if(ui_lora_get_power() == lora_power_list[i]) {
+        //     lv_dropdown_set_selected(dropdown_power, i);
+        // }
+    }
+
+    lv_obj_add_event_cb(dropdown_freq, lora_setting_event_handler, LV_EVENT_VALUE_CHANGED, 'f');
+    lv_obj_add_event_cb(dropdown_band, lora_setting_event_handler, LV_EVENT_VALUE_CHANGED, 'b');
+    lv_obj_add_event_cb(dropdown_power,   lora_setting_event_handler, LV_EVENT_VALUE_CHANGED, 'p');
+    // back
+    scr_back_btn_create(parent, ("Lora Setting"), scr2_3_btn_event_cb);
+}
+static void entry2_3(void) 
+{
+
+}
+static void exit2_3(void) {
+
+}
+static void destroy2_3(void) { }
+
+static scr_lifecycle_t screen2_3 = {
+    .create = create2_3,
+    .entry = entry2_3,
+    .exit  = exit2_3,
+    .destroy = destroy2_3,
 };
 #endif
 //************************************[ screen 3 ]****************************************** sd_card
@@ -1926,6 +2098,71 @@ static scr_lifecycle_t screen8 = {
     .destroy = destroy8,
 };
 #endif
+//************************************[ screen 10 ]****************************************** GIF
+#if 1
+
+static void scr10_btn_event_cb(lv_event_t * e)
+{
+    if(e->code == LV_EVENT_CLICKED){
+        scr_mgr_switch(SCREEN0_ID, false);
+    }
+}
+
+static void anim_x_cb(void * var, int32_t v)
+{
+    lv_obj_set_x(var, v);
+}
+
+static void anim_size_cb(void * var, int32_t v)
+{
+    lv_obj_set_size(var, v, v);
+}
+
+static void create10(lv_obj_t *parent)
+{
+    lv_obj_t * obj = lv_obj_create(parent);
+    lv_obj_set_style_bg_color(obj, lv_palette_main(LV_PALETTE_RED), 0);
+    lv_obj_set_style_radius(obj, LV_RADIUS_CIRCLE, 0);
+
+    lv_obj_align(obj, LV_ALIGN_LEFT_MID, 10, 0);
+
+    lv_anim_t a;
+    lv_anim_init(&a);
+    lv_anim_set_var(&a, obj);
+    lv_anim_set_values(&a, 10, 50);
+    lv_anim_set_time(&a, 1000);
+    lv_anim_set_playback_delay(&a, 100);
+    lv_anim_set_playback_time(&a, 300);
+    lv_anim_set_repeat_delay(&a, 500);
+    lv_anim_set_repeat_count(&a, LV_ANIM_REPEAT_INFINITE);
+    lv_anim_set_path_cb(&a, lv_anim_path_ease_in_out);
+
+    lv_anim_set_exec_cb(&a, anim_size_cb);
+    lv_anim_start(&a);
+    lv_anim_set_exec_cb(&a, anim_x_cb);
+    lv_anim_set_values(&a, 10, 240);
+    lv_anim_start(&a);
+
+    // back
+    scr_back_btn_create(parent, "gif", scr10_btn_event_cb);
+}
+
+static void entry10(void) {
+    // ui_batt_power_off();
+}
+static void exit10(void) {
+}
+static void destroy10(void) { 
+
+}
+
+static scr_lifecycle_t screen10 = {
+    .create = create10,
+    .entry = entry10,
+    .exit  = exit10,
+    .destroy = destroy10,
+};
+#endif
 //************************************[ UI ENTRY ]******************************************
 void ui_epd47_entry(void)
 {
@@ -1939,6 +2176,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN2_ID,   &screen2);    // lora
     scr_mgr_register(SCREEN2_1_ID, &screen2_1);  //     - Auto Send
     scr_mgr_register(SCREEN2_2_ID, &screen2_2);  //     - Manual Send
+    scr_mgr_register(SCREEN2_3_ID, &screen2_3);  //     - Lora Setting
     scr_mgr_register(SCREEN3_ID,   &screen3);    // sd card
     scr_mgr_register(SCREEN4_ID,   &screen4);    // setting
     scr_mgr_register(SCREEN4_1_ID, &screen4_1);  //     - About System
@@ -1947,6 +2185,7 @@ void ui_epd47_entry(void)
     scr_mgr_register(SCREEN6_ID,   &screen6);    // wifi
     scr_mgr_register(SCREEN7_ID,   &screen7);    // battery
     scr_mgr_register(SCREEN8_ID,   &screen8);    // battery
+    scr_mgr_register(SCREEN10_ID,   &screen10);    // GIF
 
     scr_mgr_switch(SCREEN0_ID, false); // set root screen
     scr_mgr_set_anim(LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT, LV_SCR_LOAD_ANIM_OVER_LEFT);
